@@ -98,13 +98,14 @@ the 13 standard Leader records.
 Index 8 is Bianca's record. Its family byte is `0x00`, so it is not part of the
 standard Unova Leader-family (`0x05`) count. That classification does **not**
 exclude Bianca from the Unova Leaders tournament: cup ID 5's constructor uses
-the source slice at indices `0–13`, which includes index 8. The published
+the source slice at indices `0–13`, which includes index 8. It can therefore
+select Bianca as one of the seven NPCs for a run. The published
 [Unova Leaders roster](https://www.serebii.net/black2white2/pwt/unova.shtml)
 also lists Bianca, so she is an actual selectable opponent in that cup—not a
 record that was merely displayed beside the roster. Because the constructor
 selects seven NPCs from the 14-record pool, Bianca may appear in a given
-bracket but is not guaranteed to appear every time. The same record may also be
-reused by another WBT mode; reuse does not make it ineligible for Unova
+bracket but is not guaranteed to appear every time. The same record may also
+be reused by another WBT mode; reuse does not make it ineligible for Unova
 Leaders.
 
 These categories are used by the game's matchup table, not by a conventional

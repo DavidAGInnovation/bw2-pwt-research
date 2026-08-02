@@ -68,13 +68,18 @@ player's eight-trainer field.
 | Johto Leaders | 7 | `0x02241B08` | byte2 `0x07`: 8 records | Mapped in this build |
 | Hoenn Leaders | 8 | `0x02241B08` | byte2 `0x08`: 9 records | Mapped in this build |
 | Sinnoh Leaders | 9 | `0x02241B08` | byte2 `0x09`: 8 records | Mapped in this build |
-| World Leaders | 2 | `0x02241C0C` | cross-region candidate pools plus the Unova wildcard | Dynamic; not one fixed count |
+| World Leaders | 10 | `0x02241AF0` | mixed leader families; seven cat.-3 selections | Mapped in this build |
 | Champions | 1 | `0x02241A88` | byte2 `0x01`: 7 records | Mapped in this build |
-| Super Rental / Rental Master | not assigned | one of remaining constructors | likely special/family-`0x00` data; exact ID not proven | Open |
-| Super Mix / Mix Master | not assigned | one of remaining constructors | likely special/family-`0x00` data; exact ID not proven | Open |
-| Type Expert | not assigned | one of remaining constructors | likely special/family-`0x00` data; exact ID not proven | Open |
+| Type Expert | 2 | `0x02241C0C` | dynamic leader/mob/weak-mob pools | Mapped in this build |
+| Rental | 12 | `0x02241B84` | 3 cat. 1 + 2 cat. 2 + 2 cat. 3 | Mapped in this build |
+| Mix | 14 | `0x02241BB0` | 3 cat. 1 + 2 cat. 2 + 2 cat. 3 | Mapped in this build |
+| Super Rental / Rental Master | 13 | `0x02241BDC` | seven cat.-3 selections | Mapped in this build |
+| Super Mix / Mix Master | 15 | `0x02241BF4` | seven cat.-3 selections | Mapped in this build |
+| Driftveil | 4 | `0x02241B20` | 4 cat. 1 + 1 cat. 2 + 2 cat. 3 | Mapped in this build |
+| Download | 3 | `0x02241998` | generic/download-style shuffle | Mapped in this build |
+| Reserved/special branch | 11 | `0x02241B4C` | 4 cat. 1 + 1 each cat. 3/4/5 | No ordinary menu label |
 
-The seven named mappings are based on the exact cup-ID dispatch, the matching
+The named mappings are based on the exact cup-ID dispatch, the matching
 family slices, and the published rosters.  The Champions slice agrees with the
 [Serebii Champions roster](https://www.serebii.net/black2white2/pwt/champion.shtml),
 and the regional cup names/rosters are listed in [Serebii's PWT overview](https://www.serebii.net/black2white2/worldtournament.shtml).
@@ -97,20 +102,25 @@ The internal request pattern should not be confused with source-record counts:
 |---|---|---|
 | `5–9` | `0x02241B08` | seven category-3 selections |
 | `1` | `0x02241A88` | all records whose packed flag is set, then up to seven are used |
-| `2` | `0x02241C0C` | dynamic leader/mob/weak-mob selection, totaling seven NPCs |
+| `2` | `0x02241C0C` | dynamic leader/mob/weak-mob selection, totaling seven NPCs (Type Expert) |
 | `4` (and default/0 after its error log) | `0x02241B20` | 4 cat. 1 + 1 cat. 2 + 2 cat. 3 |
 | `11` | `0x02241B4C` | 4 cat. 1 + 1 cat. 3 + 1 cat. 4 + 1 cat. 5 |
 | `12`, `14` | `0x02241B84`, `0x02241BB0` | 3 cat. 1 + 2 cat. 2 + 2 cat. 3 |
 | `10`, `13`, `15` | `0x02241AF0`, `0x02241BDC`, `0x02241BF4` | seven category-3 selections |
 | `3` | `0x02241998` | generic/download-style path |
 
+The ID-to-constructor rows above are decoded from the signed halfword switch
+at `0x02241D20–0x02241D3E` in overlay 135, not inferred from the menu order.
+The corrected special rows are ID 12 → `0x02241B84`, ID 14 → `0x02241BB0`,
+and ID 15 → `0x02241BF4`.
+
 The candidate pool size is fixed by the data table. RNG chooses among eligible
 records when a constructor requests fewer records than the eligible pool; it
 does not regenerate the number of source records on each entry.
 
-## World Leaders detail
+## Type Expert detail
 
-World Leaders is not “all 54 records with equal probability.” Its constructor
+Type Expert (ID 2) is not “all records with equal probability.” Its constructor
 first counts candidate records in the leader, mob, and weak-mob groups, then
 selects those groups and fills the remaining slots. The code checks:
 
@@ -119,34 +129,55 @@ selects those groups and fills the remaining slots. The code checks:
 ```
 
 The public [TournamentSearcher reverse-engineering project](https://github.com/namofure/TournamentSearcher)
-also treats World Leaders as a structured participant/shuffle problem, not as a
-simple downloadable `YY` histogram.
+also treats this dynamic path as a structured participant/shuffle problem, not
+as a simple downloadable `YY` histogram. World Leaders is ID 10 and uses its
+separate seven-category-3 constructor path.
+
+## Static menu-to-ID evidence
+
+The names are linked to numeric IDs without an emulator. In `/a/0/5/9`, member
+1277, the script initializes a list whose result is work variable `0x8023`
+(`0x05D6`), passes that variable to `EvCmdWBTSetWBTCup` (`CMD_3F3` at
+`0x02E7`), and then compares it in the description switch at
+`0x0B95–0x0DC0`. The description lines are from `/a/0/0/5`, member 668:
+
+| ID | Text line | Mode |
+|---:|---:|---|
+| 1 | `0x08` | Champions |
+| 2 | `0x07` | Type Expert |
+| 3 | `0x09` | Download |
+| 4 | `0x0A` | Driftveil |
+| 5–9 | `0x0B–0x0F` | Unova, Kanto, Johto, Hoenn, Sinnoh Leaders |
+| 10 | `0x10` | World Leaders |
+| 11 | `0x71` (`113`) | Reserved/current-tournament message; not an ordinary named cup |
+| 12 | `0x11` | Rental |
+| 13 | `0x13` | Rental Master |
+| 14 | `0x12` | Mix |
+| 15 | `0x14` | Mix Master |
+
+Text line 113 says “this Driftveil tournament” and is distinct from the
+ordinary Driftveil description at line 10, so ID 11 is retained as a
+special/reserved branch rather than guessed as a second Driftveil mode. ID 0
+is the null/error path.
+
+This also corrects the earlier tentative ID assignment: ID 2 is Type Expert,
+not World Leaders; ID 10 is World Leaders.
 
 ## Remaining uncertainty
 
 The mapping is for the archived development build identified in the companion
 page. Retail regional builds should be checked before assuming that the same
-unused/special cup IDs and family-`0x00` assignments apply everywhere. No
-original Nintendo source code was obtained; the evidence is disassembly plus
-the extracted table and public roster references.
+special ID 11 and family-`0x00` assignments apply everywhere. No original
+Nintendo source code was obtained; the evidence is disassembly, script/text
+tables, the extracted WBT table, and public roster references.
 
-## Built-in tournament-name text table
+## Static-only status
 
-The Japanese development build also contains the permanent tournament labels in
-NARC `/a/2/3/9`, member 11, entries 151–162: Champions, Driftveil, Unova,
-Kanto, Johto, Hoenn, Sinnoh, World Leaders, Rental, Rental Master, Mix, and
-Mix Master (in that order). This confirms the set of player-facing mode names
-and is separate from the downloadable `.pwt` `YY` field. It does not, by
-itself, establish the numeric constructor ID for the still-open modes; the
-text loader may translate the selected mode into a different dispatch value.
-
-For the same reason, the public retail symbol `LoadPWTTournamentTypeText`
-(`0x021C98F5` in the external symbol database) is recorded as corroborating
-evidence for the loader, not as proof that its retail address or mapping is
-identical to this development build.
-
-The script archive contains a concrete setter use for ID `4`: command `0x3F3`
-(`EvCmdWBTSetWBTCup`) is emitted with literal `4` in member `1278`. That is
-useful confirmation that ID 4 is exercised by a WBT script, but the member does
-not carry the player-facing cup name. It remains “likely Driftveil” only when
-combined with the menu's permanent-mode list, not a source-level name mapping.
+The constructor dispatch, source-table counts, Champion roster, slot shuffle,
+NPC winner routine, and ordinary menu-name-to-ID mapping can all be reproduced
+from the archived ROM files, disassembly, and NARC tables without an emulator.
+The only built-in dispatch value still without an ordinary player-facing name
+is the special ID 11 branch described above. Member 1277 is a menu/controller
+script; the standard command table is used correctly here (`0xAB`/`0xAC` are
+`PVPlay`/`PVWait`), while the menu result and setter are identified by their
+actual `ListMenuInitTL`/`CMD_3F3` commands.
