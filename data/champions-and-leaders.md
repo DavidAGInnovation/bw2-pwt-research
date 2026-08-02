@@ -14,26 +14,80 @@ The table below lists the standard Champion records recovered from the examined 
 
 The different raw values (including Red's `0x00F4` field and Cynthia's `0x0111` word 0) encode team/record metadata. After the standard conversion, the result routine sees the same priority/category/trainer-type combination for all seven.
 
-## Standard Gym Leader categories
+## Standard Gym Leader records
 
-The standard Leader records are priority 3. Representative category values from the same table are:
+The standard Gym Leader records are priority 3 and use trainer type 0. The
+`Category` column is the decoded type-chart category passed to the result
+routine; the label in parentheses is the corresponding Generation V type. It
+is a precomputed matchup field, not a simulation of the trainer's individual
+Pokémon teams. The WBT index is the record index in the examined development
+build's `/a/2/6/1` table, not the order in which a tournament displays the
+trainers.
 
-| Trainer | WBT index | Category |
-|---|---:|---:|
-| Cheren | 0 | 0 |
-| Roxie | 1 | 3 |
-| Burgh | 2 | 6 |
-| Elesa | 3 | 12 |
-| Clay | 4 | 4 |
-| Skyla | 5 | 2 |
-| Drayden | 6 | 15 |
-| Marlon | 7 | 10 |
-| Bianca | 8 | 17 |
-| Chili | 9 | 9 |
-| Cress | 10 | 10 |
-| Cilan | 11 | 11 |
-| Lenora | 12 | 0 |
-| Brycen | 13 | 14 |
+| Region | Trainer | WBT index | Priority | Trainer type | Category (type) |
+|---|---|---:|---:|---:|---:|
+| Unova | Cheren | 0 | 3 | 0 | 0 (Normal) |
+| Unova | Roxie | 1 | 3 | 0 | 3 (Poison) |
+| Unova | Burgh | 2 | 3 | 0 | 6 (Bug) |
+| Unova | Elesa | 3 | 3 | 0 | 12 (Electric) |
+| Unova | Clay | 4 | 3 | 0 | 4 (Ground) |
+| Unova | Skyla | 5 | 3 | 0 | 2 (Flying) |
+| Unova | Drayden | 6 | 3 | 0 | 15 (Dragon) |
+| Unova | Marlon | 7 | 3 | 0 | 10 (Water) |
+| Unova | Chili | 9 | 3 | 0 | 9 (Fire) |
+| Unova | Cress | 10 | 3 | 0 | 10 (Water) |
+| Unova | Cilan | 11 | 3 | 0 | 11 (Grass) |
+| Unova | Lenora | 12 | 3 | 0 | 0 (Normal) |
+| Unova | Brycen | 13 | 3 | 0 | 14 (Ice) |
+| Kanto | Brock | 20 | 3 | 0 | 5 (Rock) |
+| Kanto | Misty | 21 | 3 | 0 | 10 (Water) |
+| Kanto | Lt. Surge | 22 | 3 | 0 | 12 (Electric) |
+| Kanto | Erika | 23 | 3 | 0 | 11 (Grass) |
+| Kanto | Sabrina | 24 | 3 | 0 | 13 (Psychic) |
+| Kanto | Blaine | 25 | 3 | 0 | 9 (Fire) |
+| Kanto | Giovanni | 26 | 3 | 0 | 4 (Ground) |
+| Kanto | Janine | 35 | 3 | 0 | 3 (Poison) |
+| Johto | Falkner | 27 | 3 | 0 | 2 (Flying) |
+| Johto | Bugsy | 28 | 3 | 0 | 6 (Bug) |
+| Johto | Whitney | 29 | 3 | 0 | 0 (Normal) |
+| Johto | Morty | 30 | 3 | 0 | 7 (Ghost) |
+| Johto | Chuck | 31 | 3 | 0 | 1 (Fighting) |
+| Johto | Jasmine | 32 | 3 | 0 | 8 (Steel) |
+| Johto | Pryce | 33 | 3 | 0 | 14 (Ice) |
+| Johto | Clair | 34 | 3 | 0 | 15 (Dragon) |
+| Hoenn | Roxanne | 36 | 3 | 0 | 5 (Rock) |
+| Hoenn | Brawly | 37 | 3 | 0 | 1 (Fighting) |
+| Hoenn | Wattson | 38 | 3 | 0 | 12 (Electric) |
+| Hoenn | Flannery | 39 | 3 | 0 | 9 (Fire) |
+| Hoenn | Norman | 40 | 3 | 0 | 0 (Normal) |
+| Hoenn | Winona | 41 | 3 | 0 | 2 (Flying) |
+| Hoenn | Tate | 42 | 3 | 0 | 13 (Psychic) |
+| Hoenn | Liza | 43 | 3 | 0 | 13 (Psychic) |
+| Hoenn | Juan | 44 | 3 | 0 | 10 (Water) |
+| Sinnoh | Roark | 45 | 3 | 0 | 5 (Rock) |
+| Sinnoh | Gardenia | 46 | 3 | 0 | 11 (Grass) |
+| Sinnoh | Fantina | 47 | 3 | 0 | 7 (Ghost) |
+| Sinnoh | Maylene | 48 | 3 | 0 | 1 (Fighting) |
+| Sinnoh | Crasher Wake | 49 | 3 | 0 | 10 (Water) |
+| Sinnoh | Byron | 50 | 3 | 0 | 8 (Steel) |
+| Sinnoh | Candice | 51 | 3 | 0 | 14 (Ice) |
+| Sinnoh | Volkner | 52 | 3 | 0 | 12 (Electric) |
 
-These categories are used by the game's matchup table, not by a conventional six-Pokémon battle simulation.
+The leader rosters correspond to the in-game regional Leader tournaments:
+[Unova](https://www.serebii.net/black2white2/pwt/unova.shtml),
+[Kanto](https://www.serebii.net/black2white2/pwt/kanto.shtml),
+[Johto](https://www.serebii.net/black2white2/pwt/johto.shtml),
+[Hoenn](https://www.serebii.net/black2white2/pwt/hoenn.shtml), and
+[Sinnoh](https://www.serebii.net/black2white2/pwt/sinnoh.shtml). The Unova
+tournament has 13 participants; Iris is excluded, and the index-8 record is
+not one of these Leader records.
 
+### Excluded special record
+
+Index 8 is the Bianca record used by another WBT mode. It has previously been
+shown beside the Unova leaders because it sits among the low-numbered records,
+but it is not a Gym Leader record and should not be counted in the regional
+Leader rosters above.
+
+These categories are used by the game's matchup table, not by a conventional
+six-Pokémon battle simulation.
