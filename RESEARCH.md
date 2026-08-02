@@ -52,6 +52,26 @@ The asymmetry belongs to the A/B positions in the call. Swapping the two records
 
 All seven standard Champion entries decode to priority 4, category 17, trainer type 0. A Red-vs-Blue call therefore follows the equal-record path: if Red is A, Red is approximately 65%; if Red is B, Red is approximately 35%. The same applies to Red-vs-Lance and every other Champion pair. The bracket generator may decide whether the pair appears and in which round, but it does not change this winner routine.
 
+### Champion selection versus slot placement
+
+The built-in Champion cup has two separate steps:
+
+1. The cup-ID dispatch routes the Champion cup to `0x02241A88`. That path scans
+   the source table and copies records whose packed flag at record offset 6 is
+   set. In the examined build, exactly the seven standard Champion records are
+   flagged: Blue, Lance, Steven, Wallace, Cynthia, Alder, and Red. This path
+   does not use the category-selection RNG to choose a subset of Champions.
+2. The common match builder then creates eight participant pointers (the player
+   plus seven NPCs) and calls the shuffle routine at `0x02241DB8` with a count
+   of 8. The routine performs an RNG-based permutation; subsequent code records
+   the player's position and finalizes the match slots.
+
+Therefore, the Champion roster is fixed, but the participant positions and the
+player's scheduled path can change from run to run. The shuffle does not favor
+Red, Blue, or any other name. It only determines which name receives the A/left
+or B/right slot in an automatic NPC match; for equivalent Champions, that slot
+assignment is what produces the approximately 65/35 result.
+
 ### Champion versus standard Gym Leader
 
 Champions decode to priority 4; standard Gym Leaders decode to priority 3. Since the priorities differ, the routine selects the Champion immediately and skips the equal-priority upside check. Thus a standard Champion-vs-Leader simulation is Champion 100% in this routine (subject to any separate special-mode code not covered by this analysis).
