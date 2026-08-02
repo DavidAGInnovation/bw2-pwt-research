@@ -135,15 +135,56 @@ The permanent cups use a separate constructor dispatch from the downloadable
 build, record byte 2 identifies the source family: `0x05` is the primary Unova
 Leaders slice (13 records, plus one known wildcard at index 8),
 `0x06`/`0x07`/`0x08`/`0x09` are the Kanto/Johto/Hoenn/Sinnoh slices, and `0x01`
-is the seven-record Champions slice. The matching high-confidence cup IDs are
-5–9 for the five regional cups and 1 for Champions; cup 2 calls the dynamic
-World Leaders constructor.
+is the seven-record Champions slice. The static menu/script mapping resolves
+ID 1 for Champions, ID 2 for Type Expert, ID 3 for Download, ID 4 for
+Driftveil, IDs 5–9 for the five regional Leaders cups, ID 10 for World
+Leaders, IDs 12–15 for Rental/Mix and their Master variants, and leaves only
+ID 11 as the reserved/special branch without an ordinary menu label.
 
-The full dispatch, source-record indices, and still-unassigned special IDs are
+The full dispatch and source-record indices are
 documented in [`data/in-game-constructor-categories.md`](data/in-game-constructor-categories.md)
 and [`data/in-game-tournaments.md`](data/in-game-tournaments.md). These family
 bytes are not downloadable `YY` values, and the number of source records is
 not the same thing as the seven NPC slots selected for one run.
+
+The development build's Japanese text archive independently names the
+permanent modes. NARC `/a/2/3/9`, member 11, entries 151–162 decode in order to
+Champions, Driftveil, Unova, Kanto, Johto, Hoenn, Sinnoh, World Leaders, Rental,
+Rental Master, Mix, and Mix Master. The actual numeric linkage is recovered
+from the menu script: `/a/0/5/9`, member 1277, stores the list result in
+`0x8023`, passes it to `EvCmdWBTSetWBTCup` at member offset `0x02E7`, and
+dispatches description text by comparing the same value at offsets
+`0x0B95–0x0DC0`. The resulting mapping is:
+
+```text
+ID 1  Champions       ID 2  Type Expert       ID 3  Download
+ID 4  Driftveil       ID 5  Unova Leaders     ID 6  Kanto Leaders
+ID 7  Johto Leaders   ID 8  Hoenn Leaders     ID 9  Sinnoh Leaders
+ID 10 World Leaders   ID 11 reserved/special  ID 12 Rental
+ID 13 Rental Master   ID 14 Mix               ID 15 Mix Master
+```
+
+The text bank is NARC `/a/0/0/5`, member 668: lines 7–20 are the long
+descriptions and lines 23–36 are the short labels. ID 11 instead selects line
+113, a special message saying “this Driftveil tournament”; it has no ordinary
+menu label. ID 0 is the null/error path. This static script evidence corrects
+the earlier tentative assignment of ID 2 to World Leaders: ID 2 is Type Expert,
+while ID 10 is World Leaders. The external retail symbol
+`LoadPWTTournamentTypeText` at `0x021C98F5` is consistent with a separate text
+loader, but the retail address is not treated as a development-build code
+address.
+
+The script archive provides one additional static checkpoint: command `0x3F3`
+(`EvCmdWBTSetWBTCup`) appears with literal value `4` in member `1278` (two
+entry scripts). Member 1277 supplies the general menu result and name mapping
+described above. These results require no emulator or runtime trace.
+
+As a static-analysis correction, the overlay-135 switch table is a signed
+halfword table at `0x02241D20–0x02241D3E` with Thumb PC base `0x02241D22`.
+Evaluating the displacements routes ID 12 to `0x02241B84`, ID 14 to
+`0x02241BB0`, and ID 15 to `0x02241BF4`. These addresses are now reflected in
+the built-in-tournament tables; they are not inferred from the visible menu
+order.
 
 ## Reproducibility and limitations
 
