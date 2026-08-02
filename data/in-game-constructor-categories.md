@@ -46,10 +46,10 @@ categories.
 | 9 | `0x02241B08` | 0 | 0 | 7 | 0 | 0 | Seven cat.-3 selections |
 | 10 | `0x02241AF0` | 0 | 0 | 7 | 0 | 0 | Seven cat.-3 selections |
 | 11 | `0x02241B4C` | 4 | 0 | 1 | 1 | 1 | Four cat. 1, one each cat. 3/4/5 |
-| 12 | `0x02241BB0` | 3 | 2 | 2 | 0 | 0 | Three cat. 1, two cat. 2, two cat. 3 |
+| 12 | `0x02241B84` | 3 | 2 | 2 | 0 | 0 | Three cat. 1, two cat. 2, two cat. 3 |
 | 13 | `0x02241BDC` | 0 | 0 | 7 | 0 | 0 | Seven cat.-3 selections |
-| 14 | `0x02241BF4` | 0 | 0 | 7 | 0 | 0 | Seven cat.-3 selections |
-| 15 | `0x02241B84` | 3 | 2 | 2 | 0 | 0 | Three cat. 1, two cat. 2, two cat. 3 |
+| 14 | `0x02241BB0` | 3 | 2 | 2 | 0 | 0 | Three cat. 1, two cat. 2, two cat. 3 |
+| 15 | `0x02241BF4` | 0 | 0 | 7 | 0 | 0 | Seven cat.-3 selections |
 
 Cup ID 0 reaches the same constructor as cup 4 after logging the
 `WBTCUP_NULL!!` error path; it is not a separate named cup in this artifact.
@@ -89,6 +89,39 @@ table's family-`0x00` records (indices `8, 54–127`, 75 records) are
 special/other data. Index 8 is the known Unova-cup wildcard (Bianca); the
 remaining `54–127` records are special or download-related, but their
 player-facing names are not mapped here.
+
+### Built-in tournament-name text table
+
+The Japanese development build contains a contiguous tournament-name table in
+NARC `/a/2/3/9`, member 11. Entries 151–162 decode as follows:
+
+| Text entry | Japanese label | English gloss |
+|---:|---|---|
+| 151 | チャンピオン | Champions |
+| 152 | ホドモエ | Driftveil |
+| 153 | イッシュ | Unova |
+| 154 | カントー | Kanto |
+| 155 | ジョウト | Johto |
+| 156 | ホウエン | Hoenn |
+| 157 | シンオウ | Sinnoh |
+| 158 | ワールドリーダーズ | World Leaders |
+| 159 | レンタル | Rental |
+| 160 | レンタルマスター | Rental Master |
+| 161 | ミックス | Mix |
+| 162 | ミックスマスター | Mix Master |
+
+This confirms the player-facing permanent-mode names independently of the
+downloadable `.pwt` role bytes. The table does **not** by itself prove that
+text entry 151 is constructor ID 1, or that entries 159–162 correspond to any
+particular IDs 10–15: the menu/text loader can apply a translation or an offset
+before dispatch. Until a call site or runtime trace connects these text entries
+to the jump-table selector, those remaining name-to-ID assignments stay
+explicitly unresolved.
+
+The retail reverse-engineering symbol `LoadPWTTournamentTypeText` (listed at
+`0x021C98F5` in the public BW2 symbol database) supports the existence of such
+a loader, but that retail address is not assumed to be identical to the
+development-build layout used for the constructor disassembly.
 
 ## World Leaders special path
 
@@ -137,6 +170,16 @@ not read the trainer name or the family byte as a hidden win bonus.
   `ac4fb3e97b90831bd878f4e6ab0bed4ad355311ff90becba79ab79456f4e12da`.
 - NARC `/a/2/6/1` (resource 261) contains 128 records of 16 bytes each in that
   build; the family inventory above is based on raw byte 2.
+- The overlay-55 WBT cup setter begins at `0x02237724`, logs
+  `EvCmdWBTSetWBTCup <= %d.`, and stores the parsed 16-bit value in the WBT
+  work structure at offset `0x0C`. In the examined script streams the command
+  is followed by the next opcode after that one value. The archived public
+  PokeSDK YAML also describes command `0x3F3` as one `ushort`; the disassembly
+  is the authoritative source for the handler's actual write.
+- A static scan of the script NARC found command `0x3F3` with literal value `4`
+  in member `1278` (two entry scripts). This confirms a real script-side use of
+  cup ID 4, but the script archive does not label that value with a menu name;
+  it therefore does not by itself prove “Driftveil.”
 - No original Nintendo C/C++ source was obtained. These are disassembly
   addresses, not official source symbols.
 - Retail verification is still desirable before treating every address or

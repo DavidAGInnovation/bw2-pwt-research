@@ -145,6 +145,21 @@ and [`data/in-game-tournaments.md`](data/in-game-tournaments.md). These family
 bytes are not downloadable `YY` values, and the number of source records is
 not the same thing as the seven NPC slots selected for one run.
 
+The development build's Japanese text archive independently names the
+permanent modes. NARC `/a/2/3/9`, member 11, entries 151–162 decode in order to
+Champions, Driftveil, Unova, Kanto, Johto, Hoenn, Sinnoh, World Leaders, Rental,
+Rental Master, Mix, and Mix Master. This confirms the menu vocabulary but not
+the unresolved numeric ID assignments: the text loader may map a menu index to
+the constructor's 0–15 dispatch value. The external retail symbol
+`LoadPWTTournamentTypeText` at `0x021C98F5` is consistent with that separation,
+but the retail address is not treated as a development-build code address.
+
+The script archive provides one additional static checkpoint: command `0x3F3`
+(`EvCmdWBTSetWBTCup`) appears with literal value `4` in member `1278` (two
+entry scripts). This proves that ID 4 is used by a WBT script, but the script
+member has no menu label, so it is not enough to turn the “likely Driftveil”
+hypothesis into a confirmed name mapping.
+
 ## Reproducibility and limitations
 
 - The findings come from an archived development build; retail BW2 verification is still desirable.
