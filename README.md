@@ -4,12 +4,13 @@ This repository documents a reverse-engineering result for the Pokémon World To
 
 ## Short answer
 
-- The bracket and pairings are randomized separately from the winner calculation.
+- The bracket data assigns opponent roles separately from the winner calculation. `YY=04` and `YY=05` are the documented required-semifinalist and required-finalist opponent categories; they are not win bonuses.
 - In the normal NPC simulation path, trainer records are reduced to a small set of fields: a priority, a type-chart category, and a trainer-type flag.
 - Standard Champion records (Blue, Lance, Steven, Wallace, Cynthia, Alder, and Red) all decode to the same relevant values: priority 4, trainer type 0, and category 17. The result routine does not read the trainer name or ID.
 - Therefore, a Champion-vs-Champion tie is not 50/50 once the routine's slot asymmetry is included: if A and B are otherwise equal, A wins about 65% and B about 35%. “A” means the first/left slot, not a particular named Champion.
 - A priority-4 Champion beats a standard priority-3 Gym Leader before the tie/random branch, so the standard Champion-vs-Leader result is deterministic in favor of the Champion.
 - Leader-vs-Leader matches can be type-directed. If the two relevant values tie, the same A-slot adjustment applies; if B has the type advantage, the approximate result is A 30% / B 70%.
+- A `YY=04` or `YY=05` tag reserves a selected trainer for the player's semifinal or final encounter. It does not mean the trainer must first win an NPC-vs-NPC qualifying match. If several records share the same tag, the bracket selector chooses among them; if there is only one candidate, there is no same-tier choice.
 
 These percentages are for the observed normal NPC path and are approximate because the game uses integer arithmetic on its RNG output. They describe the encoded routine, not the strength of the teams in an actual battle.
 
@@ -24,6 +25,7 @@ The analysis was performed on an archived BW2 development build. It is not Ninte
 - Examined development-build main image SHA-256: `ac4fb3e97b90831bd878f4e6ab0bed4ad355311ff90becba79ab79456f4e12da`.
 
 See [`RESEARCH.md`](RESEARCH.md) for the routine and [`data/champions-and-leaders.md`](data/champions-and-leaders.md) for decoded records.
+See [`data/bracket-settings.md`](data/bracket-settings.md) for the bracket-setting fields and the selector trace.
 
 ## Important scope note
 
@@ -35,4 +37,3 @@ The public `namofure/TournamentSearcher` project is a fan-made RNG/trainer-ID se
 - [PWT RNG analysis (Japanese)](https://namofure.hatenablog.com/entry/2025/05/29/214716)
 - [TournamentSearcher](https://github.com/namofure/TournamentSearcher)
 - [Serebii Champion Tournament roster](https://www.serebii.net/black2white2/pwt/champion.shtml)
-
