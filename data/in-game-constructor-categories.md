@@ -65,7 +65,7 @@ record **byte 2**.  It is not the downloadable `.pwt` `YY` byte.
 |---|---:|---|---:|---|---|
 | Champions | 1 | `0x02241A88` | `0x01` | indices `14–19, 53` (7 records) | High: fixed Champion roster and flagged path |
 | World Leaders | 2 | `0x02241C0C` | leader families plus the Unova wildcard | Cross-region candidate set; not one contiguous slice | High: dynamic leader/mob/weak-mob path |
-| Unova/Teselia Leaders | 5 | `0x02241B08` | primarily `0x05` | indices `0–13` (14 records; index 8 is the known roster wildcard) | High: family roster/order and cup progression |
+| Unova/Teselia Leaders | 5 | `0x02241B08` | primarily `0x05` | indices `0–13` (14 possible NPCs: 13 standard Leaders + Bianca wildcard at index 8) | High: family roster/order and cup progression |
 | Kanto Leaders | 6 | `0x02241B08` | `0x06` | indices `20–26, 35` (8 records) | High: family roster/order |
 | Johto Leaders | 7 | `0x02241B08` | `0x07` | indices `27–34` (8 records) | High: family roster/order |
 | Hoenn Leaders | 8 | `0x02241B08` | `0x08` | indices `36–44` (9 records) | High: family roster/order |

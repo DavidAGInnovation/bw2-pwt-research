@@ -82,21 +82,28 @@ trainers.
 | Sinnoh | Candice | 51 | 3 | 0 | 14 (Ice) |
 | Sinnoh | Volkner | 52 | 3 | 0 | 12 (Electric) |
 
-The leader rosters correspond to the in-game regional Leader tournaments:
+The standard Leader rows above correspond to the in-game regional Leader
+tournaments:
 [Unova](https://www.serebii.net/black2white2/pwt/unova.shtml),
 [Kanto](https://www.serebii.net/black2white2/pwt/kanto.shtml),
 [Johto](https://www.serebii.net/black2white2/pwt/johto.shtml),
 [Hoenn](https://www.serebii.net/black2white2/pwt/hoenn.shtml), and
 [Sinnoh](https://www.serebii.net/black2white2/pwt/sinnoh.shtml). The Unova
-tournament has 13 participants; Iris is excluded, and the index-8 record is
-not one of these Leader records.
+pool has 14 possible NPC trainers: 13 standard Gym Leaders plus Bianca as a
+special wildcard; Iris is excluded. The table above intentionally lists only
+the 13 standard Leader records.
 
-### Excluded special record
+### Bianca wildcard record
 
-Index 8 is the Bianca record used by another WBT mode. It has previously been
-shown beside the Unova leaders because it sits among the low-numbered records,
-but it is not a Gym Leader record and should not be counted in the regional
-Leader rosters above.
+Index 8 is Bianca's record. Its family byte is `0x00`, so it is not part of the
+standard Unova Leader-family (`0x05`) count. That classification does **not**
+exclude Bianca from the Unova Leaders tournament: cup ID 5's constructor uses
+the source slice at indices `0–13`, which includes index 8. It can therefore
+select Bianca as one of the seven NPCs for a run, consistent with the published
+Unova Leaders roster. Because the constructor selects seven NPCs from the
+14-record pool, Bianca may appear in a given bracket but is not guaranteed to
+appear every time. The same record may also be reused by another WBT mode;
+reuse does not make it ineligible for Unova Leaders.
 
 These categories are used by the game's matchup table, not by a conventional
 six-Pokémon battle simulation.
