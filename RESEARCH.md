@@ -31,6 +31,22 @@ else:
 
 The `rng_roll_times_10()` operation is implemented with the game's 64-bit RNG and integer multiply/divide sequence. The threshold is seven out of ten in the resulting quotient, hence “about 30%,” not a floating-point probability guaranteed to be exactly 30.000%.
 
+### Category `17` (`0x11`) is a neutral sentinel
+
+The type-chart helper at `0x02238554` checks for category `0x11` before it
+indexes the ordinary matchup table. Its behavior is equivalent to:
+
+```text
+if categoryA == 0x11 or categoryB == 0x11:
+    return 2       # neutral comparison score
+```
+
+Thus `chart(17, x)` and `chart(x, 17)` both return the same neutral score for
+any category `x`. Category `17` is therefore a special neutral/sentinel value;
+it is not a normal Pokémon type and is unrelated to downloadable bracket
+`YY` values. Since all seven standard Champions use category `17`, Champion
+pairs have no type-chart advantage and proceed to the equal-record tie path.
+
 ## What “flip B to A” means
 
 Suppose the initial comparison has selected B. The routine performs a second check. When that check reaches the threshold, it stores A instead of B. It does not replay a Pokémon battle and does not change the bracket; it only changes the simulated winner flag returned by this routine. If A was already selected, this particular adjustment does nothing.

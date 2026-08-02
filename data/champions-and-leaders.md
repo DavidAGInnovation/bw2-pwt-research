@@ -14,6 +14,15 @@ The table below lists the standard Champion records recovered from the examined 
 
 The different raw values (including Red's `0x00F4` field and Cynthia's `0x0111` word 0) encode team/record metadata. After the standard conversion, the result routine sees the same priority/category/trainer-type combination for all seven.
 
+### Meaning of Champion category `17`
+
+Category `17` (`0x11`) is the neutral/sentinel value recognized by the
+type-chart helper at `0x02238554`. If either input category is `17`, the helper
+returns the neutral comparison score `2` instead of reading an ordinary type
+matchup. Consequently, two standard Champions tie at the category-comparison
+stage; their later result is determined by the equal-record RNG and A/B-slot
+adjustment. This value is not a bracket `YY` setting.
+
 ## Standard Gym Leader records
 
 The standard Gym Leader records are priority 3 and use trainer type 0. The
