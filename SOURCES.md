@@ -16,10 +16,13 @@
 - [namofure/TournamentSearcher](https://github.com/namofure/TournamentSearcher) (fan-made search tool, not official Nintendo source)
 - [Serebii: Champion Tournament](https://www.serebii.net/black2white2/pwt/champion.shtml)
 - [Serebii: Pokémon World Tournament overview](https://www.serebii.net/black2white2/worldtournament.shtml)
+- [Serebii: Unova Leaders Tournament](https://www.serebii.net/black2white2/pwt/unova.shtml) (includes Bianca in the selectable roster)
 - [Serebii: Kanto Leaders Tournament](https://www.serebii.net/black2white2/pwt/kanto.shtml)
 - [WikiDex: Pokémon World Tournament](https://www.wikidex.net/wiki/Pok%C3%A9mon_World_Tournament) (family names and unlock-condition reference; attribution retained in `data/in-game-tournaments.md`)
 - [WikiDex: Copyrights](https://www.wikidex.net/wiki/WikiDex%3ACopyrights) (CC BY-SA attribution/share-alike terms for text contributions)
 - [Bulbapedia: Champions Tournament](https://bulbapedia.bulbagarden.net/wiki/Champions_Tournament) (built-in Champions roster reference)
+- [Tdavide04/pokemon-bw2-reverse-engineering](https://github.com/Tdavide04/pokemon-bw2-reverse-engineering) (public retail symbol database; `LoadPWTTournamentTypeText` is listed at `0x021C98F5`)
+- [kwsch/PKHeX: PWTRecordID](https://github.com/kwsch/PKHeX/blob/master/PKHeX.Core/Saves/Substructures/Gen5/PWTRecordID.cs) (save-record labels; useful cross-check, but not assumed to be the constructor's 0–15 dispatch enum)
 
 ## Scope warning
 

@@ -51,7 +51,7 @@ NARC `/a/2/6/1` (resource 261) in the examined build contains 128 records of
 | `0x07` | `27–34` | 8 | Johto Leaders |
 | `0x08` | `36–44` | 9 | Hoenn Leaders |
 | `0x09` | `45–52` | 8 | Sinnoh Leaders |
-| `0x00` | `8, 54–127` | 75 | Special/other records; index 8 is Bianca, a wildcard included by the Unova Leaders constructor |
+| `0x00` | `8, 54–127` | 75 | Special/other records; index 8 is Bianca, a wildcard included by the Unova Leaders constructor (and listed on the [Unova roster](https://www.serebii.net/black2white2/pwt/unova.shtml)) |
 
 This byte is a built-in source-table family selector. It is **not** a claim
 that the record is a downloadable `YY=00`–`05` bracket record. The table counts
@@ -100,8 +100,8 @@ The internal request pattern should not be confused with source-record counts:
 | `2` | `0x02241C0C` | dynamic leader/mob/weak-mob selection, totaling seven NPCs |
 | `4` (and default/0 after its error log) | `0x02241B20` | 4 cat. 1 + 1 cat. 2 + 2 cat. 3 |
 | `11` | `0x02241B4C` | 4 cat. 1 + 1 cat. 3 + 1 cat. 4 + 1 cat. 5 |
-| `12`, `15` | `0x02241BB0`, `0x02241B84` | 3 cat. 1 + 2 cat. 2 + 2 cat. 3 |
-| `10`, `13`, `14` | `0x02241AF0`, `0x02241BDC`, `0x02241BF4` | seven category-3 selections |
+| `12`, `14` | `0x02241B84`, `0x02241BB0` | 3 cat. 1 + 2 cat. 2 + 2 cat. 3 |
+| `10`, `13`, `15` | `0x02241AF0`, `0x02241BDC`, `0x02241BF4` | seven category-3 selections |
 | `3` | `0x02241998` | generic/download-style path |
 
 The candidate pool size is fixed by the data table. RNG chooses among eligible
@@ -129,3 +129,24 @@ page. Retail regional builds should be checked before assuming that the same
 unused/special cup IDs and family-`0x00` assignments apply everywhere. No
 original Nintendo source code was obtained; the evidence is disassembly plus
 the extracted table and public roster references.
+
+## Built-in tournament-name text table
+
+The Japanese development build also contains the permanent tournament labels in
+NARC `/a/2/3/9`, member 11, entries 151–162: Champions, Driftveil, Unova,
+Kanto, Johto, Hoenn, Sinnoh, World Leaders, Rental, Rental Master, Mix, and
+Mix Master (in that order). This confirms the set of player-facing mode names
+and is separate from the downloadable `.pwt` `YY` field. It does not, by
+itself, establish the numeric constructor ID for the still-open modes; the
+text loader may translate the selected mode into a different dispatch value.
+
+For the same reason, the public retail symbol `LoadPWTTournamentTypeText`
+(`0x021C98F5` in the external symbol database) is recorded as corroborating
+evidence for the loader, not as proof that its retail address or mapping is
+identical to this development build.
+
+The script archive contains a concrete setter use for ID `4`: command `0x3F3`
+(`EvCmdWBTSetWBTCup`) is emitted with literal `4` in member `1278`. That is
+useful confirmation that ID 4 is exercised by a WBT script, but the member does
+not carry the player-facing cup name. It remains “likely Driftveil” only when
+combined with the menu's permanent-mode list, not a source-level name mapping.
