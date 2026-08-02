@@ -82,22 +82,52 @@ Both records normally have priority 3, so the type-chart fields matter. For exam
 
 ## Bracket settings are a separate selection process
 
-The seven opponent records in a player-facing PWT tournament carry bracket-setting bytes (`YY`). The public PWT format notes describe `YY=04` as a required semifinalist battle and `YY=05` as a required finalist battle. The development-build selector in overlay 135 (`wbt_makematch.c`) makes category/count selection calls including one record from category 5, one from category 4, one from category 3, and four from category 1 for a seven-opponent construction path (the call sequence begins around `0x02241B4C`; candidate selection is around `0x02241704`).
+The public downloadable PWT format notes describe `YY=04` as a semifinalist
+tier and `YY=05` as a finalist tier. The development-build selector in overlay
+135 (`wbt_makematch.c`) makes internal category/count selection calls including
+one record from category 5, one from category 4, one from category 3, and four
+from category 1 for one seven-opponent construction path (the call sequence
+begins around `0x02241B4C`; candidate selection is around `0x02241704`). This
+is a constructor request, not proof that the built-in cups store literal
+downloadable-style `YY` bytes. See `data/in-game-tournaments.md` for the
+built-in scope and `data/yy-counts.md` for the separate downloadable appendix.
 
 This establishes the important distinction:
 
 ```text
-YY=05: choose/reserve an opponent for the player's final encounter
-YY=04: choose/reserve an opponent for the player's semifinal encounter
-YY=03: flexible/whenever opponent
-YY=01: filler opponent
+Download `YY=05`: finalist-tier candidate for the player's final path
+Download `YY=04`: semifinal-tier candidate for the player's semifinal path
+Download `YY=03`: flexible/whenever opponent
+Download `YY=01`: filler opponent
 ```
 
-If several entries share a category, the selector uses RNG to choose among them. If only Red has `YY=05`, there is no Red-versus-Steven qualifying match whose 65/35 result decides whether Red becomes the finalist; Red is the selected final-category opponent. The player's battle against Red is a player battle, so `wbt_calc_result` is not used for that encounter.
+For downloadable files, if several entries share a tier, the selector uses RNG
+to choose among them. If only Red has `YY=05`, there is no Red-versus-Steven
+qualifying match whose 65/35 result decides whether Red becomes the finalist;
+Red is the selected final-category opponent. The player's battle against Red
+is a player battle, so `wbt_calc_result` is not used for that encounter.
 
 The earlier illustrative full-bracket diagram that put Cynthia versus Lance or Red versus Steven before the player's later round was therefore not a faithful model of the required `YY=04/05` schedule. It is possible for the game to simulate other all-NPC matches elsewhere, but the bracket tag itself does not invoke or modify the NPC winner routine.
 
 This bracket selection affects who the player meets and in which round. It does not give a trainer an intrinsic win advantage in an all-NPC match. When two NPC records are actually passed to `wbt_calc_result`, the priority/type/A-slot rules documented above apply independently.
+
+## Built-in cup constructor mapping
+
+The permanent cups use a separate constructor dispatch from the downloadable
+`.pwt` role bytes. Overlay 135 reads the cup ID at `0x02241D02`, dispatches IDs
+`0..15`, and uses the internal WBT table at NARC `/a/2/6/1`. In the examined
+build, record byte 2 identifies the source family: `0x05` is the primary Unova
+Leaders slice (13 records, plus one known wildcard at index 8),
+`0x06`/`0x07`/`0x08`/`0x09` are the Kanto/Johto/Hoenn/Sinnoh slices, and `0x01`
+is the seven-record Champions slice. The matching high-confidence cup IDs are
+5–9 for the five regional cups and 1 for Champions; cup 2 calls the dynamic
+World Leaders constructor.
+
+The full dispatch, source-record indices, and still-unassigned special IDs are
+documented in [`data/in-game-constructor-categories.md`](data/in-game-constructor-categories.md)
+and [`data/in-game-tournaments.md`](data/in-game-tournaments.md). These family
+bytes are not downloadable `YY` values, and the number of source records is
+not the same thing as the seven NPC slots selected for one run.
 
 ## Reproducibility and limitations
 
