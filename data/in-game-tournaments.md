@@ -51,7 +51,7 @@ NARC `/a/2/6/1` (resource 261) in the examined build contains 128 records of
 | `0x07` | `27–34` | 8 | Johto Leaders |
 | `0x08` | `36–44` | 9 | Hoenn Leaders |
 | `0x09` | `45–52` | 8 | Sinnoh Leaders |
-| `0x00` | `8, 54–127` | 75 | Special/other records; index 8 is the Unova-cup wildcard (Bianca) |
+| `0x00` | `8, 54–127` | 75 | Special/other records; index 8 is Bianca, a wildcard included by the Unova Leaders constructor |
 
 This byte is a built-in source-table family selector. It is **not** a claim
 that the record is a downloadable `YY=00`–`05` bracket record. The table counts
