@@ -4,13 +4,13 @@ This repository documents a reverse-engineering result for the Pokémon World To
 
 ## Short answer
 
-- The bracket data assigns opponent roles separately from the winner calculation. `YY=04` and `YY=05` are the documented required-semifinalist and required-finalist opponent categories; they are not win bonuses.
+- Downloadable `.pwt` bracket data assigns opponent roles separately from the winner calculation. `YY=04` and `YY=05` are the documented required-semifinalist and required-finalist categories for those files; they are not win bonuses. Built-in cups use internal constructor/category data, and the public evidence does not prove a literal `YY` histogram for them.
 - In the normal NPC simulation path, trainer records are reduced to a small set of fields: a priority, a type-chart category, and a trainer-type flag.
 - Standard Champion records (Blue, Lance, Steven, Wallace, Cynthia, Alder, and Red) all decode to the same relevant values: priority 4, trainer type 0, and category 17. The result routine does not read the trainer name or ID.
 - Therefore, a Champion-vs-Champion tie is not 50/50 once the routine's slot asymmetry is included: if A and B are otherwise equal, A wins about 65% and B about 35%. “A” means the first/left slot, not a particular named Champion.
 - A priority-4 Champion beats a standard priority-3 Gym Leader before the tie/random branch, so the standard Champion-vs-Leader result is deterministic in favor of the Champion.
 - Leader-vs-Leader matches can be type-directed. If the two relevant values tie, the same A-slot adjustment applies; if B has the type advantage, the approximate result is A 30% / B 70%.
-- A `YY=04` or `YY=05` tag reserves a selected trainer for the player's semifinal or final encounter. It does not mean the trainer must first win an NPC-vs-NPC qualifying match. If several records share the same tag, the bracket selector chooses among them; if there is only one candidate, there is no same-tier choice.
+- A downloadable `YY=04` or `YY=05` tag is a placement/candidate tier for the player's semifinal or final path; it is not a win bonus. If several records share a tier, the selector can choose among them. Built-in constructor categories must not be relabeled as `YY` without a demonstrated data mapping.
 
 These percentages are for the observed normal NPC path and are approximate because the game uses integer arithmetic on its RNG output. They describe the encoded routine, not the strength of the teams in an actual battle.
 
@@ -26,6 +26,9 @@ The analysis was performed on an archived BW2 development build. It is not Ninte
 
 See [`RESEARCH.md`](RESEARCH.md) for the routine and [`data/champions-and-leaders.md`](data/champions-and-leaders.md) for decoded records.
 See [`data/bracket-settings.md`](data/bracket-settings.md) for the bracket-setting fields and the selector trace.
+See [`data/in-game-tournaments.md`](data/in-game-tournaments.md) for the ten built-in tournament families, source-table family counts, and cup-ID mappings established for the examined development build.
+See [`data/in-game-constructor-categories.md`](data/in-game-constructor-categories.md) for the constructor dispatch, internal category pools, and confirmed slot-request patterns.
+See [`data/yy-counts.md`](data/yy-counts.md) only for the separate downloadable `.pwt` appendix; it is not a count for the built-in tournaments.
 
 ## Important scope note
 
@@ -37,3 +40,5 @@ The public `namofure/TournamentSearcher` project is a fan-made RNG/trainer-ID se
 - [PWT RNG analysis (Japanese)](https://namofure.hatenablog.com/entry/2025/05/29/214716)
 - [TournamentSearcher](https://github.com/namofure/TournamentSearcher)
 - [Serebii Champion Tournament roster](https://www.serebii.net/black2white2/pwt/champion.shtml)
+- [WikiDex: Pokémon World Tournament](https://www.wikidex.net/wiki/Pok%C3%A9mon_World_Tournament) (built-in family names and unlock conditions; attribution retained in `data/in-game-tournaments.md`)
+- [Bulbapedia: Pokémon World Tournament](https://bulbapedia.bulbagarden.net/wiki/PWT) (cross-check for permanent tournament groups)

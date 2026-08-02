@@ -1,6 +1,14 @@
 # PWT bracket settings (`YY`)
 
-Each of the seven opponent records in a player-facing tournament has a four-byte bracket record. The second byte is the bracket-setting field discussed in the Project Pokémon reverse-engineering notes.
+> Scope note: the public byte-level `YY` documentation is for downloadable
+> `.pwt` files. Built-in cups use separate internal constructor/category data;
+> the literal raw-byte equivalence has not been proved. See
+> [`in-game-tournaments.md`](in-game-tournaments.md).
+
+Each downloadable `.pwt` file has seven opponent records with a four-byte
+bracket record. The second byte is the bracket-setting field discussed in the
+Project Pokémon reverse-engineering notes. Do not silently transfer that file
+format to built-in cups.
 
 | `YY` | Documented role | Practical meaning |
 |---:|---|---|
@@ -13,7 +21,7 @@ Each of the seven opponent records in a player-facing tournament has a four-byte
 
 ## What the selector does
 
-The development-build `wbt_makematch.c` code selects seven opponents plus the player. One observed selection path calls the candidate selector with categories/counts equivalent to:
+The development-build `wbt_makematch.c` code selects seven opponents plus the player. One observed downloadable-style selection path calls the candidate selector with internal categories/counts equivalent to:
 
 ```text
 category 5: 1 record   # required finalist
@@ -26,7 +34,7 @@ The relevant selector call sequence is in overlay 135 around `0x02241B4C`, with 
 
 ### Same-tier selection
 
-If two or more records share `YY=04`, the game chooses which one fills the semifinal category using RNG. If two or more share `YY=05`, it chooses which one fills the finalist category using RNG. If only Red has `YY=05`, Red is selected without a same-tier name choice.
+If two or more downloadable records share `YY=04`, the game chooses among those semifinal-tier candidates using RNG. If two or more share `YY=05`, it chooses among those finalist-tier candidates using RNG. If only Red has `YY=05`, Red is selected without a same-tier name choice. The count of records carrying each tier is fixed by the file; built-in per-family histograms are documented separately in [`in-game-tournaments.md`](in-game-tournaments.md).
 
 ### No hidden victory roll
 
@@ -41,5 +49,4 @@ The bracket settings answer “which opponent is scheduled for which player roun
 - Project Pokémon notes label the fields “Required Finalist” and “Required Semifinalist” and state that same-setting entries are selected randomly.
 - The archived development build contains the selector trace and debug format `SELECT TRAINER(...):pri(... )btl(... )candidate(...)` in overlay 135.
 - No original Nintendo source code is available; these are disassembly/data findings from an archived development build.
-- Exact `YY` assignments can vary by tournament file. The category semantics above describe the selector, not a guarantee that every retail tournament uses every category.
-
+- Exact `YY` assignments can vary by downloadable tournament file. The category semantics above describe that file selector, not a guarantee that every retail or built-in tournament uses every category.
