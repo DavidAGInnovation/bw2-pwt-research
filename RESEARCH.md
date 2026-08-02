@@ -60,9 +60,24 @@ Champions decode to priority 4; standard Gym Leaders decode to priority 3. Since
 
 Both records normally have priority 3, so the type-chart fields matter. For example, Elesa's category is Electric (12) and Clay's is Ground (4). If A=Elesa and B=Clay, the chart favors B; B remains the winner about 70% and the A-slot adjustment produces Elesa about 30%. If A=Clay and B=Elesa, Clay has the advantage and remains A, so Clay is 100% in this routine.
 
-## Brackets are a separate RNG process
+## Bracket settings are a separate selection process
 
-Tournament construction uses RNG and bracket-placement tiers. Same-tier candidates can be selected randomly, while records marked as semifinalist/finalist are constrained to later positions. This answers “will Red and Blue meet, and when?” It does not override the result routine above.
+The seven opponent records in a player-facing PWT tournament carry bracket-setting bytes (`YY`). The public PWT format notes describe `YY=04` as a required semifinalist battle and `YY=05` as a required finalist battle. The development-build selector in overlay 135 (`wbt_makematch.c`) makes category/count selection calls including one record from category 5, one from category 4, one from category 3, and four from category 1 for a seven-opponent construction path (the call sequence begins around `0x02241B4C`; candidate selection is around `0x02241704`).
+
+This establishes the important distinction:
+
+```text
+YY=05: choose/reserve an opponent for the player's final encounter
+YY=04: choose/reserve an opponent for the player's semifinal encounter
+YY=03: flexible/whenever opponent
+YY=01: filler opponent
+```
+
+If several entries share a category, the selector uses RNG to choose among them. If only Red has `YY=05`, there is no Red-versus-Steven qualifying match whose 65/35 result decides whether Red becomes the finalist; Red is the selected final-category opponent. The player's battle against Red is a player battle, so `wbt_calc_result` is not used for that encounter.
+
+The earlier illustrative full-bracket diagram that put Cynthia versus Lance or Red versus Steven before the player's later round was therefore not a faithful model of the required `YY=04/05` schedule. It is possible for the game to simulate other all-NPC matches elsewhere, but the bracket tag itself does not invoke or modify the NPC winner routine.
+
+This bracket selection affects who the player meets and in which round. It does not give a trainer an intrinsic win advantage in an all-NPC match. When two NPC records are actually passed to `wbt_calc_result`, the priority/type/A-slot rules documented above apply independently.
 
 ## Reproducibility and limitations
 
@@ -70,4 +85,3 @@ Tournament construction uses RNG and bracket-placement tiers. Same-tier candidat
 - No original Nintendo C/C++ source was obtained. The addresses above are disassembly locations.
 - No ROM, overlay, or copyrighted game asset is redistributed here.
 - Exact raw record names and IDs are not inputs to the result calculation; only the packed fields described above are read.
-
