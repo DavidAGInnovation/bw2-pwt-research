@@ -154,11 +154,13 @@ The public downloadable PWT format notes describe `YY=04` as a semifinalist
 tier and `YY=05` as a finalist tier. The development-build selector in overlay
 135 (`wbt_makematch.c`) makes internal category/count selection calls including
 one record from category 5, one from category 4, one from category 3, and four
-from category 1 for one seven-opponent construction path (the call sequence
-begins around `0x02241B4C`; candidate selection is around `0x02241704`). This
-is a constructor request, not proof that the built-in cups store literal
-downloadable-style `YY` bytes. See `data/in-game-tournaments.md` for the
-built-in scope and `data/yy-counts.md` for the separate downloadable appendix.
+from category 1 in the built-in Driftveil event constructor
+(`entryHodomoeEventTournament`, beginning around `0x02241B4C`; candidate
+selection is around `0x02241704`). These internal priorities are reused by the
+common bracket sorter, but this is not a downloadable constructor and is not
+proof that built-in cups store literal downloadable-style `YY` bytes. See
+`data/in-game-tournaments.md` for the built-in scope and `data/yy-counts.md` for
+the separate downloadable appendix.
 
 This establishes the important distinction:
 
@@ -180,8 +182,7 @@ The permanent cups use a separate constructor dispatch from the downloadable
 `.pwt` role bytes. Overlay 135 reads the cup ID at `0x02241D02`, dispatches IDs
 `0..15`, and uses the internal WBT table at NARC `/a/2/6/1`. In the examined
 build, the byte at zero-based record offset 6 identifies the source family:
-`0x05` is the primary Unova Leaders slice (13 records, plus one known wildcard
-at index 8),
+`0x05` is the primary Unova Leaders slice (13 records),
 `0x06`/`0x07`/`0x08`/`0x09` are the Kanto/Johto/Hoenn/Sinnoh slices, and `0x01`
 is the seven-record Champions slice. The static menu/script mapping resolves
 ID 1 for Champions, ID 2 for Type Expert, ID 3 for Download, ID 4 for

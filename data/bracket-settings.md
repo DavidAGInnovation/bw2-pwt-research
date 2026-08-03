@@ -53,7 +53,7 @@ behind them is the numeric `pri` value above—not a separate `YY=00` category.
 
 ## What the selector does
 
-The development-build `wbt_makematch.c` code selects seven opponents plus the player. One observed downloadable-style selection path calls the candidate selector with internal categories/counts equivalent to:
+The development-build `wbt_makematch.c` code selects seven opponents plus the player. The built-in Driftveil event constructor (`entryHodomoeEventTournament`, at `0x02241B4C`) calls the candidate selector with internal categories/counts equivalent to:
 
 ```text
 category 5: 1 record   # required finalist

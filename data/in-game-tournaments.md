@@ -52,19 +52,19 @@ NARC `/a/2/6/1` (resource 261) in the examined build contains 128 records of
 | `0x07` | `27–34` | 8 | Johto Leaders |
 | `0x08` | `36–44` | 9 | Hoenn Leaders |
 | `0x09` | `45–52` | 8 | Sinnoh Leaders |
-| `0x00` | `8, 54–127` | 75 | Special/other records; index 8 is Bianca, a wildcard included by the Unova Leaders constructor (and listed on the [Unova roster](https://www.serebii.net/black2white2/pwt/unova.shtml)) |
+| `0x00` | `8, 54–127` | 75 | Special/other records; index 8 is Bianca, excluded from the Unova Leaders family predicate |
 
 This byte is a built-in source-table family selector. It is **not** a claim
 that the record is a downloadable `YY=00`–`05` bracket record. The table counts
-source records; a cup can also include a named wildcard from another family
-code (Unova includes index 8). Each normal run still selects seven NPCs for the
+source records; other modes can reuse records from this special/other group
+through their own entry flags. Each normal run still selects seven NPCs for the
 player's eight-trainer field.
 
 ## Per-family mapping
 
 | Built-in family | Cup ID | Constructor | Source family/count | Status |
 |---|---:|---|---|---|
-| Unova/Teselia Leaders | 5 | `0x02241B08` | indices `0–13`: 14 records (13 offset-6 `0x05` + wildcard index 8) | Mapped in this build |
+| Unova/Teselia Leaders | 5 | `0x02241B08` | indices `0–7, 9–13`: 13 records with offset-6 `0x05` | Mapped in this build |
 | Kanto Leaders | 6 | `0x02241B08` | offset-6 `0x06`: 8 records | Mapped in this build |
 | Johto Leaders | 7 | `0x02241B08` | offset-6 `0x07`: 8 records | Mapped in this build |
 | Hoenn Leaders | 8 | `0x02241B08` | offset-6 `0x08`: 9 records | Mapped in this build |
@@ -87,8 +87,8 @@ and the regional cup names/rosters are listed in [Serebii's PWT overview](https:
 
 ## Champion placement
 
-The Champion constructor fixes the participant set: the seven flagged records
-are all used in the examined build. After that selection, the common match
+The Champion constructor fixes the participant set: the seven records whose
+offset-6 family selector equals `0x01` are all used in the examined build. After that selection, the common match
 builder shuffles eight participant pointers (the player plus seven NPCs) with
 RNG at `0x02241DB8` and finalizes the player's position. Thus Champion names
 can occupy different bracket slots on different runs even though the Champion
@@ -246,10 +246,10 @@ the downloadable `.pwt` `YY` fields.
 | 14 | `WBTCUP_MIX` | Ordinary Driftveil win count is nonzero |
 | 15 | `WBTCUP_MIXMASTER` | Mix win count is nonzero and all regions are cleared |
 
-The lobby source `wbt_lobby.ev` requests ID 11 first, then ID 4. This explains
-why Bianca's selectable Unova roster entry and the special Driftveil event are
-not excluded: roster membership and cup availability are separate source
-decisions.
+The lobby source `wbt_lobby.ev` requests ID 11 first, then ID 4. This keeps
+the special Driftveil event's availability separate from regional roster
+membership: Bianca's family-`0x00` record is not admitted by the cup-5 regional
+predicate, even though the same record can be reused by other modes.
 
 ## Remaining uncertainty
 

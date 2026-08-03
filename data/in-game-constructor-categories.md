@@ -23,7 +23,7 @@ The relevant overlay-135 routines are:
 | `0x02241630` | Counts candidates matching a requested internal pool. |
 | `0x02241704` | Selects a requested number of candidates using RNG. |
 | `0x022415E0` | Finalizes the selected seven NPC records. |
-| `0x02241A88` | Fixed/flagged path; selects records whose selector byte at offset `6` equals `0x01`. |
+| `0x02241A88` | Fixed Champion path; selects records whose family selector at offset `6` equals `0x01`. |
 | `0x02241C0C` | Dynamic leader/mob/weak-mob path used by Type Expert. |
 
 ## Cup-ID dispatch
@@ -37,7 +37,7 @@ internal selector categories.
 | Cup ID | Constructor | Cat. 1 | Cat. 2 | Cat. 3 | Cat. 4 | Cat. 5 | Code-level description |
 |---:|---|---:|---:|---:|---:|---:|---|
 | 0 | default/error path, then `0x02241B20` | 4 | 1 | 2 | 0 | 0 | Four cat. 1, one cat. 2, two cat. 3 |
-| 1 | `0x02241A88` | flagged | — | — | — | — | Select packed-flagged records |
+| 1 | `0x02241A88` | selector `0x01` | — | — | — | — | Select records whose family selector equals `0x01` |
 | 2 | `0x02241C0C` | dynamic | dynamic | dynamic | — | — | Leader/mob/weak-mob pools |
 | 3 | `0x02241998` | — | — | — | — | — | Generic/download-style shuffle path |
 | 4 | `0x02241B20` | 4 | 1 | 2 | 0 | 0 | Four cat. 1, one cat. 2, two cat. 3 |
@@ -75,7 +75,7 @@ byte.
 | Type Expert | 2 | `0x02241C0C` | dynamic | Type/category-specific leader/mob/weak-mob pools | Confirmed: menu branch + dynamic constructor |
 | Download | 3 | `0x02241998` | download/special | Generic/download-style shuffle path | Confirmed: menu branch + constructor; payload is mode-specific |
 | Driftveil | 4 | `0x02241B20` | mixed | Four cat. 1, one cat. 2, two cat. 3 | Confirmed: menu branch + constructor |
-| Unova/Teselia Leaders | 5 | `0x02241B08` | primarily `0x05` | indices `0–13` (14 possible NPCs: 13 standard Leaders + Bianca wildcard at index 8) | Confirmed: family roster/order + cup progression |
+| Unova/Teselia Leaders | 5 | `0x02241B08` | `0x05` | indices `0–7, 9–13` (13 standard Leaders) | Confirmed: family roster/order + cup progression |
 | Kanto Leaders | 6 | `0x02241B08` | `0x06` | indices `20–26, 35` (8 records) | Confirmed: family roster/order |
 | Johto Leaders | 7 | `0x02241B08` | `0x07` | indices `27–34` (8 records) | Confirmed: family roster/order |
 | Hoenn Leaders | 8 | `0x02241B08` | `0x08` | indices `36–44` (9 records) | Confirmed: family roster/order |
@@ -166,9 +166,9 @@ can produce cup ID 11 dynamically when its availability predicate passes,
 even though the archive has no literal `CMD_3F3 11`.
 
 The source table's family-`0x00` records (indices `8, 54–127`, 75 records) are
-special/other data.  Index 8 is the known Unova-cup wildcard (Bianca); the
-remaining `54–127` records are special or download-related and should not be
-silently counted as regional Leader records.
+special/other data. Index 8 is Bianca's record and is excluded by the cup-5
+regional family predicate; the remaining `54–127` records are special or
+download-related and should not be silently counted as regional Leader records.
 
 ### Built-in tournament-name text table
 
@@ -293,8 +293,9 @@ cup ID
 The constructor decides which records are present. The common match builder
 then shuffles the eight participant pointers with RNG at `0x02241DB8` before
 recording the player's position and finalizing slots. The winner routine
-receives packed records and evaluates their priority/type/slot fields; it does
-not read the trainer name or the family byte as a hidden win bonus.
+receives packed records and evaluates their priority, type category, and
+player/NPC trainer-type flag; it does not read a bracket-slot field, the trainer
+name, or the family byte as a hidden win bonus.
 
 ## USA/Europe retail code-path check
 

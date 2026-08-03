@@ -26,8 +26,9 @@ Category `17` (`0x11`) is the neutral/sentinel value recognized by the
 type-chart helper at `0x02238554`. If either input category is `17`, the helper
 returns the neutral comparison score `2` instead of reading an ordinary type
 matchup. Consequently, two standard Champions tie at the category-comparison
-stage; their later result is determined by the equal-record RNG and A/B-slot
-adjustment. This value is not a bracket `YY` setting.
+stage; their later result is determined by the equal-record RNG. A/B only names
+the two arguments passed to the symmetric result routine; it is not an
+additional winner adjustment. This value is not a bracket `YY` setting.
 
 ## Standard Gym Leader records
 
@@ -95,23 +96,17 @@ tournaments:
 [Johto](https://www.serebii.net/black2white2/pwt/johto.shtml),
 [Hoenn](https://www.serebii.net/black2white2/pwt/hoenn.shtml), and
 [Sinnoh](https://www.serebii.net/black2white2/pwt/sinnoh.shtml). The Unova
-pool has 14 possible NPC trainers: 13 standard Gym Leaders plus Bianca as a
-special wildcard; Iris is excluded. The table above intentionally lists only
-the 13 standard Leader records.
+pool has 13 possible NPC trainers: the 13 standard Gym Leaders; Iris is
+excluded. The table above lists the complete regional pool.
 
-### Bianca wildcard record
+### Bianca special record
 
 Index 8 is Bianca's record. Its family byte is `0x00`, so it is not part of the
-standard Unova Leader-family (`0x05`) count. That classification does **not**
-exclude Bianca from the Unova Leaders tournament: cup ID 5's constructor uses
-the source slice at indices `0–13`, which includes index 8. It can therefore
-select Bianca as one of the seven NPCs for a run. The published
-[Unova Leaders roster](https://www.serebii.net/black2white2/pwt/unova.shtml)
-also lists Bianca, so she is an actual selectable opponent in that cup. Because the constructor
-selects seven NPCs from the 14-record pool, Bianca may appear in a given
-bracket but is not guaranteed to appear every time. The same record may also
-be reused by another WBT mode; reuse does not make it ineligible for Unova
-Leaders.
+standard Unova Leader-family (`0x05`) count. The regional constructor's
+predicate requires `region_tournament_id == WBTCUP_ISSYU` (`5`), so this record
+is excluded from the Unova Leaders pool. Bianca's eligibility in other modes is
+controlled by their separate entry flags; reuse of the record does not change
+the regional family count.
 
 These categories are used by the game's matchup table, not by a conventional
 six-Pokémon battle simulation.
