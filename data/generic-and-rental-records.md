@@ -117,28 +117,9 @@ source row and prepares the common packer at `0x0224208C` as follows:
 The converter passes the source row's byte 1 as the sex selector, the row's
 bytes 2–3 as `mmdl_id`, and byte 4 as `btl_tr_type`; it also passes the source
 row index as the runtime `tr_id`. These are identity/setup fields, not inputs
-to the NPC winner calculation. The result below is therefore a complete
+to the NPC winner calculation. The combined table below is therefore a complete
 mapping of the generic rows' relevant result fields, not a claim that each row
 is selected in every cup.
-
-| Source indices | Packed priority | Result category | Category meaning | NPC trainer type |
-|---|---:|---:|---|---:|
-| `54` | 4 | 17 (`0x11`) | neutral sentinel | 0 |
-| `55` | 3 | 17 (`0x11`) | neutral sentinel | 0 |
-| `56` | 4 | 17 (`0x11`) | neutral sentinel | 0 |
-| `57` | 5 | 17 (`0x11`) | neutral sentinel | 0 |
-| `58` | 2 | 3 | Poison | 0 |
-| `59` | 2 | 4 | Ground | 0 |
-| `60` | 2 | 13 | Psychic | 0 |
-| `61` | 2 | 6 | Bug | 0 |
-| `62` | 2 | 7 | Ghost | 0 |
-| `63` | 2 | 15 | Dragon | 0 |
-| `64` | 2 | 8 | Steel | 0 |
-| `65` | 2 | 16 | Dark | 0 |
-| `66` | 2 | 16 | Dark | 0 |
-| `67` | 2 | 16 | Dark | 0 |
-| `68–77` | 2 | 17 (`0x11`) | neutral sentinel | 0 |
-| `78–127` | 1 | 17 (`0x11`) | neutral sentinel | 0 |
 
 This explains why records `58–67` have ordinary type categories when they are
 selected by the Type Expert constructor, while Rental/Mix generic records are
@@ -146,7 +127,8 @@ neutral in the NPC result routine even though their byte-7 constructor values
 are `0x12` or the `0x11` Type Expert wildcard. It also explains why a generic
 record does not acquire a category from the six Pokémon later associated with
 it: the packed category is copied from the source row before the winner
-routine runs.
+routine runs. The full per-record identity and result-field table appears
+below.
 
 The complete raw rows and these derived fields are reproducible with
 `--dump-records`:
@@ -191,108 +173,89 @@ The following table maps every non-regional/generic row. Names and class text
 are the USA/Europe retail labels; the WBT bytes and identity fields are the
 byte-identical table shared with the examined development build.
 
-| Index | Retail PWT name | Sex | `mmdl_id` | `btl_tr_type` |
-|---:|---|---:|---:|---:|
-| 54 | Hilda | 1 | `0x0004` | 183 |
-| 55 | Rival | 0 | `0x0123` | 145 |
-| 56 | Cheren | 0 | `0x00DF` | 115 |
-| 57 | Colress | 0 | `0x00FA` | 186 |
-| 58 | Castor | 0 | `0x0049` | 104 |
-| 59 | Homer | 0 | `0x0040` | 105 |
-| 60 | Delphine | 1 | `0x00B8` | 107 |
-| 61 | Walter | 0 | `0x0020` | 108 |
-| 62 | Ferly | 0 | `0x00B7` | 106 |
-| 63 | Drakon | 0 | `0x001E` | 110 |
-| 64 | Margaret | 1 | `0x0021` | 109 |
-| 65 | Vito | 0 | `0x0020` | 108 |
-| 66 | Impera | 1 | `0x0021` | 109 |
-| 67 | Bonnie | 1 | `0x001F` | 111 |
-| 68 | X | 0 | `0x001E` | 110 |
-| 69 | Makina | 1 | `0x001F` | 111 |
-| 70 | Fidel | 0 | `0x0020` | 108 |
-| 71 | Theodora | 1 | `0x0021` | 109 |
-| 72 | Allan | 0 | `0x002E` | 228 |
-| 73 | Jocelyn | 1 | `0x002F` | 229 |
-| 74 | Dmitri | 0 | `0x0049` | 104 |
-| 75 | Levina | 1 | `0x004A` | 230 |
-| 76 | Rylan | 0 | `0x00B7` | 106 |
-| 77 | Destiny | 1 | `0x00B8` | 107 |
-| 78 | Ted | 0 | `0x000B` | 0 |
-| 79 | Seamus | 0 | `0x000B` | 0 |
-| 80 | Kendal | 1 | `0x000F` | 0 |
-| 81 | Uno | 1 | `0x000F` | 0 |
-| 82 | Nanaka | 1 | `0x0017` | 0 |
-| 83 | Enid | 1 | `0x0017` | 0 |
-| 84 | Masashi | 0 | `0x0018` | 0 |
-| 85 | Dorian | 0 | `0x0018` | 0 |
-| 86 | Yareli | 1 | `0x001A` | 0 |
-| 87 | Makayla | 1 | `0x001B` | 0 |
-| 88 | Tristan | 0 | `0x0022` | 0 |
-| 89 | Yosef | 0 | `0x0022` | 0 |
-| 90 | Karlie | 1 | `0x0023` | 0 |
-| 91 | Naomi | 1 | `0x0023` | 0 |
-| 92 | Hernando | 0 | `0x0024` | 0 |
-| 93 | Indy | 0 | `0x0024` | 0 |
-| 94 | Hannah | 1 | `0x0025` | 0 |
-| 95 | Clarissa | 1 | `0x0025` | 0 |
-| 96 | Lester | 0 | `0x002A` | 0 |
-| 97 | Minoru | 0 | `0x002A` | 0 |
-| 98 | Willa | 1 | `0x002B` | 0 |
-| 99 | Hailey | 1 | `0x002B` | 0 |
-| 100 | Kaden | 0 | `0x002E` | 0 |
-| 101 | Roddy | 0 | `0x002E` | 0 |
-| 102 | Chloe | 1 | `0x002F` | 0 |
-| 103 | Tessa | 1 | `0x002F` | 0 |
-| 104 | Berke | 0 | `0x0030` | 0 |
-| 105 | Sunan | 0 | `0x0030` | 0 |
-| 106 | Sudapon | 1 | `0x0031` | 0 |
-| 107 | Anupa | 1 | `0x0031` | 0 |
-| 108 | Jax | 0 | `0x0034` | 0 |
-| 109 | Franco | 0 | `0x0034` | 0 |
-| 110 | Hayden | 1 | `0x0035` | 0 |
-| 111 | Maxie | 1 | `0x0035` | 0 |
-| 112 | Bobhiko | 0 | `0x0048` | 0 |
-| 113 | Bobmasa | 0 | `0x0048` | 0 |
-| 114 | Nokko | 1 | `0x0128` | 0 |
-| 115 | Liz | 1 | `0x0128` | 0 |
-| 116 | Yen | 0 | `0x002C` | 0 |
-| 117 | Cents | 0 | `0x002C` | 0 |
-| 118 | Wanda | 1 | `0x002D` | 0 |
-| 119 | Euro | 1 | `0x002D` | 0 |
-| 120 | Celsius | 0 | `0x0032` | 0 |
-| 121 | Ren | 0 | `0x0032` | 0 |
-| 122 | Kelly | 1 | `0x0033` | 0 |
-| 123 | Alison | 1 | `0x0033` | 0 |
-| 124 | Butch | 0 | `0x003D` | 0 |
-| 125 | Carver | 0 | `0x003D` | 0 |
-| 126 | Gavin | 0 | `0x003E` | 0 |
-| 127 | Larry | 0 | `0x003E` | 0 |
+| Index | Retail PWT name | Sex | `mmdl_id` | `btl_tr_type` | Packed priority | Result category | Category meaning | NPC trainer type |
+|---:|---|---:|---:|---:|---:|---:|---|---:|
+| 54 | Hilda | 1 | `0x0004` | 183 | 4 | 17 (`0x11`) | neutral sentinel | 0 |
+| 55 | Rival | 0 | `0x0123` | 145 | 3 | 17 (`0x11`) | neutral sentinel | 0 |
+| 56 | Cheren | 0 | `0x00DF` | 115 | 4 | 17 (`0x11`) | neutral sentinel | 0 |
+| 57 | Colress | 0 | `0x00FA` | 186 | 5 | 17 (`0x11`) | neutral sentinel | 0 |
+| 58 | Castor | 0 | `0x0049` | 104 | 2 | 3 | Poison | 0 |
+| 59 | Homer | 0 | `0x0040` | 105 | 2 | 4 | Ground | 0 |
+| 60 | Delphine | 1 | `0x00B8` | 107 | 2 | 13 | Psychic | 0 |
+| 61 | Walter | 0 | `0x0020` | 108 | 2 | 6 | Bug | 0 |
+| 62 | Ferly | 0 | `0x00B7` | 106 | 2 | 7 | Ghost | 0 |
+| 63 | Drakon | 0 | `0x001E` | 110 | 2 | 15 | Dragon | 0 |
+| 64 | Margaret | 1 | `0x0021` | 109 | 2 | 8 | Steel | 0 |
+| 65 | Vito | 0 | `0x0020` | 108 | 2 | 16 | Dark | 0 |
+| 66 | Impera | 1 | `0x0021` | 109 | 2 | 16 | Dark | 0 |
+| 67 | Bonnie | 1 | `0x001F` | 111 | 2 | 16 | Dark | 0 |
+| 68 | X | 0 | `0x001E` | 110 | 2 | 17 (`0x11`) | neutral sentinel | 0 |
+| 69 | Makina | 1 | `0x001F` | 111 | 2 | 17 (`0x11`) | neutral sentinel | 0 |
+| 70 | Fidel | 0 | `0x0020` | 108 | 2 | 17 (`0x11`) | neutral sentinel | 0 |
+| 71 | Theodora | 1 | `0x0021` | 109 | 2 | 17 (`0x11`) | neutral sentinel | 0 |
+| 72 | Allan | 0 | `0x002E` | 228 | 2 | 17 (`0x11`) | neutral sentinel | 0 |
+| 73 | Jocelyn | 1 | `0x002F` | 229 | 2 | 17 (`0x11`) | neutral sentinel | 0 |
+| 74 | Dmitri | 0 | `0x0049` | 104 | 2 | 17 (`0x11`) | neutral sentinel | 0 |
+| 75 | Levina | 1 | `0x004A` | 230 | 2 | 17 (`0x11`) | neutral sentinel | 0 |
+| 76 | Rylan | 0 | `0x00B7` | 106 | 2 | 17 (`0x11`) | neutral sentinel | 0 |
+| 77 | Destiny | 1 | `0x00B8` | 107 | 2 | 17 (`0x11`) | neutral sentinel | 0 |
+| 78 | Ted | 0 | `0x000B` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
+| 79 | Seamus | 0 | `0x000B` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
+| 80 | Kendal | 1 | `0x000F` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
+| 81 | Uno | 1 | `0x000F` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
+| 82 | Nanaka | 1 | `0x0017` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
+| 83 | Enid | 1 | `0x0017` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
+| 84 | Masashi | 0 | `0x0018` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
+| 85 | Dorian | 0 | `0x0018` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
+| 86 | Yareli | 1 | `0x001A` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
+| 87 | Makayla | 1 | `0x001B` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
+| 88 | Tristan | 0 | `0x0022` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
+| 89 | Yosef | 0 | `0x0022` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
+| 90 | Karlie | 1 | `0x0023` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
+| 91 | Naomi | 1 | `0x0023` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
+| 92 | Hernando | 0 | `0x0024` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
+| 93 | Indy | 0 | `0x0024` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
+| 94 | Hannah | 1 | `0x0025` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
+| 95 | Clarissa | 1 | `0x0025` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
+| 96 | Lester | 0 | `0x002A` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
+| 97 | Minoru | 0 | `0x002A` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
+| 98 | Willa | 1 | `0x002B` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
+| 99 | Hailey | 1 | `0x002B` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
+| 100 | Kaden | 0 | `0x002E` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
+| 101 | Roddy | 0 | `0x002E` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
+| 102 | Chloe | 1 | `0x002F` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
+| 103 | Tessa | 1 | `0x002F` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
+| 104 | Berke | 0 | `0x0030` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
+| 105 | Sunan | 0 | `0x0030` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
+| 106 | Sudapon | 1 | `0x0031` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
+| 107 | Anupa | 1 | `0x0031` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
+| 108 | Jax | 0 | `0x0034` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
+| 109 | Franco | 0 | `0x0034` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
+| 110 | Hayden | 1 | `0x0035` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
+| 111 | Maxie | 1 | `0x0035` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
+| 112 | Bobhiko | 0 | `0x0048` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
+| 113 | Bobmasa | 0 | `0x0048` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
+| 114 | Nokko | 1 | `0x0128` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
+| 115 | Liz | 1 | `0x0128` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
+| 116 | Yen | 0 | `0x002C` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
+| 117 | Cents | 0 | `0x002C` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
+| 118 | Wanda | 1 | `0x002D` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
+| 119 | Euro | 1 | `0x002D` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
+| 120 | Celsius | 0 | `0x0032` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
+| 121 | Ren | 0 | `0x0032` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
+| 122 | Kelly | 1 | `0x0033` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
+| 123 | Alison | 1 | `0x0033` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
+| 124 | Butch | 0 | `0x003D` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
+| 125 | Carver | 0 | `0x003D` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
+| 126 | Gavin | 0 | `0x003E` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
+| 127 | Larry | 0 | `0x003E` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
 
-### Result categories for these identities
-
-For clarity, the NPC winner routine's stored result category is mapped to the
-identity-table rows as follows. This is raw source byte 0; it is not
-`mmdl_id`, `btl_tr_type`, or the Type Expert raw byte-7 field.
-
-| Indices | Result category | Meaning | Packed priority |
-|---|---:|---|---:|
-| 54–57 | 17 (`0x11`) | neutral sentinel | 4, 3, 4, 5 respectively |
-| 58 | 3 | Poison | 2 |
-| 59 | 4 | Ground | 2 |
-| 60 | 13 | Psychic | 2 |
-| 61 | 6 | Bug | 2 |
-| 62 | 7 | Ghost | 2 |
-| 63 | 15 | Dragon | 2 |
-| 64 | 8 | Steel | 2 |
-| 65–67 | 16 | Dark | 2 |
-| 68–77 | 17 (`0x11`) | neutral sentinel | 2 |
-| 78–127 | 17 (`0x11`) | neutral sentinel | 1 |
-
-Thus the Rental/Mix generic pools (68–127) are neutral in the displayed NPC
-result routine. The ordinary type categories occur in the Type Expert-oriented
-rows 58–67. The `0x11` value in rows 54–57 and 68–127 is the NPC routine's
-neutral sentinel; it must not be confused with the Type Expert wildcard in
-raw byte 7.
+The result category is raw source byte 0; it is not `mmdl_id`, `btl_tr_type`,
+or the Type Expert raw byte-7 field. Thus the Rental/Mix generic pools
+(68–127) are neutral in the displayed NPC result routine, while the ordinary
+type categories occur in the Type Expert-oriented rows 58–67. The `0x11`
+value in rows 54–57 and 68–127 is the NPC routine's neutral sentinel; it must
+not be confused with the Type Expert wildcard in raw byte 7.
 
 This answers the identity question at the level supported by the recovered
 data: we can name every row and identify its model resource and internal
