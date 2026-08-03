@@ -61,6 +61,47 @@ the grouped table above is a compact view of that exact output.
 The `0x11` type ID in records 78–127 is the Type Expert wildcard; it is
 separate from the category-17 neutral sentinel used by the NPC winner routine.
 
+### How to read the generic-record map
+
+This is a compact map of the unnamed/generic rows in the 128-record WBT source
+table:
+
+- **Indices** are source-table row numbers, not tournament positions.
+- **Mask byte 5** determines which static cups may use a row. For example,
+  `0x1A` sets the Driftveil, Rental, and Mix eligibility bits.
+- **Family byte 6** identifies regional families. `0x00` means the rows in
+  this non-named group are not standard named Leader or Champion family rows.
+- **Type ID byte 7** is read by the Type Expert constructor. It is not the
+  matchup category consumed later by the NPC winner routine.
+- **Pool** is the internal constructor bucket, calculated as `byte 8 & 7`.
+  Rental requests records from pools 1, 2, and 3.
+
+For Rental, the generic candidates are records `78–127` in pool 1 and
+`68–77` in pool 2. Named records `0–4, 8` supply pool 3. These are eligibility
+sets, not guaranteed appearances: the constructor randomly selects the
+requested number of records from each pool.
+
+Some generic rows do carry specific Type Expert IDs. Records `58–67` use the
+following raw byte-7 values:
+
+| Raw Type ID | Type Expert type |
+|---:|---|
+| `0x03` | Poison |
+| `0x04` | Ground |
+| `0x06` | Bug |
+| `0x07` | Ghost |
+| `0x08` | Steel |
+| `0x0D` | Psychic |
+| `0x0F` | Dragon |
+| `0x10` | Dark |
+
+This type-specific interpretation applies to Type Expert filtering only. The
+Rental/Mix generic rows use raw byte-7 values `0x12` (records `68–77`) or
+`0x11` (records `78–127`); `0x11` is the Type Expert wildcard, not a fixed
+Pokémon type. Although that wildcard is numerically the same as decimal 17,
+the Type Expert wildcard and the category-17 neutral sentinel belong to
+different fields and code paths.
+
 ## Rental and Mix pools
 
 The constructor calls and the table predicates produce these exact pools:
