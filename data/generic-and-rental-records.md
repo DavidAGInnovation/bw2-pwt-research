@@ -37,10 +37,10 @@ Cup IDs 1 and 5–9 use the family-selector comparison instead. The Download
 path (ID 3) uses its separate generic/download constructor. Type Expert (ID 2)
 uses the type-ID comparison and its dynamic leader/mob/weak-mob grouping.
 
-## Complete non-named record groups
+## Complete non-regional/generic record groups
 
-The table below groups the records that are not the named regional
-Leader/Champion rows already listed in
+The table below groups the records that are not the regional Leader/Champion
+rows already listed in
 [`champions-and-leaders.md`](champions-and-leaders.md). `type ID` is raw byte 7;
 `pool` is raw byte 8 masked with `7`.
 
@@ -114,11 +114,12 @@ source row and prepares the common packer at `0x0224208C` as follows:
 | `byte 0` | packed byte 1 | Matchup category read by the type-affinity helper. |
 | built-in source-row path | trainer-type flag `0` in packed byte 0 bits 0–2 | NPC record; the player override uses a different flag. |
 
-The converter passes the source row's byte 1 as sex and retains the remaining
-record words as trainer/team metadata. Those fields do not change the NPC
-winner calculation. The result below is therefore a complete mapping of the
-generic rows' relevant result fields, not a claim that each row is selected in
-every cup.
+The converter passes the source row's byte 1 as the sex selector, the row's
+bytes 2–3 as `mmdl_id`, and byte 4 as `btl_tr_type`; it also passes the source
+row index as the runtime `tr_id`. These are identity/setup fields, not inputs
+to the NPC winner calculation. The result below is therefore a complete
+mapping of the generic rows' relevant result fields, not a claim that each row
+is selected in every cup.
 
 | Source indices | Packed priority | Result category | Category meaning | NPC trainer type |
 |---|---:|---:|---|---:|
@@ -158,7 +159,120 @@ For named Leader and Champion records, including the special Bianca row, see
 [`champions-and-leaders.md`](champions-and-leaders.md). Together, that table
 and the mapping above cover every source-table row's priority, category, and
 built-in NPC trainer-type fields: 46 standard Leaders, Bianca, 7 standard
-Champions, and 74 unnamed rows (`0–127` in total).
+Champions, and 74 non-regional/generic rows (`0–127` in total).
+
+## Retail PWT names and identity fields
+
+The generic rows are not nameless at runtime. In the USA/Europe retail build,
+the ordinary text NARC `/a/0/0/2` has a 128-entry PWT-name table (entry 409) and
+a parallel 128-entry PWT-class table (entry 410). The WBT converter writes the
+source row index to the packed record's `tr_id`, so the text entry at the same
+index is the displayed PWT name. This positional mapping is cross-checked by
+the known rows: indices 0–13 are the Unova Leaders, 8 is Bianca, 14–19 are
+Blue through Alder, and 53 is Red.
+
+The retail PWT class table contains the same generic `Trainer` label for all
+128 entries. It therefore does not identify rows as Youngster, Ace Trainer,
+and so on. The numeric `btl_tr_type` below is a separate battle-engine field;
+it is not the packed NPC-result `npc_trainer_type` flag (which is 0 for the
+built-in path). Cross-referencing the normal BW2 trainer-class table shows
+that the generic rows use the generic `Trainer` class-domain values
+`0`, `104–111`, `145`, `183`, and `228–230`; row 56 uses `115` (`Leader`) and
+row 57 uses `186` (`Team Plasma`). Those normal class labels do not override
+the PWT-specific class table's generic `Trainer` display text.
+
+`mmdl_id` is the internal model/appearance resource identifier copied into the
+runtime record. Equal IDs use the same model resource; resolving an ID to a
+rendered sprite or a human-readable outfit name requires the separate model
+resource table, which is not part of the 16-byte WBT table. `sex` is the row's
+male/female selector (`0` male, `1` female).
+
+The following table maps every non-regional/generic row. Names and class text
+are the USA/Europe retail labels; the WBT bytes and identity fields are the
+byte-identical table shared with the examined development build.
+
+| Index | Retail PWT name | Sex | `mmdl_id` | `btl_tr_type` |
+|---:|---|---:|---:|---:|
+| 54 | Hilda | 1 | `0x0004` | 183 |
+| 55 | Rival | 0 | `0x0123` | 145 |
+| 56 | Cheren | 0 | `0x00DF` | 115 |
+| 57 | Colress | 0 | `0x00FA` | 186 |
+| 58 | Castor | 0 | `0x0049` | 104 |
+| 59 | Homer | 0 | `0x0040` | 105 |
+| 60 | Delphine | 1 | `0x00B8` | 107 |
+| 61 | Walter | 0 | `0x0020` | 108 |
+| 62 | Ferly | 0 | `0x00B7` | 106 |
+| 63 | Drakon | 0 | `0x001E` | 110 |
+| 64 | Margaret | 1 | `0x0021` | 109 |
+| 65 | Vito | 0 | `0x0020` | 108 |
+| 66 | Impera | 1 | `0x0021` | 109 |
+| 67 | Bonnie | 1 | `0x001F` | 111 |
+| 68 | X | 0 | `0x001E` | 110 |
+| 69 | Makina | 1 | `0x001F` | 111 |
+| 70 | Fidel | 0 | `0x0020` | 108 |
+| 71 | Theodora | 1 | `0x0021` | 109 |
+| 72 | Allan | 0 | `0x002E` | 228 |
+| 73 | Jocelyn | 1 | `0x002F` | 229 |
+| 74 | Dmitri | 0 | `0x0049` | 104 |
+| 75 | Levina | 1 | `0x004A` | 230 |
+| 76 | Rylan | 0 | `0x00B7` | 106 |
+| 77 | Destiny | 1 | `0x00B8` | 107 |
+| 78 | Ted | 0 | `0x000B` | 0 |
+| 79 | Seamus | 0 | `0x000B` | 0 |
+| 80 | Kendal | 1 | `0x000F` | 0 |
+| 81 | Uno | 1 | `0x000F` | 0 |
+| 82 | Nanaka | 1 | `0x0017` | 0 |
+| 83 | Enid | 1 | `0x0017` | 0 |
+| 84 | Masashi | 0 | `0x0018` | 0 |
+| 85 | Dorian | 0 | `0x0018` | 0 |
+| 86 | Yareli | 1 | `0x001A` | 0 |
+| 87 | Makayla | 1 | `0x001B` | 0 |
+| 88 | Tristan | 0 | `0x0022` | 0 |
+| 89 | Yosef | 0 | `0x0022` | 0 |
+| 90 | Karlie | 1 | `0x0023` | 0 |
+| 91 | Naomi | 1 | `0x0023` | 0 |
+| 92 | Hernando | 0 | `0x0024` | 0 |
+| 93 | Indy | 0 | `0x0024` | 0 |
+| 94 | Hannah | 1 | `0x0025` | 0 |
+| 95 | Clarissa | 1 | `0x0025` | 0 |
+| 96 | Lester | 0 | `0x002A` | 0 |
+| 97 | Minoru | 0 | `0x002A` | 0 |
+| 98 | Willa | 1 | `0x002B` | 0 |
+| 99 | Hailey | 1 | `0x002B` | 0 |
+| 100 | Kaden | 0 | `0x002E` | 0 |
+| 101 | Roddy | 0 | `0x002E` | 0 |
+| 102 | Chloe | 1 | `0x002F` | 0 |
+| 103 | Tessa | 1 | `0x002F` | 0 |
+| 104 | Berke | 0 | `0x0030` | 0 |
+| 105 | Sunan | 0 | `0x0030` | 0 |
+| 106 | Sudapon | 1 | `0x0031` | 0 |
+| 107 | Anupa | 1 | `0x0031` | 0 |
+| 108 | Jax | 0 | `0x0034` | 0 |
+| 109 | Franco | 0 | `0x0034` | 0 |
+| 110 | Hayden | 1 | `0x0035` | 0 |
+| 111 | Maxie | 1 | `0x0035` | 0 |
+| 112 | Bobhiko | 0 | `0x0048` | 0 |
+| 113 | Bobmasa | 0 | `0x0048` | 0 |
+| 114 | Nokko | 1 | `0x0128` | 0 |
+| 115 | Liz | 1 | `0x0128` | 0 |
+| 116 | Yen | 0 | `0x002C` | 0 |
+| 117 | Cents | 0 | `0x002C` | 0 |
+| 118 | Wanda | 1 | `0x002D` | 0 |
+| 119 | Euro | 1 | `0x002D` | 0 |
+| 120 | Celsius | 0 | `0x0032` | 0 |
+| 121 | Ren | 0 | `0x0032` | 0 |
+| 122 | Kelly | 1 | `0x0033` | 0 |
+| 123 | Alison | 1 | `0x0033` | 0 |
+| 124 | Butch | 0 | `0x003D` | 0 |
+| 125 | Carver | 0 | `0x003D` | 0 |
+| 126 | Gavin | 0 | `0x003E` | 0 |
+| 127 | Larry | 0 | `0x003E` | 0 |
+
+This answers the identity question at the level supported by the recovered
+data: we can name every row and identify its model resource and internal
+battle-trainer-type value. We cannot yet attach a canonical portrait or a
+human-readable trainer-class label to each `mmdl_id`/`btl_tr_type` without
+decoding the separate model and battle-type definition resources.
 
 ## Rental and Mix pools
 

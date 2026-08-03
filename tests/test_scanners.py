@@ -58,6 +58,10 @@ class ScannerTests(unittest.TestCase):
         table[0 * 16 + wbt_table.MASK_OFFSET] = 0x08
         table[0 * 16 + wbt_table.FAMILY_OFFSET] = 0x05
         table[0 * 16 + wbt_table.POOL_OFFSET] = 0x03
+        table[0 * 16 + wbt_table.SEX_OFFSET] = 1
+        table[0 * 16 + wbt_table.MMDL_OFFSET] = 0x34
+        table[0 * 16 + wbt_table.MMDL_OFFSET + 1] = 0x12
+        table[0 * 16 + wbt_table.BTL_TRAINER_TYPE_OFFSET] = 104
         table[1 * 16 + wbt_table.MASK_OFFSET] = 0x20
         table[1 * 16 + wbt_table.FAMILY_OFFSET] = 0x05
         table[1 * 16 + wbt_table.POOL_OFFSET] = 0x03
@@ -78,6 +82,9 @@ class ScannerTests(unittest.TestCase):
         self.assertIn("result_priority=3", formatted)
         self.assertIn("result_category=0", formatted)
         self.assertIn("npc_trainer_type=0", formatted)
+        self.assertIn("sex=1", formatted)
+        self.assertIn("mmdl_id=0x1234", formatted)
+        self.assertIn("btl_tr_type=104", formatted)
 
     def test_narc_and_menu_builder(self) -> None:
         members = menu_builder.narc_members(make_narc([make_menu_member()]))

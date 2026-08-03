@@ -13,6 +13,12 @@ Overlay 135 supplies the field meanings used here:
 * record byte 7: Type Expert ``type_tournament_id``;
 * low three bits of record byte 8: internal constructor pool 1--5.
 
+The source row also carries the runtime identity fields copied by the common
+WBT record packer: byte 1 is the sex selector, bytes 2--3 are ``mmdl_id``
+(the model/appearance resource ID), and byte 4 is ``btl_tr_type`` (the battle
+engine's trainer-type field).  These are distinct from the packed NPC-result
+trainer-type flag printed below.
+
 For built-in NPC rows, Overlay 135's row-conversion path also copies raw byte 0
 to the packed result category and uses the low three bits of byte 8 as the
 packed priority.  The built-in path passes trainer-type flag 0.  These derived
@@ -36,6 +42,9 @@ MASK_OFFSET = 5
 FAMILY_OFFSET = 6
 TYPE_OFFSET = 7
 POOL_OFFSET = 8
+SEX_OFFSET = 1
+MMDL_OFFSET = 2
+BTL_TRAINER_TYPE_OFFSET = 4
 RESULT_CATEGORY_OFFSET = 0
 NPC_TRAINER_TYPE = 0
 
@@ -158,6 +167,8 @@ def format_record(index: int, row: bytes) -> str:
         f"record {index:03d}: {row.hex(' ')} "
         f"mask=0x{row[MASK_OFFSET]:02x} family=0x{row[FAMILY_OFFSET]:02x} "
         f"type=0x{row[TYPE_OFFSET]:02x} pool={row[POOL_OFFSET] & 7} "
+        f"sex={row[SEX_OFFSET]} mmdl_id=0x{int.from_bytes(row[MMDL_OFFSET:MMDL_OFFSET + 2], 'little'):04x} "
+        f"btl_tr_type={row[BTL_TRAINER_TYPE_OFFSET]} "
         f"result_priority={priority} result_category={category} "
         f"npc_trainer_type={trainer_type}"
     )

@@ -106,9 +106,23 @@ them.
 - Development WBT NARC `/a/2/6/1`, resource 261, one 2,048-byte member with
   128 16-byte records; the built-in family inventory uses the byte at
   zero-based record offset 6.
+- Overlay 55's WBT debug formatter at `0x02237CFC` prints the runtime
+  `tr_id`, `sex`, `mmdl_id`, and `btl_tr_type` fields. Overlay 135's built-in
+  row converter copies source byte 1 to `sex`, bytes 2–3 to `mmdl_id`, byte 4
+  to `btl_tr_type`, and the source row index to runtime `tr_id` before calling
+  the common record packer.
 - USA/Europe retail WBT NARC `/a/2/4/7`: 2,108 bytes, one 2,048-byte member,
   SHA-256 `0a32d2956f75a6e6365f292eb20e129c5247fe9ec093ca881dd469ea698d00ca`,
   exactly matching the development table.
+- USA/Europe retail text NARC `/a/0/0/2`, entries 409 and 410: the 128 PWT
+  trainer names and parallel PWT class strings. The entries are positional
+  with the WBT `tr_id`; known anchors (Unova Leaders, Bianca, Champions, and
+  Red) cross-check the index mapping. Entry 410 uses the generic `Trainer`
+  label for all 128 rows, so it is not a per-row visual trainer-class map.
+- The same retail text NARC's normal trainer-class entry 383 was used only as
+  a label cross-reference for the numeric `btl_tr_type` values (for example,
+  115 = `Leader` and 186 = `Team Plasma`); it is not substituted for the PWT
+  class entry 410.
 - USA/Europe retail `/a/2/6/1`: a different 24,052-byte NARC with 1,000
   16-byte members, SHA-256
   `416ddd7a37b89bcada27e977dc0a59df818ccddf4b9e47dd2f3ae39d742b5980`; it is
