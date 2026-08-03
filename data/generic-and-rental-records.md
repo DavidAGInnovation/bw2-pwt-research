@@ -78,8 +78,8 @@ assign a permanent personal win/loss record to a trainer.
 ### Named records in those pools
 
 - Rental and Mix pool 3 (`0–4, 8`) is Cheren, Roxie, Burgh, Elesa, Clay, and
-  Bianca. Thus Elesa is eligible, but she is one of six candidates for two
-  pool-3 slots; she is not guaranteed to appear in every run.
+  Bianca. The constructor selects two records from these six pool-3
+  candidates, so no individual record is guaranteed to appear in every run.
 - Rental Master pool 3 (`0–13, 20–52`) contains all 13 standard Unova Leaders,
   Bianca, and every Kanto, Johto, Hoenn, and Sinnoh Leader (47 records total).
 - Mix Master pool 3 (`0–7`) contains Cheren, Roxie, Burgh, Elesa, Clay, Skyla,
@@ -88,21 +88,19 @@ assign a permanent personal win/loss record to a trainer.
   their mask byte is `0x00`, while each Rental/Mix predicate requires a set
   mask bit.
 
-## What this proves about Elesa's Rental category
+## What the record-packing path proves
 
-Elesa is record index 3. Her stored result-routine category is 12 (Electric),
-as shown in [`champions-and-leaders.md`](champions-and-leaders.md). Rental
-selection admits that record through the pool-3 predicate; it does not replace
-the record's category with a type derived from the Rental Pokémon. The common
-record packer at `0x0224208C` then supplies the selected record to the same
-winner routine documented in [`RESEARCH.md`](../RESEARCH.md), which reads the
-packed priority/category fields and never inspects the six-Pokémon roster.
-
-Therefore the precise answer is: Elesa's Electric category is used by the NPC
-result routine if her record is selected in Rental, even if the Rental team
-shown for her is not Electric. Standard Champions are not selected by Rental or
-Rental Master in this table, so their priority/category values are not used
-there through the standard Champion records.
+Rental selection admits records through the pool predicates without replacing
+their stored result-routine category with a type derived from the Rental
+Pokémon. For example, record index 3 (Elesa) stores category 12 (Electric), as
+shown in [`champions-and-leaders.md`](champions-and-leaders.md). The common
+record packer at `0x0224208C` supplies the selected record to the same winner
+routine documented in [`RESEARCH.md`](../RESEARCH.md), which reads the packed
+priority/category fields and never inspects the six-Pokémon roster. The same
+principle applies to every selected record: its stored category remains the
+input to the displayed NPC result calculation. Standard Champions are not
+selected by Rental or Rental Master in this table, so their priority/category
+values are not used there through the standard Champion records.
 
 ## Reproduction
 
