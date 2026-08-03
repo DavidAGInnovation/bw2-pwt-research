@@ -285,6 +285,24 @@ recording the player's position and finalizing slots. The winner routine
 receives packed records and evaluates their priority/type/slot fields; it does
 not read the trainer name or the family byte as a hidden win bonus.
 
+## USA/Europe retail code-path check
+
+Retail Overlay 135 was decompressed at base `0x021EEC80` (4,032 bytes;
+SHA-256 `30b48d2cc1e724470351f57fa6fa28d2844f195732737052bc9ce41e57ef98b8`).
+The corresponding retail anchors are candidate selector `0x021EEE08`,
+category-17 helper `0x021EEF90`, cup dispatch `0x021EF298` with its 16-entry
+switch at `0x021EF2C0`, and common eight-position shuffle `0x021EF344`.
+The decoded control flow preserves category filtering, the neutral/sentinel
+`0x11` test, cup IDs `0..15`, and RNG-based slot shuffling.
+
+The USA/Europe retail WBT table is `/a/2/4/7`, not `/a/2/6/1`. Its 2,108-byte
+NARC (one 2,048-byte member) has the same SHA-256 as the development table,
+`0a32d2956f75a6e6365f292eb20e129c5247fe9ec093ca881dd469ea698d00ca`.
+Consequently, the development byte-2 family inventory and the named indices in
+[`champions-and-leaders.md`](champions-and-leaders.md) are byte-for-byte
+verified for this USA/Europe retail build. The retail `/a/2/6/1` resource is a
+different 24,052-byte, 1,000-member NARC and is not used for this WBT table.
+
 ## Reproducibility and limits
 
 - The source artifact is an archived development build, SHA-256
@@ -305,6 +323,8 @@ not read the trainer name or the family byte as a hidden win bonus.
   It is retained locally under the artifact's
   `rom/original-builds/swanmirror.tar` and is not copied into this repository.
   The addresses above remain build-specific disassembly cross-checks.
-- Retail verification is still desirable before treating every address or
-  roster byte as universal across regional releases; the source-level enum and
-  enable predicate for ID 11 are resolved.
+- The USA/Europe retail Overlay 135 and the correctly identified retail WBT
+  table `/a/2/4/7` are now cross-checked as described above. Other
+  regional/revision builds should still be checked before treating every
+  address or roster byte as universal; the source-level enum and enable
+  predicate for ID 11 are resolved.

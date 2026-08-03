@@ -74,10 +74,19 @@ The script prints the seven four-byte records and the `YY` histogram. The
 it is an observed format detail, not a claim that every future/custom file has
 the same absolute offset.
 
+`YY=00` is retained in the histograms because it occurs in the published
+format/preset data. The recovered source identifies byte 1 as
+`WBTDL_MATCH.pri`, with `WBT_TRPRI_NULL = 0` as the explicit undefined/null
+priority. In downloadable setup that value is copied into the trainer's
+priority, where it is the lowest numeric value for bracket sorting and NPC
+result comparison. See [`bracket-settings.md`](bracket-settings.md); do not
+interpret it as a hidden win bonus or as a built-in cup ID/category.
+
 ## Scope limitation
 
 This is a complete count for the nine publicly downloadable `.pwt` files and
 the additional seven-record presets published in the cited reverse-engineering
-post. It is not yet a complete inventory of every retail BW2 built-in PWT
-table: that requires extracting the corresponding NARC from a retail ROM or
-an equivalent dump. No retail ROM is redistributed here.
+post. The USA/Europe retail WBT NARC is `/a/2/4/7` and matches the development
+table byte-for-byte; the separate retail `/a/2/6/1` NARC has 1,000 members and
+is not the WBT roster table. Neither is folded into these downloadable `YY`
+counts. No retail ROM is redistributed here.

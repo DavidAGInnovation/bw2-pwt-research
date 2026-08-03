@@ -27,6 +27,7 @@
   Thumb disassembly used Capstone 5.0.7.
 - Overlay 135 disassembly: WBT record conversion/packing around `0x0224208C`.
 - Overlay 135 constructor/selector/shuffle: cup dispatch at `0x02241D02`, candidate selection at `0x02241704`, and common eight-position shuffle at `0x02241DB8`.
+- USA/Europe retail Overlay 135 cross-check: decompressed base `0x021EEC80`, size 4,032 bytes, SHA-256 `30b48d2cc1e724470351f57fa6fa28d2844f195732737052bc9ce41e57ef98b8`; corresponding selector `0x021EEE08`, category helper `0x021EEF90`, cup dispatch `0x021EF298` with switch table `0x021EF2C0`, and common shuffle `0x021EF344`.
 - Script NARC `/a/0/5/9`, member 1277: the PWT menu result (`ListMenuInitTL` at
   member offset `0x05E2`), the cup-ID setter (`CMD_3F3` at `0x02E7`, passing
   the selected work variable), and the ID-to-description switch at
@@ -82,8 +83,15 @@
   `EvCmdWBTSystemCheckEnable` in `scrcmd_wbt_table.cdat`.
 - Text NARC `/a/0/0/5`, member 668: PWT description/menu strings used by that
   switch. Text NARC `/a/2/3/9`, member 11: the compact permanent-mode labels.
-- WBT NARC `/a/2/6/1`, resource 261, 128 16-byte records in the examined build;
-  the built-in family inventory uses record byte 2.
+- Development WBT NARC `/a/2/6/1`, resource 261, one 2,048-byte member with
+  128 16-byte records; the built-in family inventory uses record byte 2.
+- USA/Europe retail WBT NARC `/a/2/4/7`: 2,108 bytes, one 2,048-byte member,
+  SHA-256 `0a32d2956f75a6e6365f292eb20e129c5247fe9ec093ca881dd469ea698d00ca`,
+  exactly matching the development table.
+- USA/Europe retail `/a/2/6/1`: a different 24,052-byte NARC with 1,000
+  16-byte members, SHA-256
+  `416ddd7a37b89bcada27e977dc0a59df818ccddf4b9e47dd2f3ae39d742b5980`; it is
+  not used for the WBT roster mapping.
 - `scripts/find_pwt_state_script.py`: static NARC scanner for the Join Avenue
   `CMD_3EA` sequence and nearby message IDs 113/114; it reproduces Resort
   member 1280 on both the development archive and the downloaded retail
@@ -105,6 +113,20 @@
 - [Project Pokémon RawDB: Black 2 NARC list](https://projectpokemon.org/rawdb/black2/narc.php) (retail file-system inventory; lists `/a/0/5/6` as the large script archive)
 - [Project Pokémon: PWT download tournaments and reverse engineering](https://projectpokemon.org/home/forums/topic/23084-pwt-download-tournaments/page/2/)
 - [PWT RNG analysis](https://namofure.hatenablog.com/entry/2025/05/29/214716)
+
+The Project Pokémon PWT notes identify byte 1 of a downloadable bracket record
+as `Trainer Rank` and provide the observed placement labels for values 01–05.
+The recovered SWAN source mirror resolves the previously open value: byte 1 is
+`WBTDL_MATCH.pri`, and `WBT_TRPRI_NULL = 0` is the source-defined undefined/null
+priority. `wbt_system_lobby.c` copies it into `WBTTRAINER.pri`,
+`wbt_makematch.c` sorts by it, and `wbt_calc_result.c` compares it before the
+affinity/RNG branch. The source mirror is SVN revision 59995 on
+`branches/upper_version`, retained locally under the research artifact and not
+redistributed here.
+
+Only a USA/Europe retail ROM was available for the retail cross-check in this
+repository. Japanese, Korean, and other regional/revision ROMs remain outside
+the verified evidence set.
 - [namofure/TournamentSearcher](https://github.com/namofure/TournamentSearcher) (fan-made search tool, not official Nintendo source)
 - [Serebii: Champion Tournament](https://www.serebii.net/black2white2/pwt/champion.shtml)
 - [Serebii: Pokémon World Tournament overview](https://www.serebii.net/black2white2/worldtournament.shtml)

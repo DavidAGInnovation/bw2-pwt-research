@@ -313,6 +313,50 @@ Evaluating the displacements routes ID 12 to `0x02241B84`, ID 14 to
 the built-in-tournament tables; they are not inferred from the visible menu
 order.
 
+## USA/Europe retail Overlay 135 and WBT-table cross-check
+
+The complete USA/Europe retail ROM was independently extracted with the same
+NARC/overlay tooling. Retail Overlay 135 (file ID 135) decompresses to 4,032
+bytes at `0x021EEC80`, SHA-256
+`30b48d2cc1e724470351f57fa6fa28d2844f195732737052bc9ce41e57ef98b8`. Its
+corresponding constructor anchors are:
+
+```text
+candidate/category selector   0x021EEE08
+category-17 affinity helper   0x021EEF90
+cup dispatch                  0x021EF298
+16-entry switch table         0x021EF2C0
+eight-position shuffle        0x021EF344
+```
+
+The retail code retains the development behavior: category filtering is done
+by packed record bits, category `0x11` is accepted as the neutral/sentinel
+affinity, cup IDs `0..15` dispatch through the same 16-case structure, and the
+common builder uses RNG to shuffle the eight participant positions. The
+addresses and compiler stack layout are relocated, so these are behavioral
+cross-checks, not claims of identical address values.
+
+The retail file-system path for this WBT table is `/a/2/4/7`, not
+`/a/2/6/1`. It is a 2,108-byte NARC with one 2,048-byte member and SHA-256
+`0a32d2956f75a6e6365f292eb20e129c5247fe9ec093ca881dd469ea698d00ca`, exactly
+matching the development `/a/2/6/1` table. This closes the retail record/name
+mapping: the development indices in `data/champions-and-leaders.md` apply
+unchanged to the examined USA/Europe retail ROM. The separate retail
+`/a/2/6/1` path is a 24,052-byte NARC with 1,000 16-byte members (SHA-256
+`416ddd7a37b89bcada27e977dc0a59df818ccddf4b9e47dd2f3ae39d742b5980`) and is
+not the WBT roster table.
+
+The downloadable-format notes call the second record byte `Trainer Rank`. The
+recovered SWAN source makes its implementation precise: `WBTDL_MATCH.pri` is
+the second byte, `WBT_TRPRI_NULL` is the explicit value 0 (“undefined”), and
+downloadable setup copies `pri` into each non-player `WBTTRAINER`. The common
+sorter orders trainers by this value, so `YY=00` is the lowest/unprioritized
+value; the result routine likewise treats it as priority 0. Two `YY=00`
+records therefore reach the equal-priority affinity/RNG path, while a
+`YY=00` record loses deterministically to any record with `YY=01`–`05` in an
+NPC-vs-NPC comparison. Only this USA/Europe retail ROM was available locally,
+so other regional or revision ROMs have not been cross-checked.
+
 ## Reproducibility and limitations
 
 - The findings come from an archived development build, with the relevant
