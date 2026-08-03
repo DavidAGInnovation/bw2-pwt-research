@@ -12,11 +12,11 @@ This repository documents a reverse-engineering result for the Pokémon World To
 - Leader-vs-Leader matches can be type-directed. If the two relevant values tie, the same A-slot adjustment applies; if B has the type advantage, the approximate result is A 30% / B 70%.
 - A downloadable `YY=04` or `YY=05` tag is a placement/candidate tier for the player's semifinal or final path; it is not a win bonus. If several records share a tier, the selector can choose among them. Built-in constructor categories must not be relabeled as `YY` without a demonstrated data mapping.
 - The built-in menu mapping is now recoverable statically, without an emulator: ID 1 is Champions, ID 2 Type Expert, ID 3 Download, ID 4 Driftveil, IDs 5–9 the regional Leaders cups, ID 10 World Leaders, and IDs 12–15 Rental/Mix plus their Master variants. ID 11 is a reserved/current-tournament branch without an ordinary menu label; ID 0 is the null/error path.
-- The ID-11 story gate is also resolved statically: the state script counts how
-  many of eight PWT progress records equal exactly one win and selects the
-  special Driftveil text only when that count is exactly one. This branch does
-  not itself write cup ID 11; the runtime producer of that numeric menu value
-  is not present as a literal script call.
+- The ID-11 story gate and event invocation are resolved statically: member
+  1280, sequence 7 counts how many of eight PWT progress records equal exactly
+  one win and selects the special Driftveil text only when that count is one.
+  This branch does not itself write cup ID 11; the separate runtime producer of
+  that numeric menu value is not present as a literal script call.
 
 These percentages are for the observed normal NPC path and are approximate because the game uses integer arithmetic on its RNG output. They describe the encoded routine, not the strength of the teams in an actual battle.
 

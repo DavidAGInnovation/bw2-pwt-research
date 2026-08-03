@@ -118,9 +118,10 @@ WBT command and are not proof of a cup-11 assignment.  No literal
 script archive.
 
 This changes the strength of the static claim: ID 11 is definitely a real
-constructor/description branch, but its invocation is dynamic or comes from
-code/resource data that is not represented as a literal `CMD_3F3 11` in this
-archive.
+constructor/description branch, and its story/event invocation is identified
+below as member 1280, sequence 7. What remains dynamic is only the separate
+menu/resource value passed to the cup setter; the archive does not represent
+that value as a literal `CMD_3F3 11` call.
 
 The event gate itself is now decoded exactly. In member 1280, sequence 7
 initializes work variable `0x8055` to zero, then performs these eight checks:
@@ -140,11 +141,12 @@ retail copies. The interpretation of script comparison mode 1 and the `0xFF`
 stack-result jump follows the documented BW2 VM conventions in the
 [Project Pokémon scripting reference](https://projectpokemon.org/home/forums/topic/25852-b2w2-scripting-thread/).
 
-This resolves the **event/unlock condition** statically. It does not prove that
-the branch itself writes cup ID 11: the branch selects text 113/114, while the
-general menu/controller path supplies a runtime value to `CMD_3F3`. No literal
-`CMD_3F3 11` exists in the examined script archive, so the exact runtime
-producer of numeric ID 11 remains unobserved.
+This resolves the **event/unlock condition and event-script invocation**
+statically. It does not prove that the branch itself writes cup ID 11: the
+branch selects text 113/114, while the general menu/controller path supplies a
+runtime value to `CMD_3F3`. No literal `CMD_3F3 11` exists in the examined
+script archive, so the separate runtime producer of numeric ID 11 remains
+unobserved.
 
 ### Evidence for a story/current Driftveil state
 

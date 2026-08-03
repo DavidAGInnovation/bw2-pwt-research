@@ -16,6 +16,9 @@
   each returned value with `1`, increments accumulator `0x8055` for exact
   matches, then selects messages 113 or 114 according to the final
   `0x8055 == 1` gate at `0x38FF`.
+  This is the identified story/event invocation of the special branch; the
+  separate menu/resource producer of numeric cup ID 11 is not a literal
+  `CMD_3F3 11` script call.
 - Overlay 55 disassembly: `EvCmdWBTSetWBTCup` (`CMD_3F3`) starts at
   `0x02237728`; `EvCmdWBTSetReceptionID` (`CMD_3F7`) starts at
   `0x022377CC`; `CMD_3F8` is the reception-ID getter at `0x022377F4`.

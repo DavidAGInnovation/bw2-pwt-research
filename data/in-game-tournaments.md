@@ -208,9 +208,10 @@ The mapping is for the archived development build identified in the companion
 page and its matching Black 2 USA/Europe retail script. Retail regional builds
 should be checked before assuming that the same special ID 11 and family-`0x00`
 assignments apply everywhere. No original Nintendo source code was obtained;
-the only remaining ID-11 question is which runtime menu/resource path can
-return numeric value 11 to the cup setter. The event gate and the `CMD_3EA`
-counter semantics are statically resolved.
+the event invocation itself is identified as member 1280, sequence 7 in both
+archives. The only remaining ID-11 question is which runtime menu/resource path
+can return numeric value 11 to the cup setter. The event gate and the
+`CMD_3EA` counter semantics are statically resolved.
 
 ## Static-only status
 
@@ -220,6 +221,7 @@ from the archived ROM files, disassembly, and NARC tables without an emulator.
 The only built-in dispatch value still without an ordinary player-facing name
 is the special ID 11 branch described above. Member 1277 is a menu/controller
 script; the menu result is stored with `CMD_3F3` (`EvCmdWBTSetWBTCup`).
-`CMD_3F7` is the reception-ID setter. The event condition that selects the
-special Driftveil text is fully reproducible from member 1280 and is not an
-unresolved flag hypothesis.
+`CMD_3F7` is the reception-ID setter. The event condition and its invocation
+(member 1280, sequence 7) are fully reproducible and are not an unresolved
+flag hypothesis. The remaining question is only which runtime menu/resource
+path supplies numeric value 11 to the cup setter.
