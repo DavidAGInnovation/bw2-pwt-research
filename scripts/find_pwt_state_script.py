@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""Locate the PWT state/reception script in a Gen-V script NARC.
+"""Locate the Join Avenue Resort CMD_3EA script in a Gen-V script NARC.
 
 This is a static scanner; it does not need an emulator or a ROM image in
 memory.  Give it an extracted retail ``/a/0/5/6`` NARC (or the development
-``/a/0/5/9`` NARC).  It looks for the distinctive CMD_3EA record-ID sequence
-used by the introductory/current Driftveil state and reports the member and
-member-relative offsets.  The command parser is deliberately conservative:
+``/a/0/5/9`` NARC).  It looks for a distinctive Resort ``CMD_3EA`` selector
+sequence and reports the member and member-relative offsets.  The command
+parser is deliberately conservative:
 the bytes are only treated as a candidate when all eight IDs occur in order
 with small gaps and the nearby script contains CMD_3EB message IDs 113 and
 114.
@@ -22,10 +22,9 @@ IDS = (17, 18, 21, 20, 19, 22, 23, 24)
 CMD_GET = b"\xea\x03"
 CMD_MESSAGE_113 = b"\xeb\x03\x71\x00"
 CMD_MESSAGE_114 = b"\xeb\x03\x72\x00"
-# After the eighth getter, the script pushes the accumulator (0x8055),
-# pushes literal 1, compares them with StackCmp(1), and conditionally skips
-# to the alternate message.  Keeping this byte pattern here prevents the
-# scanner from treating an unrelated eight-ID run as the state gate.
+# The sequence is retained as a reproducible cross-build byte signature. It is
+# a Resort/Join Avenue script, not a PWT unlock predicate; the PWT cup-enable
+# logic comes from the recovered WBT source in wbt_tool.c.
 FINAL_GATE = bytes.fromhex(
     "0900558008000100110001001f00ff2c000000"
 )
@@ -51,12 +50,9 @@ def narc_members(blob: bytes) -> list[bytes]:
 def find_candidate(data: bytes, max_gap: int, message_window: int):
     """Yield (command offsets, message-113 offset, message-114 offset).
 
-    The final tuple member is the literal gate shape used by the retail and
-    development scripts: the accumulator at ``0x8055`` is compared with
-    ``1`` before the two message branches.  The script VM's documented
-    comparison mode 1 is ``!=``; the ``0xFF`` jump tests that comparison
-    result, so the first message is reached only when the accumulator equals
-    one.
+    The final tuple member is the literal branch shape used by the retail and
+    development Resort scripts. It is reported for byte-level reproducibility;
+    it is not interpreted here as a PWT unlock condition.
     """
 
     first = 0
@@ -104,10 +100,10 @@ def main() -> int:
                 f"member {member_id}: CMD_3EA offsets "
                 + ", ".join(f"0x{x:X}" for x in offsets)
                 + f"; CMD_3EB(113)=0x{msg113:X}; CMD_3EB(114)=0x{msg114:X}"
-                + f"; final accumulator gate (0x8055 == 1) at 0x{gate:X}"
+                + f"; branch signature after messages at 0x{gate:X}"
             )
     if not found:
-        print("no matching PWT state script found")
+        print("no matching Resort CMD_3EA script found")
         return 1
     return 0
 

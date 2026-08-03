@@ -38,7 +38,7 @@ If two or more downloadable records share `YY=04`, the game chooses among those 
 
 ### No hidden victory roll
 
-The `YY` selector does not call the NPC result routine to make a tagged trainer qualify. A required finalist record is reserved as the player's final opponent category; the player then battles that trainer directly. The 65/35 A-slot result documented in [`../RESEARCH.md`](../RESEARCH.md) applies only when two NPC records are actually passed to `wbt_calc_result` for an all-NPC simulated match.
+The `YY` selector does not call the NPC result routine to make a tagged trainer qualify. A required finalist record is reserved as the player's final opponent category; the player then battles that trainer directly. The source-backed 50/50 equal-affinity or 70/30 type-advantage results documented in [`../RESEARCH.md`](../RESEARCH.md) apply only when two NPC records are actually passed to `wbt_calc_result` for an all-NPC simulated match.
 
 ## Relation to the bracket screen
 
@@ -48,5 +48,8 @@ The bracket settings answer “which opponent is scheduled for which player roun
 
 - Project Pokémon notes label the fields “Required Finalist” and “Required Semifinalist” and state that same-setting entries are selected randomly.
 - The archived development build contains the selector trace and debug format `SELECT TRAINER(...):pri(... )btl(... )candidate(...)` in overlay 135.
-- No original Nintendo source code is available; these are disassembly/data findings from an archived development build.
+- The recovered SWAN source identifies the separate Join Avenue/Resort
+  `CMD_3EA` wrapper as `EvCmdResortGetData`. WBT uses the same numeric slot for
+  `EvCmdWBTSystemCheckEnable`; neither symbol changes the bracket semantics,
+  which remain disassembly/data findings from the archived development build.
 - Exact `YY` assignments can vary by downloadable tournament file. The category semantics above describe that file selector, not a guarantee that every retail or built-in tournament uses every category.
