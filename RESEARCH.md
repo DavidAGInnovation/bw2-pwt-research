@@ -216,18 +216,16 @@ ID 13 Rental Master   ID 14 Mix               ID 15 Mix Master
 The text bank is NARC `/a/0/0/5`, member 668: lines 7–20 are the long
 descriptions and lines 23–36 are the short labels. ID 11 instead selects line
 113, a special message saying “this Driftveil tournament”; it has no ordinary
-menu label. ID 0 is the null/error path. This static script evidence corrects
-the earlier tentative assignment of ID 2 to World Leaders: ID 2 is Type Expert,
-while ID 10 is World Leaders. The external retail symbol
+menu label. ID 0 is the null/error path. The static script mapping assigns ID 2
+to Type Expert and ID 10 to World Leaders. The external retail symbol
 `LoadPWTTournamentTypeText` at `0x021C98F5` is consistent with a separate text
 loader, but the retail address is not treated as a development-build code
 address.
 
-The earlier scan of `CMD_3EF` arguments was misinterpreted: it is not
-`EvCmdWBTSetWBTCup`. No literal `CMD_3F3`/`EvCmdWBTSetWBTCup` call with value
-`11` was found in the examined script archive. Member 1277 supplies the
-general menu result and description mapping. The actual source-level mapping
-is now available, so ID 11 is not an unresolved/reserved enum:
+`CMD_3EF` is a different WBT command. No literal
+`CMD_3F3`/`EvCmdWBTSetWBTCup` call with value `11` occurs in the examined
+script archive; member 1277 supplies the general menu result and description
+mapping. ID 11 is defined by the source as:
 
 | Cup ID | Source enum | Source enable predicate |
 |---:|---|---|
@@ -249,9 +247,9 @@ These are the original source definitions in `prog/include/field/wbt.h` and
 `_WBT_CHECK_CUP_ENABLE` for ID 11 as `SCR_WBT_CUP_HODOMOE_EVENT`, followed by
 the ordinary Driftveil ID 4. Thus the special event cup is enabled before the
 ordinary Driftveil cup has a win recorded; it is not gated by the eight-record
-sequence previously attributed to this member.
+sequence in member 1280.
 
-The source also resolves the command-name ambiguity. Each overlay command
+The source defines the table-specific command names. Each overlay command
 table starts at numeric ID 1000. In `scrcmd_wbt_table.cdat`, the third WBT
 entry is `EvCmdWBTSystemCheckEnable`, so WBT `CMD_3EA` is that handler. In the
 separate Join Avenue table, `EvCmdResortTalkStart` and
@@ -270,11 +268,10 @@ development/retail builds.
 
 The PWT victory counters themselves are exposed by the WBT source and by
 `EvCmdWBTGetVictoryCount`/`EvCmdWBTIncVictoryCount`; `wbt_tool.c` reads them
-through `WBTSAVE_GetWinCount`. The earlier eight-call sequence at member 1280
-is a Join Avenue `resort_scr.bin` sequence, not a PWT save-record gate, and
-that interpretation has been withdrawn.
+through `WBTSAVE_GetWinCount`. The eight-call sequence at member 1280 is a
+Join Avenue `resort_scr.bin` sequence, not a PWT save-record gate.
 
-The separate numeric cup-ID producer is also resolved in the script archive.
+The separate numeric cup-ID producer is documented in the script archive.
 Member 1277 contains fifteen repeated availability blocks at offsets
 `0x0616–0x07E4`. Each block calls `CMD_3EE(candidate, 0x8010)`, tests the
 result for `1`, and conditionally executes `ListMenuAdd` with the candidate as
@@ -284,8 +281,8 @@ is `11,4,5,6,7,8,9,10,1,13,15,2,12,14,3`. The resulting list UID is stored in
 menu candidate when its availability predicate passes; a literal setter call
 with constant `11` is neither required nor present.
 
-As a static-analysis correction, the overlay-135 switch table is a signed
-halfword table at `0x02241D20–0x02241D3E` with Thumb PC base `0x02241D22`.
+The overlay-135 switch table is a signed halfword table at
+`0x02241D20–0x02241D3E` with Thumb PC base `0x02241D22`.
 Evaluating the displacements routes ID 12 to `0x02241B84`, ID 14 to
 `0x02241BB0`, and ID 15 to `0x02241BF4`. These addresses are now reflected in
 the built-in-tournament tables; they are not inferred from the visible menu
@@ -347,7 +344,7 @@ so other regional or revision ROMs have not been cross-checked.
   file-system listings use `/a/0/5/6` for the large B2W2 script archive; its
   1,289-member extraction contains the same `resort_scr.bin` bytes and offsets.
   The repository scanner `scripts/find_pwt_state_script.py` reproduces the
-  byte match, but the sequence must no longer be described as a PWT unlock
+  byte match; the sequence is a Join Avenue data query, not a PWT unlock
   script.
 - The recovered SWAN source mirror is available locally. It identifies the
   original Resort command as `EvCmdResortGetData` and the WBT command-table

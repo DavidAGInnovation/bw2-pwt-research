@@ -21,7 +21,7 @@ format to built-in cups.
 
 ### `YY=00` is the source-defined null/lowest priority
 
-The recovered SWAN source removes the earlier ambiguity. A downloadable record
+The recovered SWAN source defines the field precisely. A downloadable record
 is declared as `WBTDL_MATCH { type, pri, id }` in
 `include/savedata/wbt_download.h`, so byte 1 (`YY`) is copied as `pri`. The
 priority enum in `include/field/wbt.h` defines `WBT_TRPRI_NULL = 0`, followed

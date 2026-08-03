@@ -56,10 +56,9 @@ internal selector categories.
 Cup ID 0 reaches the same constructor as cup 4 after logging the
 `WBTCUP_NULL!!` error path; it is not a separate named cup in this artifact.
 
-The corrected rows above are the result of evaluating that switch table
-directly.  In particular, ID 12 branches to `0x02241B84`, ID 14 to
-`0x02241BB0`, and ID 15 to `0x02241BF4`; an earlier table had those three
-constructor addresses shifted.
+The rows above are the result of evaluating that switch table directly. In
+particular, ID 12 branches to `0x02241B84`, ID 14 to `0x02241BB0`, and ID 15
+to `0x02241BF4`.
 
 ## Mapping to named permanent cups
 
@@ -102,12 +101,11 @@ Steven, Wallace, Cynthia, Alder, and Red) described by those references.
 
 ## ID 11: Driftveil event cup
 
-The original source resolves the formerly uncertain dispatch value. In
+The original source defines the dispatch value. In
 `prog/include/field/wbt.h`, numeric ID 11 is `WBTCUP_HODOMOE_EVENT`; the lobby
 script requests it as `SCR_WBT_CUP_HODOMOE_EVENT` before the ordinary Driftveil
 cup (ID 4). Text entry 113's “this Driftveil tournament” wording is therefore
-the event cup's description, not evidence of an unknown enum. ID 0 remains the
-null/error path.
+the event cup's description. ID 0 remains the null/error path.
 
 The neighboring text entry 112 says that a special tournament is being
 prepared and asks the player to wait; this is consistent with the source enum's
@@ -129,12 +127,11 @@ ID 4  (WBTCUP_HODOMOE):       ordinary Driftveil win count != 0
 ```
 
 This is a win-counter test, not a hidden map flag and not the eight-record
-sequence previously attributed to script member 1280.
+sequence in script member 1280.
 
 ### Source confirmation and command IDs
 
-The source is stronger than the earlier script-only inference. `wbt.h` and
-`wbt_tool.c` define ID 11 as `WBTCUP_HODOMOE_EVENT` and implement its predicate
+`wbt.h` and `wbt_tool.c` define ID 11 as `WBTCUP_HODOMOE_EVENT` and implement its predicate
 as ordinary Driftveil win count `== 0`. The lobby script calls
 `_WBT_CHECK_CUP_ENABLE` with that enum, then adds the ordinary Driftveil cup.
 This is the definitive event/unlock condition for the built-in PWT.
@@ -143,10 +140,10 @@ The numeric command ID `0x3EA` is not globally unique. In
 `scrcmd_wbt_table.cdat`, WBT command 1002 is `EvCmdWBTSystemCheckEnable`; in
 the separate Join Avenue `scrcmd_resort_table.cdat`, command 1002 is
 `EvCmdResortGetData`. WBT victory-count access is `EvCmdWBTGetVictoryCount`
-at `CMD_3FA`. The recovered source therefore resolves both stripped symbols
-without conflating WBT and Resort overlays.
+at `CMD_3FA`. The source defines both stripped symbols without conflating WBT
+and Resort overlays.
 
-The byte sequence previously attributed to the PWT gate is actually Join
+The byte sequence in the relevant script member is Join
 Avenue `resort_scr.bin`, NARC member 1280, in both the development
 `/a/0/5/9` and retail `/a/0/5/6` archives. It is useful as a source/ROM
 cross-check for `EvCmdResortGetData`, but it is not a PWT unlock script.
@@ -239,8 +236,7 @@ and entries 23–36 are their short menu labels. Entry 113 is the event
 “this Driftveil tournament” message. ID 0 never reaches this description
 switch because it is the null/error path.
 
-This corrects the earlier tentative assignment of ID 2 to World Leaders. The
-direct script branch assigns ID 2 to Type Expert and ID 10 to World Leaders;
+The direct script branch assigns ID 2 to Type Expert and ID 10 to World Leaders;
 the constructor code independently agrees that ID 2 is the dynamic
 leader/mob/weak-mob path while ID 10 requests seven category-3 records.
 
@@ -326,9 +322,8 @@ guarantee identical addresses or data in untested regional/revision ROMs.
   work structure at offset `0x0C`. Its command is `CMD_3F3`. The neighboring
   reception-ID setter begins at `0x022377CC` (`CMD_3F7`) and writes a separate
   WBT field; `0x022377F4` is the reception-ID getter (`CMD_3F8`).
-- Earlier scans of `CMD_3EF` with literal value `11` in members `980` and
-  `1280` were not cup assignments. No literal `CMD_3F3 11` occurs in the
-  examined script archive; the menu result can instead be supplied dynamically.
+- `CMD_3EF` is a different WBT command. No literal `CMD_3F3 11` occurs in the
+  examined script archive; the menu result supplies the cup ID dynamically.
 - The recovered SWAN source mirror (revision 59995) supplies original C
   symbols and source-level implementation evidence: WBT `CMD_3EA` is
   `EvCmdWBTSystemCheckEnable`, WBT `CMD_3FA` is
@@ -336,8 +331,8 @@ guarantee identical addresses or data in untested regional/revision ROMs.
   It is retained locally under the artifact's
   `rom/original-builds/swanmirror.tar` and is not copied into this repository.
   The addresses above remain build-specific disassembly cross-checks.
-- The USA/Europe retail Overlay 135 and the correctly identified retail WBT
-  table `/a/2/4/7` are now cross-checked as described above. Other
+- The USA/Europe retail Overlay 135 and the retail WBT
+  table `/a/2/4/7` are cross-checked as described above. Other
   regional/revision builds should still be checked before treating every
   address or roster byte as universal; the source-level enum and enable
-  predicate for ID 11 are resolved for this examined build.
+  predicate for ID 11 are defined for this examined build.

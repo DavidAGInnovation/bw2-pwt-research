@@ -40,8 +40,7 @@
   offset `0x3807` (through `0x38E0`): a Join Avenue `resort_scr.bin` sequence
   that calls the generic command `CMD_3EA` with selectors 17,18,21,20,19,22,23,24
   and selects messages 113 or 114. Source comparison shows that this is the
-  Resort command `EvCmdResortGetData`, not a PWT save-record gate. The earlier
-  PWT interpretation of this member has been withdrawn.
+  Resort command `EvCmdResortGetData`, not a PWT save-record gate.
 - Recovered SWAN WBT source (SVN revision 59995):
   `prog/include/field/wbt.h` defines cup IDs 0–15, including
   `WBTCUP_HODOMOE_EVENT` at ID 11; `prog/src/field/wbt_tool.c` implements
@@ -115,7 +114,7 @@
 
 The Project Pokémon PWT notes identify byte 1 of a downloadable bracket record
 as `Trainer Rank` and provide the observed placement labels for values 01–05.
-The recovered SWAN source mirror resolves the previously open value: byte 1 is
+The recovered SWAN source mirror defines the value: byte 1 is
 `WBTDL_MATCH.pri`, and `WBT_TRPRI_NULL = 0` is the source-defined undefined/null
 priority. `wbt_system_lobby.c` copies it into `WBTTRAINER.pri`,
 `wbt_makematch.c` sorts by it, and `wbt_calc_result.c` compares it before the
@@ -138,7 +137,7 @@ the verified evidence set.
 - [kwsch/PKHeX: PWTRecordID](https://github.com/kwsch/PKHeX/blob/master/PKHeX.Core/Saves/Substructures/Gen5/PWTRecordID.cs) (save-record labels; useful cross-check, but not assumed to be the constructor's 0–15 dispatch enum)
 - [kwsch/PKHeX: PWTBlock5](https://github.com/kwsch/PKHeX/blob/master/PKHeX.Core/Saves/Substructures/Gen5/PWTBlock5.cs) (16-bit PWT record access at `0x5C + 2 * id`)
 - [FlagBrew/PKSM: B2W2 scripts](https://github.com/FlagBrew/PKSM-Scripts/blob/master/src/scriptsB2W2.txt) (Champion unlock writes `10` at `0x2378C`; all-record PWT payload starts at `0x2375C`)
-- [ds-pokemon-hacking/PokeScriptSDK5: B2W2 Overlay 58 command table](https://github.com/ds-pokemon-hacking/PokeScriptSDK5/blob/92ae570f98e2eeb2ff1d8075edb3976e2c8b364e/yml/B2W2/Overlay%2058.yml) (public command signature; the recovered source supplies the previously missing symbol/behavior distinction)
+- [ds-pokemon-hacking/PokeScriptSDK5: B2W2 Overlay 58 command table](https://github.com/ds-pokemon-hacking/PokeScriptSDK5/blob/92ae570f98e2eeb2ff1d8075edb3976e2c8b364e/yml/B2W2/Overlay%2058.yml) (public command signature; the recovered source supplies the symbol/behavior distinction)
 
 ## Scope warning
 
@@ -146,8 +145,7 @@ the verified evidence set.
 for the raw `YY` histogram of a named built-in cup. The built-in cup inventory
 is documented separately in `data/in-game-tournaments.md`; the static menu
 branch maps all ordinary built-in names for the examined development build.
-ID 11 is now resolved by the recovered WBT source as
-`WBTCUP_HODOMOE_EVENT`, the Driftveil event cup. `wbt_tool.c` enables it when
+ID 11 is `WBTCUP_HODOMOE_EVENT`, the Driftveil event cup. `wbt_tool.c` enables it when
 the ordinary Driftveil win count is zero; ID 4 is enabled when that count is
 nonzero. Member 1277 includes UID 11 in the dynamic availability/menu
 candidate list, and the selected UID is passed to `EvCmdWBTSetWBTCup`.
@@ -163,8 +161,8 @@ The internal constructor/category evidence is documented in
 relabeled as downloadable `YY` bytes without a demonstrated data mapping.
 The static menu branch supplies the numeric mapping for ordinary built-in
 modes and dynamically includes candidate UID 11 when its `CMD_3EE` availability
-check passes. ID 11 is the source-defined Driftveil event cup, not an unresolved
-reserved branch. The recovered source distinguishes WBT
+check passes. ID 11 is the source-defined Driftveil event cup. The recovered
+source distinguishes WBT
 `EvCmdWBTSystemCheckEnable` (`CMD_3EA`) from Resort `EvCmdResortGetData`
 (`CMD_3EA`) and WBT `EvCmdWBTGetVictoryCount` (`CMD_3FA`).
 

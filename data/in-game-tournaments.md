@@ -142,7 +142,7 @@ The internal request pattern should not be confused with source-record counts:
 
 The ID-to-constructor rows above are decoded from the signed halfword switch
 at `0x02241D20–0x02241D3E` in overlay 135, not inferred from the menu order.
-The corrected special rows are ID 12 → `0x02241B84`, ID 14 → `0x02241BB0`,
+The special rows are ID 12 → `0x02241B84`, ID 14 → `0x02241BB0`,
 and ID 15 → `0x02241BF4`.
 
 The candidate pool size is fixed by the data table. RNG chooses among eligible
@@ -189,8 +189,7 @@ command. The description lines are from `/a/0/0/5`, member 668:
 | 15 | `0x14` | Mix Master |
 
 Text line 113 says “this Driftveil tournament” and is distinct from the
-ordinary Driftveil description at line 10. The recovered source now resolves
-the numeric ID rather than leaving it reserved: `wbt.h` defines ID 11 as
+ordinary Driftveil description at line 10. `wbt.h` defines ID 11 as
 `WBTCUP_HODOMOE_EVENT`, and `wbt_lobby.ev` requests it first in the menu as
 `SCR_WBT_CUP_HODOMOE_EVENT`. ID 0 remains the null/error path.
 
@@ -207,10 +206,9 @@ ID 4  (WBTCUP_HODOMOE):       ordinary Driftveil win count != 0
 ```
 
 Thus the event cup is enabled before the ordinary Driftveil cup has a win
-recorded. It is not gated by the previously reported eight-record `CMD_3EA`
-sequence.
+recorded. It is not gated by the eight-record `CMD_3EA` sequence.
 
-The source also resolves the command-name ambiguity. `scrcmd_wbt_table.cdat`
+The source defines the table-specific command names. `scrcmd_wbt_table.cdat`
 registers WBT `CMD_3EA` as `EvCmdWBTSystemCheckEnable`, while the separate
 Join Avenue `scrcmd_resort_table.cdat` registers Resort `CMD_3EA` as
 `EvCmdResortGetData`. `EvCmdWBTGetVictoryCount` is WBT `CMD_3FA`. The same
@@ -246,8 +244,7 @@ why Bianca's selectable Unova roster entry and the special Driftveil event are
 not excluded: roster membership and cup availability are separate source
 decisions.
 
-This also corrects the earlier tentative ID assignment: ID 2 is Type Expert,
-not World Leaders; ID 10 is World Leaders.
+ID 2 is Type Expert, not World Leaders; ID 10 is World Leaders.
 
 ## Remaining uncertainty
 
@@ -255,15 +252,15 @@ The mapping is for the archived development build and the matching Black 2
 USA/Europe retail script. Other regional/revision builds should still be
 checked before assuming that every address and roster byte is identical.
 The source-level cup enum, ID-11 predicate, menu producer, and command symbols
-are no longer unresolved.
+are documented by the source and script evidence.
 
 ## Static-only status
 
 The constructor dispatch, source-table counts, Champion roster, slot shuffle,
 NPC winner routine, cup enable predicates, and menu-name-to-ID mapping can all
 be reproduced from the archived ROM files, disassembly, scripts, and recovered
-source without an emulator. ID 11 is now identified as
+source without an emulator. ID 11 is identified as
 `WBTCUP_HODOMOE_EVENT`; WBT `CMD_3EA` is `EvCmdWBTSystemCheckEnable`, Resort
 `CMD_3EA` is `EvCmdResortGetData`, and WBT `CMD_3FA` is
 `EvCmdWBTGetVictoryCount`. Remaining work is only cross-region/build
-verification, not symbol or event-condition recovery.
+verification.
