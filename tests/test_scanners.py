@@ -70,6 +70,8 @@ class ScannerTests(unittest.TestCase):
         self.assertEqual(wbt_table.candidate_indices(bytes(table), 13), [1])
         self.assertEqual(wbt_table.pool_indices(bytes(table), 12, 3), [0])
         self.assertEqual(wbt_table.compact_indices([0, 1, 2, 5, 7, 8]), "0–2, 5, 7–8")
+        self.assertIn("record 000:", wbt_table.format_record(0, bytes(table[:16])))
+        self.assertIn("mask=0x08", wbt_table.format_record(0, bytes(table[:16])))
 
     def test_narc_and_menu_builder(self) -> None:
         members = menu_builder.narc_members(make_narc([make_menu_member()]))

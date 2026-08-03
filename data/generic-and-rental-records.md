@@ -54,8 +54,10 @@ Leader/Champion rows already listed in
 | `68–77` | `0x1A` | `0x00` | `0x12` | 2 | IDs 4, 12, and 14 |
 | `78–127` | `0x1B` | `0x00` | `0x11` | 1 | IDs 4, 11, 12, and 14 |
 
-The exact per-record values, including the repeated values in these ranges,
-are reproduced by [`scripts/inspect_wbt_table.py`](../scripts/inspect_wbt_table.py).
+The complete 16-byte row for every index, including the exact per-record values
+in the `58–67` range, is reproducible with the decoder's `--dump-records`
+option. The dump includes both the raw bytes and the decoded constructor fields;
+the grouped table above is a compact view of that exact output.
 The `0x11` type ID in records 78–127 is the Type Expert wildcard; it is
 separate from the category-17 neutral sentinel used by the NPC winner routine.
 
@@ -109,6 +111,9 @@ With the extracted development WBT NARC:
 ```sh
 python3 scripts/inspect_wbt_table.py rom/extracted/a/2/6/1 \
   --cup 12 --cup 13 --cup 14 --cup 15
+
+# Optional: print all 128 complete source rows and decoded constructor fields.
+python3 scripts/inspect_wbt_table.py rom/extracted/a/2/6/1 --dump-records --cup 12
 ```
 
 The USA/Europe retail WBT NARC is `/a/2/4/7`; its member is byte-for-byte

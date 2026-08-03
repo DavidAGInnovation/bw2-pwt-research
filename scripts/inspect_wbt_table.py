@@ -124,6 +124,16 @@ def compact_indices(indices: list[int]) -> str:
     return ", ".join(ranges)
 
 
+def format_record(index: int, row: bytes) -> str:
+    """Render one complete source row plus the constructor-visible fields."""
+
+    return (
+        f"record {index:03d}: {row.hex(' ')} "
+        f"mask=0x{row[MASK_OFFSET]:02x} family=0x{row[FAMILY_OFFSET]:02x} "
+        f"type=0x{row[TYPE_OFFSET]:02x} pool={row[POOL_OFFSET] & 7}"
+    )
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("table", type=Path, help="WBT table member or one-member NARC")
@@ -134,6 +144,11 @@ def main() -> int:
         action="append",
         dest="cups",
         help="static cup ID to print (may be repeated; defaults to all)",
+    )
+    parser.add_argument(
+        "--dump-records",
+        action="store_true",
+        help="print every complete 16-byte source row and decoded constructor fields",
     )
     args = parser.parse_args()
     try:
@@ -148,6 +163,9 @@ def main() -> int:
         f"type@{TYPE_OFFSET},pool=byte{POOL_OFFSET}&7"
     )
     rows = records(table)
+    if args.dump_records:
+        for index, row in enumerate(rows):
+            print(format_record(index, row))
     for cup_id in cups:
         eligible = candidate_indices(table, cup_id)
         predicate = (
