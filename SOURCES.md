@@ -83,7 +83,8 @@
 - Text NARC `/a/0/0/5`, member 668: PWT description/menu strings used by that
   switch. Text NARC `/a/2/3/9`, member 11: the compact permanent-mode labels.
 - Development WBT NARC `/a/2/6/1`, resource 261, one 2,048-byte member with
-  128 16-byte records; the built-in family inventory uses record byte 2.
+  128 16-byte records; the built-in family inventory uses the byte at
+  zero-based record offset 6.
 - USA/Europe retail WBT NARC `/a/2/4/7`: 2,108 bytes, one 2,048-byte member,
   SHA-256 `0a32d2956f75a6e6365f292eb20e129c5247fe9ec093ca881dd469ea698d00ca`,
   exactly matching the development table.

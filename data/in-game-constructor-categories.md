@@ -23,7 +23,7 @@ The relevant overlay-135 routines are:
 | `0x02241630` | Counts candidates matching a requested internal pool. |
 | `0x02241704` | Selects a requested number of candidates using RNG. |
 | `0x022415E0` | Finalizes the selected seven NPC records. |
-| `0x02241A88` | Fixed/flagged path; selects records whose packed flag at offset `6` is set. |
+| `0x02241A88` | Fixed/flagged path; selects records whose selector byte at offset `6` equals `0x01`. |
 | `0x02241C0C` | Dynamic leader/mob/weak-mob path used by Type Expert. |
 
 ## Cup-ID dispatch
@@ -65,10 +65,11 @@ to `0x02241BF4`.
 The script-level mapping below resolves the player-facing names for every
 ordinary built-in mode.  The cup IDs come from the dispatch above and the
 names come from the actual PWT menu/description branch in script member 1277
-(documented in the static-evidence section below).  The family byte is raw
-record **byte 2**.  It is not the downloadable `.pwt` `YY` byte.
+(documented in the static-evidence section below).  The family byte is the raw
+record byte at **zero-based offset 6**.  It is not the downloadable `.pwt` `YY`
+byte.
 
-| Named cup | Cup ID | Constructor | Raw family byte 2 | Source-table records in this build | Evidence status |
+| Named cup | Cup ID | Constructor | Raw family byte (offset 6) | Source-table records in this build | Evidence status |
 |---|---:|---|---:|---|---|
 | Champions | 1 | `0x02241A88` | `0x01` | indices `14–19, 53` (7 records) | Confirmed: menu branch + fixed Champion roster |
 | Type Expert | 2 | `0x02241C0C` | dynamic | Type/category-specific leader/mob/weak-mob pools | Confirmed: menu branch + dynamic constructor |
@@ -308,7 +309,7 @@ The decoded control flow preserves category filtering, the neutral/sentinel
 The USA/Europe retail WBT table is `/a/2/4/7`, not `/a/2/6/1`. Its 2,108-byte
 NARC (one 2,048-byte member) has the same SHA-256 as the development table,
 `0a32d2956f75a6e6365f292eb20e129c5247fe9ec093ca881dd469ea698d00ca`.
-Consequently, the development byte-2 family inventory and the named indices in
+Consequently, the development offset-6 family inventory and the named indices in
 [`champions-and-leaders.md`](champions-and-leaders.md) are byte-for-byte
 verified for this USA/Europe retail build. The retail `/a/2/6/1` resource is a
 different 24,052-byte, 1,000-member NARC and is not used for this WBT table.
@@ -324,7 +325,7 @@ guarantee identical addresses or data in untested regional/revision ROMs.
 - The source artifact is an archived development build, SHA-256
   `ac4fb3e97b90831bd878f4e6ab0bed4ad355311ff90becba79ab79456f4e12da`.
 - NARC `/a/2/6/1` (resource 261) contains 128 records of 16 bytes each in that
-  build; the family inventory above is based on raw byte 2.
+  build; the family inventory above is based on the raw byte at offset 6.
 - The overlay-55 WBT cup setter begins at `0x02237728`, logs
   `EvCmdWBTSetWBTCup <= %d.`, and stores the parsed 16-bit value in the WBT
   work structure at offset `0x0C`. Its command is `CMD_3F3`. The neighboring

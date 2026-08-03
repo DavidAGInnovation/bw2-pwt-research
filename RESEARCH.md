@@ -118,17 +118,17 @@ source uses only `GFL_STD_Rand(context, 2)`, giving A and B 50% each.
 
 ### Champion versus Champion
 
-All seven standard Champion entries decode to priority 4, category 17, trainer type 0. Source `PokeType` defines the null/sentinel value immediately after the 16 ordinary types (17), and `BTL_CALC_TypeAff` returns the neutral score when either side is null. Champion pairs therefore have equal affinities and use the source's exact 50/50 `GFL_STD_Rand(context, 2)` branch. Red-vs-Blue and Red-vs-Lance are not name-biased; whichever name is A or B has the same 50% chance. The bracket generator may decide whether the pair appears and in which round, but it does not change this winner routine.
+All seven standard Champion entries decode to priority 4, category 17, trainer type 0. Source `PokeType` defines the null/sentinel value immediately after the 17 ordinary types (values 0–16), and `BTL_CALC_TypeAff` returns the neutral score when either side is null. Champion pairs therefore have equal affinities and use the source's exact 50/50 `GFL_STD_Rand(context, 2)` branch. Red-vs-Blue and Red-vs-Lance are not name-biased; whichever name is A or B has the same 50% chance. The bracket generator may decide whether the pair appears and in which round, but it does not change this winner routine.
 
 ### Champion selection versus slot placement
 
 The built-in Champion cup has two separate steps:
 
 1. The cup-ID dispatch routes the Champion cup to `0x02241A88`. That path scans
-   the source table and copies records whose packed flag at record offset 6 is
-   set. In the examined build, exactly the seven standard Champion records are
-   flagged: Blue, Lance, Steven, Wallace, Cynthia, Alder, and Red. This path
-   does not use the category-selection RNG to choose a subset of Champions.
+   the source table and copies records whose selector byte at record offset 6
+   equals `0x01`. In the examined build, exactly the seven standard Champion
+   records match: Blue, Lance, Steven, Wallace, Cynthia, Alder, and Red. This
+   path does not use the category-selection RNG to choose a subset of Champions.
 2. The common match builder then creates eight participant pointers (the player
    plus seven NPCs) and calls the shuffle routine at `0x02241DB8` with a count
    of 8. The routine performs an RNG-based permutation; subsequent code records
@@ -179,8 +179,9 @@ This bracket selection affects who the player meets and in which round they meet
 The permanent cups use a separate constructor dispatch from the downloadable
 `.pwt` role bytes. Overlay 135 reads the cup ID at `0x02241D02`, dispatches IDs
 `0..15`, and uses the internal WBT table at NARC `/a/2/6/1`. In the examined
-build, record byte 2 identifies the source family: `0x05` is the primary Unova
-Leaders slice (13 records, plus one known wildcard at index 8),
+build, the byte at zero-based record offset 6 identifies the source family:
+`0x05` is the primary Unova Leaders slice (13 records, plus one known wildcard
+at index 8),
 `0x06`/`0x07`/`0x08`/`0x09` are the Kanto/Johto/Hoenn/Sinnoh slices, and `0x01`
 is the seven-record Champions slice. The static menu/script mapping resolves
 ID 1 for Champions, ID 2 for Type Expert, ID 3 for Download, ID 4 for

@@ -41,9 +41,10 @@ retained.
 ## What is being counted
 
 NARC `/a/2/6/1` (resource 261) in the examined build contains 128 records of
-16 bytes.  The family inventory is the raw **byte at record offset 2**:
+16 bytes.  The family inventory is the raw **byte at zero-based record offset
+6**:
 
-| Family byte 2 | Record indices | Count | Roster/family identified |
+| Family byte (record offset 6) | Record indices | Count | Roster/family identified |
 |---:|---|---:|---|
 | `0x05` | `0–7, 9–13` | 13 | Primary Unova/Teselia Leaders family |
 | `0x01` | `14–19, 53` | 7 | Champions |
@@ -63,13 +64,13 @@ player's eight-trainer field.
 
 | Built-in family | Cup ID | Constructor | Source family/count | Status |
 |---|---:|---|---|---|
-| Unova/Teselia Leaders | 5 | `0x02241B08` | indices `0–13`: 14 records (13 byte2 `0x05` + wildcard index 8) | Mapped in this build |
-| Kanto Leaders | 6 | `0x02241B08` | byte2 `0x06`: 8 records | Mapped in this build |
-| Johto Leaders | 7 | `0x02241B08` | byte2 `0x07`: 8 records | Mapped in this build |
-| Hoenn Leaders | 8 | `0x02241B08` | byte2 `0x08`: 9 records | Mapped in this build |
-| Sinnoh Leaders | 9 | `0x02241B08` | byte2 `0x09`: 8 records | Mapped in this build |
+| Unova/Teselia Leaders | 5 | `0x02241B08` | indices `0–13`: 14 records (13 offset-6 `0x05` + wildcard index 8) | Mapped in this build |
+| Kanto Leaders | 6 | `0x02241B08` | offset-6 `0x06`: 8 records | Mapped in this build |
+| Johto Leaders | 7 | `0x02241B08` | offset-6 `0x07`: 8 records | Mapped in this build |
+| Hoenn Leaders | 8 | `0x02241B08` | offset-6 `0x08`: 9 records | Mapped in this build |
+| Sinnoh Leaders | 9 | `0x02241B08` | offset-6 `0x09`: 8 records | Mapped in this build |
 | World Leaders | 10 | `0x02241AF0` | mixed leader families; seven cat.-3 selections | Mapped in this build |
-| Champions | 1 | `0x02241A88` | byte2 `0x01`: 7 records | Mapped in this build |
+| Champions | 1 | `0x02241A88` | offset-6 `0x01`: 7 records | Mapped in this build |
 | Type Expert | 2 | `0x02241C0C` | dynamic leader/mob/weak-mob pools | Mapped in this build |
 | Rental | 12 | `0x02241B84` | 3 cat. 1 + 2 cat. 2 + 2 cat. 3 | Mapped in this build |
 | Mix | 14 | `0x02241BB0` | 3 cat. 1 + 2 cat. 2 + 2 cat. 3 | Mapped in this build |
@@ -132,7 +133,7 @@ The internal request pattern should not be confused with source-record counts:
 | Cup IDs | Constructor | Requests |
 |---|---|---|
 | `5–9` | `0x02241B08` | seven category-3 selections |
-| `1` | `0x02241A88` | all records whose packed flag is set, then up to seven are used |
+| `1` | `0x02241A88` | all records whose offset-6 selector byte equals `0x01`, then up to seven are used |
 | `2` | `0x02241C0C` | dynamic leader/mob/weak-mob selection, totaling seven NPCs (Type Expert) |
 | `4` (and default/0 after its error log) | `0x02241B20` | 4 cat. 1 + 1 cat. 2 + 2 cat. 3 |
 | `11` | `0x02241B4C` | 4 cat. 1 + 1 cat. 3 + 1 cat. 4 + 1 cat. 5 |
