@@ -32,7 +32,9 @@ def main() -> None:
 
     for index, record in enumerate(records, start=1):
         print(f"record {index}: {' '.join(f'{byte:02X}' for byte in record)}")
-    print("YY counts:", " ".join(f"{yy}={counts.get(yy, 0)}" for yy in range(6)))
+    unexpected = sorted(yy for yy in counts if yy not in range(6))
+    yy_values = list(range(6)) + unexpected
+    print("YY counts:", " ".join(f"{yy}={counts.get(yy, 0)}" for yy in yy_values))
 
 
 if __name__ == "__main__":

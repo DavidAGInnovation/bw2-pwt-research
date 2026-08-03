@@ -25,7 +25,7 @@ CMD_MESSAGE_114 = b"\xeb\x03\x72\x00"
 # The sequence is retained as a reproducible cross-build byte signature. It is
 # a Resort/Join Avenue script, not a PWT unlock predicate; the PWT cup-enable
 # logic comes from the recovered WBT source in wbt_tool.c.
-FINAL_GATE = bytes.fromhex(
+BRANCH_SIGNATURE = bytes.fromhex(
     "0900558008000100110001001f00ff2c000000"
 )
 
@@ -82,9 +82,11 @@ def find_candidate(data: bytes, max_gap: int, message_window: int):
         end = offsets[-1] + message_window
         msg113 = data.find(CMD_MESSAGE_113, offsets[-1], end)
         msg114 = data.find(CMD_MESSAGE_114, offsets[-1], end)
-        gate = data.find(FINAL_GATE, offsets[-1] + len(CMD_GET) + 2, end)
-        if msg113 >= 0 and msg114 >= 0 and gate >= 0:
-            yield offsets, msg113, msg114, gate
+        signature = data.find(
+            BRANCH_SIGNATURE, offsets[-1] + len(CMD_GET) + 2, end
+        )
+        if msg113 >= 0 and msg114 >= 0 and signature >= 0:
+            yield offsets, msg113, msg114, signature
         first = offsets[0] + 1
 
 
@@ -98,7 +100,7 @@ def main() -> int:
     members = narc_members(args.narc.read_bytes())
     found = False
     for member_id, member in enumerate(members):
-        for offsets, msg113, msg114, gate in find_candidate(
+        for offsets, msg113, msg114, signature in find_candidate(
             member, args.max_gap, args.message_window
         ):
             found = True
@@ -106,7 +108,7 @@ def main() -> int:
                 f"member {member_id}: CMD_3EA offsets "
                 + ", ".join(f"0x{x:X}" for x in offsets)
                 + f"; CMD_3EB(113)=0x{msg113:X}; CMD_3EB(114)=0x{msg114:X}"
-                + f"; branch signature after messages at 0x{gate:X}"
+                + f"; branch signature at 0x{signature:X}"
             )
     if not found:
         print("no matching Resort CMD_3EA script found")

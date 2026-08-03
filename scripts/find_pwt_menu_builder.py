@@ -16,6 +16,7 @@ from pathlib import Path
 
 
 CMD_GET = b"\xee\x03"
+CMD_IF_PREFIX = bytes.fromhex("0900108008000100")
 LIST_MENU_ADD_OPCODES = {b"\xab\x00", b"\xaf\x00"}
 EXPECTED = (11, 4, 5, 6, 7, 8, 9, 10, 1, 13, 15, 2, 12, 14, 3)
 BLOCK_SIZE = 0x21
@@ -58,6 +59,8 @@ def find_builder(member: bytes):
                 len(block) != BLOCK_SIZE
                 or block[:2] != CMD_GET
                 or struct.unpack_from("<H", block, 2)[0] != candidate
+                or struct.unpack_from("<H", block, 4)[0] != 0x8010
+                or block[6:14] != CMD_IF_PREFIX
                 or block[0x19:0x1B] not in LIST_MENU_ADD_OPCODES
                 or struct.unpack_from("<H", block, 0x1D)[0] != 0xFFFF
                 or struct.unpack_from("<H", block, 0x1F)[0] != candidate
