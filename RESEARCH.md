@@ -150,11 +150,13 @@ not the same thing as the seven NPC slots selected for one run.
 The development build's Japanese text archive independently names the
 permanent modes. NARC `/a/2/3/9`, member 11, entries 151–162 decode in order to
 Champions, Driftveil, Unova, Kanto, Johto, Hoenn, Sinnoh, World Leaders, Rental,
-Rental Master, Mix, and Mix Master. The actual numeric linkage is recovered
-from the menu script: `/a/0/5/9`, member 1277, stores the list result in
-`0x8023`, passes it to `EvCmdWBTSetWBTCup` at member offset `0x02E7`, and
+Rental Master, Mix, and Mix Master. The numeric linkage is recovered from the
+menu script: `/a/0/5/9`, member 1277, stores the list result in `0x8023`,
+passes it to `EvCmdWBTSetWBTCup` (`CMD_3F3`) at member offset `0x02E7`, and
 dispatches description text by comparing the same value at offsets
-`0x0B95–0x0DC0`. The resulting mapping is:
+`0x0B95–0x0DC0`. The neighboring reception-ID setter is `CMD_3F7`; `CMD_3EF`
+is a different WBT command. The resulting
+mapping is:
 
 ```text
 ID 1  Champions       ID 2  Type Expert       ID 3  Download
@@ -174,10 +176,25 @@ while ID 10 is World Leaders. The external retail symbol
 loader, but the retail address is not treated as a development-build code
 address.
 
-The script archive provides one additional static checkpoint: command `0x3F3`
-(`EvCmdWBTSetWBTCup`) appears with literal value `4` in member `1278` (two
-entry scripts). Member 1277 supplies the general menu result and name mapping
-described above. These results require no emulator or runtime trace.
+The earlier scan of `CMD_3EF` arguments was misinterpreted: it is not
+`EvCmdWBTSetWBTCup`. No literal `CMD_3F3`/`EvCmdWBTSetWBTCup` call with value
+`11` was found in the examined script archive. Member 1277 supplies the
+general menu result and description mapping. Zero-based NARC entry 1280,
+sequence 7 at raw member offset `0x3807` (through `0x38E0`), calls `CMD_3EA` for PWT save-record IDs
+`17,18,21,20,19,22,23,24`, compares each returned value with `1`, accumulates
+the matches, and selects messages 113 or 114. Entry 113 says “this Driftveil
+tournament,” matching the documented first/story Driftveil wording. This is
+strong evidence that ID 11 is an introductory/story Driftveil state whose gate
+is represented by PWT save-record state.
+
+The `CMD_3EA` behavior is resolved at the save-data level: it returns the
+16-bit PWT progress/victory value for the supplied record ID, so `== 1` means
+exactly one recorded win. PKHeX maps the IDs to `0x5C + 2 * id` in the PWT
+save block, the examined save contains values such as World Leaders `10`, and
+PKSM's B2W2 scripts write `10` at `0x2378C` to unlock Champions. Overlay 55
+also exposes `EvCmdWBTGetVictoryCount`/`EvCmdWBTIncVictoryCount` with a
+`WBTSTAGE_WIN` assertion. The original Nintendo symbol for the Overlay-58
+wrapper remains unknown, but the returned value is not an unresolved boolean.
 
 As a static-analysis correction, the overlay-135 switch table is a signed
 halfword table at `0x02241D20–0x02241D3E` with Thumb PC base `0x02241D22`.
@@ -188,7 +205,22 @@ order.
 
 ## Reproducibility and limitations
 
-- The findings come from an archived development build; retail BW2 verification is still desirable.
+- The findings come from an archived development build, with the relevant
+  script sequence now cross-checked against a Black 2 USA/Europe retail
+  extraction. The retail bytes are retained locally under
+  `rom/retail-extracted/a/0/5/6`; see the artifact-level README for provenance.
+- In this development artifact the relevant script NARC is `/a/0/5/9`, with
+  zero-based entry 1280 containing the state check. Public retail file-system
+  listings use `/a/0/5/6` for the large B2W2 script archive, so the member
+  number and offset have now been checked against a retail extraction. The
+  retail NARC has 1,289 members and the same state-check sequence is in
+  zero-based member 1280 at raw offsets `0x3807, 0x3826, 0x3845, 0x3864,
+  0x3883, 0x38A2, 0x38C1, 0x38E0`, with message branches 113 and 114 at
+  `0x3926` and `0x3958`. The repository scanner
+  `scripts/find_pwt_state_script.py` reproduces these findings.
 - No original Nintendo C/C++ source was obtained. The addresses above are disassembly locations.
-- No ROM, overlay, or copyrighted game asset is redistributed here.
+- The retail NARC was downloaded from a public ROM mirror for local analysis;
+  its legal extraction provenance is not established, and it should not be
+  redistributed. A user-owned cartridge extraction remains the appropriate
+  source for a legally reproducible artifact.
 - Exact raw record names and IDs are not inputs to the result calculation; only the packed fields described above are read.
