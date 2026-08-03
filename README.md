@@ -1,6 +1,6 @@
 # Pokémon Black 2 / White 2 PWT NPC-vs-NPC result research
 
-This repository documents how Pokémon Black 2 and White 2 construct and resolve Pokémon World Tournament (PWT) matches between NPC trainers. It answers a practical question: are NPC-vs-NPC winners always selected 50/50, or do trainer priority and matchup categories affect the result?
+This repository documents how Pokémon Black 2 and White 2 construct and resolve Pokémon World Tournament (PWT) matches between NPC trainers. It answers a practical question: when two NPC trainers are shown battling, is either one equally likely to win, or does the game use another rule?
 
 ## Short answer
 
