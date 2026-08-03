@@ -107,6 +107,3 @@ predicate requires `region_tournament_id == WBTCUP_ISSYU` (`5`), so this record
 is excluded from the Unova Leaders pool. Bianca's eligibility in other modes is
 controlled by their separate entry flags; reuse of the record does not change
 the regional family count.
-
-These categories are used by the game's matchup table, not by a conventional
-six-Pokémon battle simulation.
