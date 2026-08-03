@@ -163,7 +163,7 @@ Champions decode to priority 4; standard Gym Leaders decode to priority 3. Since
 
 ### Gym Leader versus Gym Leader
 
-Both records normally have priority 3, so their matchup categories decide the odds. If the categories tie, either Leader wins 50% of the time. If one category has the advantage, that Leader wins about 70% of the time, while the other still has about a 30% chance. The same rule applies whichever Leader has the advantage. For example, Clay's Ground category has the advantage over Elesa's Electric category, so Clay wins about 70% and Elesa about 30%; reversing their A/B positions does not change those percentages.
+Both records normally have priority 3, so their matchup categories decide the odds. If the categories tie, either Leader wins 50% of the time. If one category has the advantage, that Leader wins about 70% of the time, while the other still has about a 30% chance. For example, Clay's Ground category has the advantage over Elesa's Electric category, so Clay wins about 70% and Elesa about 30%; reversing their A/B positions does not change those percentages.
 
 ## Bracket settings are a separate selection process
 
