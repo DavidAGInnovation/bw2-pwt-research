@@ -100,12 +100,13 @@ The bracket settings answer “which opponent is scheduled for which player roun
 
 - Project Pokémon notes label the fields “Required Finalist” and “Required Semifinalist” and state that same-setting entries are selected randomly.
 - The archived development build contains the selector trace and debug format `SELECT TRAINER(...):pri(... )btl(... )candidate(...)` in overlay 135.
-- The recovered SWAN source mirror (SVN revision 59995, branch
-  `branches/upper_version`) confirms the field and its consumers in
+- The recovered SWAN source mirror (SVN revision 59995; the historical source
+  path is `branches/upper_version`) confirms the field and its consumers in
   `include/savedata/wbt_download.h`, `include/field/wbt.h`,
   `field/wbt_system_lobby.c`, `field/wbt_makematch.c`, and
   `field/wbt_calc_result.c`. The source is retained locally and is not
-  redistributed in this repository.
+  redistributed in this repository. The path is provenance for the archived
+  SVN snapshot, not a branch of this GitHub repository.
 - The recovered SWAN source identifies the separate Join Avenue/Resort
   `CMD_3EA` wrapper as `EvCmdResortGetData`. WBT uses the same numeric slot for
   `EvCmdWBTSystemCheckEnable`; neither symbol changes the bracket semantics,

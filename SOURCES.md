@@ -2,6 +2,16 @@
 
 ## Primary artifacts used for this report
 
+### Source-path convention
+
+The recovered SWAN mirror is one local snapshot of SVN revision `59995`. Some
+citations retain historical upstream SVN directory names such as
+`branches/fes_rom` and `branches/upper_version`; these are paths inside that
+archive, not branches of this GitHub repository. The public repository is
+maintained directly on `main`. The two historical source trees are cited for
+provenance only; this report does not claim that every file is identical across
+them.
+
 - Archived BW2 development build examined locally (not redistributed).
 - Recovered SWAN source: `branches/fes_rom/prog/src/field/wbt_calc_result.c`
   contains `calcWBTResult` and `WBTSYS_CalcResult`, including the priority,
@@ -119,9 +129,10 @@ The recovered SWAN source mirror defines the value: byte 1 is
 `WBTDL_MATCH.pri`, and `WBT_TRPRI_NULL = 0` is the source-defined undefined/null
 priority. `wbt_system_lobby.c` copies it into `WBTTRAINER.pri`,
 `wbt_makematch.c` sorts by it, and `wbt_calc_result.c` compares it before the
-affinity/RNG branch. The source mirror is SVN revision 59995 on
-`branches/upper_version`, retained locally under the research artifact and not
-redistributed here.
+affinity/RNG branch. The source mirror is SVN revision 59995; `branches/upper_version`
+is the historical upstream SVN path retained in the local archive, not a branch
+of this GitHub repository. The source is retained locally under the research
+artifact and not redistributed here.
 
 Only a USA/Europe retail ROM was available for the retail cross-check in this
 repository. Japanese, Korean, and other regional/revision ROMs remain outside

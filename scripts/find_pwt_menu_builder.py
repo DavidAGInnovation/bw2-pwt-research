@@ -78,7 +78,10 @@ def main() -> int:
     parser.add_argument("narc", type=Path, help="extracted script NARC")
     args = parser.parse_args()
 
-    members = narc_members(args.narc.read_bytes())
+    try:
+        members = narc_members(args.narc.read_bytes())
+    except (OSError, ValueError, struct.error) as exc:
+        parser.error(str(exc))
     for member_id, member in enumerate(members):
         blocks = find_builder(member)
         if blocks is None:

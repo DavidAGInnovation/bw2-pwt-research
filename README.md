@@ -71,3 +71,12 @@ locally under the artifact directory and are not redistributed.
 - [Serebii Champion Tournament roster](https://www.serebii.net/black2white2/pwt/champion.shtml)
 - [WikiDex: Pokémon World Tournament](https://www.wikidex.net/wiki/Pok%C3%A9mon_World_Tournament) (built-in family names and unlock conditions; attribution retained in `data/in-game-tournaments.md`)
 - [Bulbapedia: Pokémon World Tournament](https://bulbapedia.bulbagarden.net/wiki/PWT) (cross-check for permanent tournament groups)
+
+## Tests
+
+The scanner unit tests use small synthetic NARC/script fixtures and do not
+require a ROM or recovered source archive:
+
+```sh
+python3 -m unittest discover -s tests -v
+```

@@ -54,7 +54,7 @@ def narc_members(blob: bytes) -> list[bytes]:
 
 
 def find_candidate(data: bytes, max_gap: int, message_window: int):
-    """Yield (command offsets, message-113 offset, message-114 offset).
+    """Yield command offsets, message offsets, and branch-signature offset.
 
     The final tuple member is the literal branch shape used by the retail and
     development Resort scripts. It is reported for byte-level reproducibility;
@@ -97,7 +97,10 @@ def main() -> int:
     parser.add_argument("--message-window", type=int, default=0x800)
     args = parser.parse_args()
 
-    members = narc_members(args.narc.read_bytes())
+    try:
+        members = narc_members(args.narc.read_bytes())
+    except (OSError, ValueError, struct.error) as exc:
+        parser.error(str(exc))
     found = False
     for member_id, member in enumerate(members):
         for offsets, msg113, msg114, signature in find_candidate(
