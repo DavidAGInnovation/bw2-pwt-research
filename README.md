@@ -42,13 +42,24 @@ This repository documents a reverse-engineering result for the Pokémon World To
 
 These percentages are for the observed normal NPC path and are approximate because the game uses integer arithmetic on its RNG output. They describe the encoded routine, not the strength of the teams in an actual battle.
 
+## Verified scope
+
+The source-level conclusions and cup-name mapping are definitive for the
+archived development build examined here. The USA/Europe retail ROM
+cross-check confirms the corresponding WBT table and relocated Overlay 55/135
+behavior. This is not a claim that every Japanese, Korean, or later regional
+revision has identical addresses, data, or scripts; those builds remain outside
+the verified evidence set.
+
 ## Evidence
 
 The analysis was performed on an archived BW2 development build and cross-checked
 against a complete, locally retained Black 2 retail ROM. The recovered SWAN
-source mirror is used only to identify the original command symbol and
-constants; it is retained locally and not redistributed here. The result
-routine was also independently checked in the decompressed retail Overlay 55.
+source mirror is used to verify source-level structures and behavior—including
+the winner routine, downloadable priority field, cup IDs, unlock predicates,
+and command symbols/constants. It is retained locally and not redistributed
+here. The result routine was also independently checked in the decompressed
+retail Overlay 55.
 The repository records hashes, table indexes, decoded fields, disassembly
 locations, and reproducible pseudocode; the ROM/source mirror provenance is
 documented separately and is not a legally verified dump.

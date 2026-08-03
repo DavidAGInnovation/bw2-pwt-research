@@ -69,23 +69,29 @@ names come from the actual PWT menu/description branch in script member 1277
 (documented in the static-evidence section below).  The family byte is raw
 record **byte 2**.  It is not the downloadable `.pwt` `YY` byte.
 
-| Named cup | Cup ID | Constructor | Raw family byte 2 | Source-table records in this build | Confidence |
+| Named cup | Cup ID | Constructor | Raw family byte 2 | Source-table records in this build | Evidence status |
 |---|---:|---|---:|---|---|
-| Champions | 1 | `0x02241A88` | `0x01` | indices `14–19, 53` (7 records) | High: menu branch + fixed Champion roster |
-| Type Expert | 2 | `0x02241C0C` | dynamic | Type/category-specific leader/mob/weak-mob pools | High: menu branch + dynamic constructor |
-| Download | 3 | `0x02241998` | download/special | Generic/download-style shuffle path | High: menu branch; record details are mode-specific |
-| Driftveil | 4 | `0x02241B20` | mixed | Four cat. 1, one cat. 2, two cat. 3 | High: menu branch + constructor |
-| Unova/Teselia Leaders | 5 | `0x02241B08` | primarily `0x05` | indices `0–13` (14 possible NPCs: 13 standard Leaders + Bianca wildcard at index 8) | High: family roster/order and cup progression |
-| Kanto Leaders | 6 | `0x02241B08` | `0x06` | indices `20–26, 35` (8 records) | High: family roster/order |
-| Johto Leaders | 7 | `0x02241B08` | `0x07` | indices `27–34` (8 records) | High: family roster/order |
-| Hoenn Leaders | 8 | `0x02241B08` | `0x08` | indices `36–44` (9 records) | High: family roster/order |
-| Sinnoh Leaders | 9 | `0x02241B08` | `0x09` | indices `45–52` (8 records) | High: family roster/order |
-| World Leaders | 10 | `0x02241AF0` | mixed leader families | Seven cat.-3 selections | High: menu branch + constructor |
-| Rental | 12 | `0x02241B84` | special | Three cat. 1, two cat. 2, two cat. 3 | High: menu branch + constructor |
-| Rental Master | 13 | `0x02241BDC` | special | Seven cat.-3 selections | High: menu branch + constructor |
-| Mix | 14 | `0x02241BB0` | special | Three cat. 1, two cat. 2, two cat. 3 | High: menu branch + constructor |
-| Mix Master | 15 | `0x02241BF4` | special | Seven cat.-3 selections | High: menu branch + constructor |
-| Driftveil event | 11 | `0x02241B4C` | `WBTCUP_HODOMOE_EVENT` | Four cat. 1, one each cat. 3/4/5 | Source enum and enable predicate confirmed |
+| Champions | 1 | `0x02241A88` | `0x01` | indices `14–19, 53` (7 records) | Confirmed: menu branch + fixed Champion roster |
+| Type Expert | 2 | `0x02241C0C` | dynamic | Type/category-specific leader/mob/weak-mob pools | Confirmed: menu branch + dynamic constructor |
+| Download | 3 | `0x02241998` | download/special | Generic/download-style shuffle path | Confirmed: menu branch + constructor; payload is mode-specific |
+| Driftveil | 4 | `0x02241B20` | mixed | Four cat. 1, one cat. 2, two cat. 3 | Confirmed: menu branch + constructor |
+| Unova/Teselia Leaders | 5 | `0x02241B08` | primarily `0x05` | indices `0–13` (14 possible NPCs: 13 standard Leaders + Bianca wildcard at index 8) | Confirmed: family roster/order + cup progression |
+| Kanto Leaders | 6 | `0x02241B08` | `0x06` | indices `20–26, 35` (8 records) | Confirmed: family roster/order |
+| Johto Leaders | 7 | `0x02241B08` | `0x07` | indices `27–34` (8 records) | Confirmed: family roster/order |
+| Hoenn Leaders | 8 | `0x02241B08` | `0x08` | indices `36–44` (9 records) | Confirmed: family roster/order |
+| Sinnoh Leaders | 9 | `0x02241B08` | `0x09` | indices `45–52` (8 records) | Confirmed: family roster/order |
+| World Leaders | 10 | `0x02241AF0` | mixed leader families | Seven cat.-3 selections | Confirmed: menu branch + constructor |
+| Rental | 12 | `0x02241B84` | special | Three cat. 1, two cat. 2, two cat. 3 | Confirmed: menu branch + constructor |
+| Rental Master | 13 | `0x02241BDC` | special | Seven cat.-3 selections | Confirmed: menu branch + constructor |
+| Mix | 14 | `0x02241BB0` | special | Three cat. 1, two cat. 2, two cat. 3 | Confirmed: menu branch + constructor |
+| Mix Master | 15 | `0x02241BF4` | special | Seven cat.-3 selections | Confirmed: menu branch + constructor |
+| Driftveil event | 11 | `0x02241B4C` | `WBTCUP_HODOMOE_EVENT` | Four cat. 1, one each cat. 3/4/5 | Confirmed: source enum + menu branch + enable predicate |
+
+“Confirmed” means the mapping is deterministic and supported by the source,
+script menu/description branch, and constructor evidence for the examined build;
+the matching USA/Europe retail data/code path was cross-checked where noted.
+It does not mean that every regional or revision ROM must use the same addresses
+or data.
 
 The regional names and rosters agree with the public PWT listings for the
 [regional Leaders cups](https://www.serebii.net/black2white2/worldtournament.shtml),
