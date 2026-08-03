@@ -159,6 +159,12 @@ selects those groups and fills the remaining slots. The code checks:
 1 + leader_num + mob_num + weak_mob_num == WBT_TRAINER_NUM
 ```
 
+`WBT_TRAINER_NUM` is 8, consisting of the player and seven NPCs. Thus the
+three group counts must add up to seven. For example, two Leaders, three Mobs,
+and two Weak Mobs would give `1 + 2 + 3 + 2 = 8`; the actual trainer records
+within those groups are selected by the constructor and their positions are
+then shuffled.
+
 The public [TournamentSearcher reverse-engineering project](https://github.com/namofure/TournamentSearcher)
 also treats this dynamic path as a structured participant/shuffle problem, not
 as a simple downloadable `YY` histogram. World Leaders is ID 10 and uses its

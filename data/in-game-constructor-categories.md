@@ -264,6 +264,13 @@ Its debug strings are `SELECT LEADER:%d,rest=%d`, `SELECT MOB:%d,rest=%d`, and
 1 + leader_num + mob_num + weak_mob_num == WBT_TRAINER_NUM
 ```
 
+`WBT_TRAINER_NUM` is 8: the player plus seven NPCs. The equation therefore
+means that the three internal groups supply exactly seven NPC slots. For
+example, a composition of two Leaders, three Mobs, and two Weak Mobs gives
+`1 + 2 + 3 + 2 = 8`; the player is the remaining participant. RNG chooses the
+eligible records within those groups, and the common builder then shuffles the
+eight participant positions.
+
 Therefore Type Expert is a dynamic candidate-pool selection, not a fixed
 downloadable-style `YY` histogram. World Leaders is cup ID 10 and uses its
 separate seven-category-3 constructor path.
