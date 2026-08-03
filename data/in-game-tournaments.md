@@ -77,7 +77,7 @@ player's eight-trainer field.
 | Super Mix / Mix Master | 15 | `0x02241BF4` | seven cat.-3 selections | Mapped in this build |
 | Driftveil | 4 | `0x02241B20` | 4 cat. 1 + 1 cat. 2 + 2 cat. 3 | Mapped in this build |
 | Download | 3 | `0x02241998` | generic/download-style shuffle | Mapped in this build |
-| Reserved/special branch | 11 | `0x02241B4C` | 4 cat. 1 + 1 each cat. 3/4/5 | No ordinary menu label |
+| Driftveil event | 11 | `0x02241B4C` | 4 cat. 1 + 1 each cat. 3/4/5 | `WBTCUP_HODOMOE_EVENT`; enabled while ordinary Driftveil wins are zero |
 
 The named mappings are based on the exact cup-ID dispatch, the matching
 family slices, and the published rosters.  The Champions slice agrees with the
@@ -151,77 +151,88 @@ command. The description lines are from `/a/0/0/5`, member 668:
 | 4 | `0x0A` | Driftveil |
 | 5–9 | `0x0B–0x0F` | Unova, Kanto, Johto, Hoenn, Sinnoh Leaders |
 | 10 | `0x10` | World Leaders |
-| 11 | `0x71` (`113`) | Reserved/current-tournament message; not an ordinary named cup |
+| 11 | `0x71` (`113`) | Driftveil event cup (`WBTCUP_HODOMOE_EVENT`) |
 | 12 | `0x11` | Rental |
 | 13 | `0x13` | Rental Master |
 | 14 | `0x12` | Mix |
 | 15 | `0x14` | Mix Master |
 
 Text line 113 says “this Driftveil tournament” and is distinct from the
-ordinary Driftveil description at line 10, so ID 11 is retained as a
-special/reserved branch rather than guessed as a second Driftveil mode. ID 0
-is the null/error path. Neighboring text entry 112 says that a special
-tournament is being prepared, reinforcing the temporary/event interpretation.
+ordinary Driftveil description at line 10. The recovered source now resolves
+the numeric ID rather than leaving it reserved: `wbt.h` defines ID 11 as
+`WBTCUP_HODOMOE_EVENT`, and `wbt_lobby.ev` requests it first in the menu as
+`SCR_WBT_CUP_HODOMOE_EVENT`. ID 0 remains the null/error path.
 
-ID 11 is not merely a dead dispatch value: the description branch and the WBT
-state script reference it. However, the earlier scan of `CMD_3EF` arguments was
-misinterpreted; `CMD_3EF` is not `EvCmdWBTSetWBTCup`. No literal
-`CMD_3F3 11` appears in the examined script archive. The safest current label
-is **introductory/story Driftveil tournament state (reserved special slot)**,
-based on the exact wording of text entry 113 and its use alongside the
-eight-record `CMD_3EA` check in zero-based NARC entry 1280.
+The menu still supplies cup IDs dynamically. Member 1277 checks each candidate
+with `CMD_3EE`, conditionally emits `ListMenuAdd` with that candidate as UID
+(including 11), stores the selected UID in `0x8023`, and passes it to
+`CMD_3F3`; therefore no literal `CMD_3F3 11` is required.
 
-The eight-record gate is exact, not hypothetical. The script sets accumulator
-`0x8055` to zero, reads records `17, 18, 21, 20, 19, 22, 23, 24` with
-`CMD_3EA`, and adds one only when a returned counter equals `1`. It then
-compares the accumulator with `1`: message 113 (the unrestricted/current
-Driftveil text) is selected when **exactly one** of the eight records is at one;
-message 114 is selected otherwise. The scanner records the final comparison at
-member offset `0x38FF` and reproduces it in both development and retail
-archives. This resolves the event condition without an emulator. It should not
-be described as a direct assignment of cup ID 11, because the branch does not
-call the cup setter.
+The exact enable predicate is in the original `wbt_tool.c` source:
 
-`CMD_3EA` is a PWT progress-record getter in this script context. It reads the
-16-bit value for the supplied record ID and writes it to the output variable;
-the script's comparison with `1` is an exact one-win test, not a boolean
-unlock test. PKHeX's record map and PKSM's unlock script independently confirm
-that these values are victory/progress counters (see the links in
-`data/in-game-constructor-categories.md`). Overlay 55's debug name
-`EvCmdWBTGetVictoryCount` belongs to its separate `CMD_3FA` handler; the
-Overlay-58 `CMD_3EA` wrapper has no recovered Nintendo symbol. The behavior,
-however, is no longer unresolved.
+```text
+ID 11 (WBTCUP_HODOMOE_EVENT): ordinary Driftveil win count == 0
+ID 4  (WBTCUP_HODOMOE):       ordinary Driftveil win count != 0
+```
 
-The retail member is now verified against the complete downloaded Black 2
-USA/Europe ROM: retail stores the script in `/a/0/5/6` (1,289 entries), with
-the same state-check sequence in member 1280 and the offsets recorded in
-`data/in-game-constructor-categories.md`. The ROM and extracted NARC are
-retained locally for comparison; their public-mirror provenance is not a
-legally verified user dump.
+Thus the event cup is enabled before the ordinary Driftveil cup has a win
+recorded. It is not gated by the previously reported eight-record `CMD_3EA`
+sequence.
+
+The source also resolves the command-name ambiguity. `scrcmd_wbt_table.cdat`
+registers WBT `CMD_3EA` as `EvCmdWBTSystemCheckEnable`, while the separate
+Join Avenue `scrcmd_resort_table.cdat` registers Resort `CMD_3EA` as
+`EvCmdResortGetData`. `EvCmdWBTGetVictoryCount` is WBT `CMD_3FA`. The same
+numeric command is therefore overlay/table-specific, not one global function.
+
+Retail member 1280 is `resort_scr.bin`, the Join Avenue script containing the
+Resort command sequence. Its matching bytes in `/a/0/5/6` verify the source
+mapping, but they are not a PWT unlock script.
+
+## Source-defined cup enable predicates
+
+The recovered WBT source makes the in-game menu predicates explicit. These are
+the predicates used by `WBTTOOL_CheckCupEnable` in `wbt_tool.c`; they are not
+the downloadable `.pwt` `YY` fields.
+
+| ID | Source enum | Enable condition |
+|---:|---|---|
+| 1 | `WBTCUP_CHAMPION` | World Leaders win count is at least 10 |
+| 2 | `WBTCUP_POKETYPE` | All five regional Leader win counts are nonzero |
+| 3 | `WBTCUP_DOWNLOAD` | Ordinary Driftveil win count is nonzero |
+| 4 | `WBTCUP_HODOMOE` | Ordinary Driftveil win count is nonzero |
+| 5 | `WBTCUP_ISSYU` | `SYS_FLAG_GAME_CLEAR` is set |
+| 6–9 | `WBTCUP_KANTO`…`WBTCUP_SINOU` | Unova Leader win count is nonzero |
+| 10 | `WBTCUP_WORLD` | All five regional Leader win counts are nonzero |
+| 11 | `WBTCUP_HODOMOE_EVENT` | Ordinary Driftveil win count is zero |
+| 12 | `WBTCUP_RENTAL` | Ordinary Driftveil win count is nonzero |
+| 13 | `WBTCUP_RENTALMASTER` | Rental win count is nonzero and all regions are cleared |
+| 14 | `WBTCUP_MIX` | Ordinary Driftveil win count is nonzero |
+| 15 | `WBTCUP_MIXMASTER` | Mix win count is nonzero and all regions are cleared |
+
+The lobby source `wbt_lobby.ev` requests ID 11 first, then ID 4. This explains
+why Bianca's selectable Unova roster entry and the special Driftveil event are
+not excluded: roster membership and cup availability are separate source
+decisions.
 
 This also corrects the earlier tentative ID assignment: ID 2 is Type Expert,
 not World Leaders; ID 10 is World Leaders.
 
 ## Remaining uncertainty
 
-The mapping is for the archived development build identified in the companion
-page and its matching Black 2 USA/Europe retail script. Retail regional builds
-should be checked before assuming that the same special ID 11 and family-`0x00`
-assignments apply everywhere. No original Nintendo source code was obtained;
-the event invocation itself is identified as member 1280, sequence 7 in both
-archives. The only remaining ID-11 question is which runtime menu/resource path
-can return numeric value 11 to the cup setter. The event gate and the
-`CMD_3EA` counter semantics are statically resolved.
+The mapping is for the archived development build and the matching Black 2
+USA/Europe retail script. Other regional/revision builds should still be
+checked before assuming that every address and roster byte is identical.
+The source-level cup enum, ID-11 predicate, menu producer, and command symbols
+are no longer unresolved.
 
 ## Static-only status
 
 The constructor dispatch, source-table counts, Champion roster, slot shuffle,
-NPC winner routine, and ordinary menu-name-to-ID mapping can all be reproduced
-from the archived ROM files, disassembly, and NARC tables without an emulator.
-The only built-in dispatch value still without an ordinary player-facing name
-is the special ID 11 branch described above. Member 1277 is a menu/controller
-script; the menu result is stored with `CMD_3F3` (`EvCmdWBTSetWBTCup`).
-`CMD_3F7` is the reception-ID setter. The event condition and its invocation
-(member 1280, sequence 7) are fully reproducible and are not an unresolved
-flag hypothesis. The remaining question is only which runtime menu/resource
-path supplies numeric value 11 to the cup setter.
+NPC winner routine, cup enable predicates, and menu-name-to-ID mapping can all
+be reproduced from the archived ROM files, disassembly, scripts, and recovered
+source without an emulator. ID 11 is now identified as
+`WBTCUP_HODOMOE_EVENT`; WBT `CMD_3EA` is `EvCmdWBTSystemCheckEnable`, Resort
+`CMD_3EA` is `EvCmdResortGetData`, and WBT `CMD_3FA` is
+`EvCmdWBTGetVictoryCount`. Remaining work is only cross-region/build
+verification, not symbol or event-condition recovery.

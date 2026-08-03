@@ -7,16 +7,37 @@ This repository documents a reverse-engineering result for the Pokémon World To
 - Downloadable `.pwt` bracket data assigns opponent roles separately from the winner calculation. `YY=04` and `YY=05` are the documented required-semifinalist and required-finalist categories for those files; they are not win bonuses. Built-in cups use internal constructor/category data, and the public evidence does not prove a literal `YY` histogram for them.
 - In the normal NPC simulation path, trainer records are reduced to a small set of fields: a priority, a type-chart category, and a trainer-type flag.
 - Standard Champion records (Blue, Lance, Steven, Wallace, Cynthia, Alder, and Red) all decode to the same relevant values: priority 4, trainer type 0, and category 17. The result routine does not read the trainer name or ID.
-- Therefore, a Champion-vs-Champion tie is not 50/50 once the routine's slot asymmetry is included: if A and B are otherwise equal, A wins about 65% and B about 35%. “A” means the first/left slot, not a particular named Champion.
+- Therefore, a Champion-vs-Champion tie is exactly 50/50 in the source routine: both have equal priority and neutral category-17 affinity, so the code calls `GFL_STD_Rand(context, 2)`. “A” means the first/left slot, not a particular named Champion.
 - A priority-4 Champion beats a standard priority-3 Gym Leader before the tie/random branch, so the standard Champion-vs-Leader result is deterministic in favor of the Champion.
-- Leader-vs-Leader matches can be type-directed. If the two relevant values tie, the same A-slot adjustment applies; if B has the type advantage, the approximate result is A 30% / B 70%.
+- Leader-vs-Leader matches can be type-directed. If the two affinity values tie, the result is 50/50. If one side has the type advantage, that side wins about 70% and the other about 30%; the source's 30% reversal applies in either direction.
 - A downloadable `YY=04` or `YY=05` tag is a placement/candidate tier for the player's semifinal or final path; it is not a win bonus. If several records share a tier, the selector can choose among them. Built-in constructor categories must not be relabeled as `YY` without a demonstrated data mapping.
-- The built-in menu mapping is now recoverable statically, without an emulator: ID 1 is Champions, ID 2 Type Expert, ID 3 Download, ID 4 Driftveil, IDs 5–9 the regional Leaders cups, ID 10 World Leaders, and IDs 12–15 Rental/Mix plus their Master variants. ID 11 is a reserved/current-tournament branch without an ordinary menu label; ID 0 is the null/error path.
-- The ID-11 story gate and event invocation are resolved statically: member
-  1280, sequence 7 counts how many of eight PWT progress records equal exactly
-  one win and selects the special Driftveil text only when that count is one.
-  This branch does not itself write cup ID 11; the separate runtime producer of
-  that numeric menu value is not present as a literal script call.
+- The built-in menu mapping is now recoverable statically, without an emulator: ID 1 is Champions, ID 2 Type Expert, ID 3 Download, ID 4 Driftveil, IDs 5–9 the regional Leaders cups, ID 10 World Leaders, ID 11 the source-defined Driftveil event cup, and IDs 12–15 Rental/Mix plus their Master variants. ID 0 is the null/error path.
+- The original SWAN source now resolves the built-in cup IDs and unlock logic.
+  `WBTCUP_HODOMOE_EVENT` is ID 11 and is enabled while the ordinary Driftveil
+  win counter is zero; the ordinary Driftveil cup (ID 4) requires that counter
+  to be nonzero. The same source maps the other in-game IDs and their unlock
+  predicates in `wbt.h` and `wbt_tool.c`.
+- The PWT menu is built dynamically: member 1277 checks each candidate with
+  `CMD_3EE`, conditionally emits `ListMenuAdd` with that candidate as its UID
+  (including UID 11), stores the selected UID in `0x8023`, and passes it to
+  `CMD_3F3`. There is no literal `CMD_3F3 11` because the setter receives the
+  menu result.
+- The recovered source file `wbt_calc_result.c` verifies the winner routine:
+  unequal priorities are deterministic, equal affinities use `rand(2)`, and
+  unequal affinities use the type-favored result with a three-in-ten reversal.
+- The original Nintendo source is now available in the recovered SWAN mirror.
+  For the Join Avenue/Resonance Resort command table, it names `CMD_3EA`
+  `EvCmdResortGetData` in
+  `branches/fes_rom/prog/src/field/resonance_resort/scrcmd_resort.c`, and the
+  command table registers it as `EV_SEQ_RESORT_GET_DATA`. The source's
+  parameters 17–24 are the eight shop-selection cases seen in the retail and
+  development dispatches. The shared source macro starts overlay command IDs
+  at 1000; two preceding entries put this function at 1002 (`0x3EA`). The
+  WBT uses the same numeric command slot in its own table: `CMD_3EA` is
+  `EvCmdWBTSystemCheckEnable`, while `EvCmdWBTGetVictoryCount` is `CMD_3FA`.
+  The corresponding stripped-binary **Resort** dispatches are overlay-specific,
+  at `0x02237618` (development) / `0x021e5950` (retail), with the shared helper
+  at `0x02248d54` / `0x021f522c`.
 
 These percentages are for the observed normal NPC path and are approximate because the game uses integer arithmetic on its RNG output. They describe the encoded routine, not the strength of the teams in an actual battle.
 
@@ -24,10 +45,11 @@ These percentages are for the observed normal NPC path and are approximate becau
 
 The analysis was performed on an archived BW2 development build and cross-checked
 against a complete, locally retained Black 2 retail ROM and its extracted script
-NARC. It is not Nintendo source code. The repository records hashes, table
-indexes, decoded fields, disassembly locations, and reproducible pseudocode;
-the retail source's public-mirror provenance is documented separately and is
-not a legally verified dump.
+NARC. The recovered SWAN source mirror is used only to identify the original
+command symbol and constants; it is retained locally and not redistributed here.
+The repository records hashes, table indexes, decoded fields, disassembly
+locations, and reproducible pseudocode; the ROM/source mirror provenance is
+documented separately and is not a legally verified dump.
 
 - Result routine: overlay 55, RAM address `0x02238314` (`wbt_calc_result.c` debug string nearby).
 - Type-chart helper: `0x02238554`; type table: `0x022399EC`.
@@ -41,14 +63,14 @@ See [`data/in-game-tournaments.md`](data/in-game-tournaments.md) for the ten bui
 See [`data/in-game-constructor-categories.md`](data/in-game-constructor-categories.md) for the constructor dispatch, internal category pools, and confirmed slot-request patterns.
 See [`data/yy-counts.md`](data/yy-counts.md) only for the separate downloadable `.pwt` appendix; it is not a count for the built-in tournaments.
 
-## Retail script cross-check
+## Retail/source cross-check
 
 The complete Black 2 USA/Europe ROM is retained at the artifact level under
 `rom/retail-source/`; its header/FAT extraction of `/a/0/5/6` has 1,289
-members. The static scanner finds the same state/reception sequence in
-zero-based member 1280 as in the development `/a/0/5/9` archive, with the
-eight `CMD_3EA` offsets and message branches recorded in `SOURCES.md` and
-`RESEARCH.md`.
+members. Member 1280 matches the development `resort_scr.bin` Join Avenue
+script, not a PWT unlock script. The PWT unlock behavior is instead directly
+identified by the recovered SWAN source: `wbt_lobby.ev` requests
+`_WBT_CHECK_CUP_ENABLE` and `wbt_tool.c` evaluates the corresponding counters.
 
 ## Important scope note
 

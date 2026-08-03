@@ -3,35 +3,82 @@
 ## Primary artifacts used for this report
 
 - Archived BW2 development build examined locally (not redistributed).
+- Recovered SWAN source: `branches/fes_rom/prog/src/field/wbt_calc_result.c`
+  contains `calcWBTResult` and `WBTSYS_CalcResult`, including the priority,
+  type-affinity, RNG, and player-override branches. This source file is from
+  local-only SWAN mirror revision `59995`.
 - Overlay 55 disassembly: result routine at `0x02238314`; type-chart helper at `0x02238554`; chart data at `0x022399EC`.
+- Overlay 55 ROM control-flow cross-check: priority branch `0x0223834E`
+  targets `0x022383E2`; equal-affinity branch `0x02238356` targets
+  `0x02238358` and rejoins at `0x022383EA`; unequal-affinity branch targets
+  `0x02238386` and alone reaches the threshold/reversal sequence at
+  `0x022383A8–0x022383E0`; player override begins at `0x022383EC`.
 - Overlay 135 disassembly: WBT record conversion/packing around `0x0224208C`.
 - Overlay 135 constructor/selector/shuffle: cup dispatch at `0x02241D02`, candidate selection at `0x02241704`, and common eight-position shuffle at `0x02241DB8`.
 - Script NARC `/a/0/5/9`, member 1277: the PWT menu result (`ListMenuInitTL` at
   member offset `0x05E2`), the cup-ID setter (`CMD_3F3` at `0x02E7`, passing
   the selected work variable), and the ID-to-description switch at
-  `0x0B95–0x0DC0` (the offsets include the member's four-byte prefix).
+  `0x0B95–0x0DC0` (the offsets include the member's four-byte prefix). The
+  fifteen availability blocks at `0x0616–0x07E4` call `CMD_3EE` and then
+  conditionally `ListMenuAdd`; their candidate order is
+  `11,4,5,6,7,8,9,10,1,13,15,2,12,14,3`, so ID 11 is a genuine dynamic menu
+  UID even though no literal `CMD_3F3 11` occurs.
 - Script NARC `/a/0/5/9`, zero-based NARC entry 1280, sequence 7 at raw member
-  offset `0x3807` (through `0x38E0`): the WBT state/reception sequence that
-  calls `CMD_3EA` for PWT save-record IDs `17,18,21,20,19,22,23,24`, compares
-  each returned value with `1`, increments accumulator `0x8055` for exact
-  matches, then selects messages 113 or 114 according to the final
-  `0x8055 == 1` gate at `0x38FF`.
-  This is the identified story/event invocation of the special branch; the
-  separate menu/resource producer of numeric cup ID 11 is not a literal
-  `CMD_3F3 11` script call.
+  offset `0x3807` (through `0x38E0`): a Join Avenue `resort_scr.bin` sequence
+  that calls the generic command `CMD_3EA` with selectors 17,18,21,20,19,22,23,24
+  and selects messages 113 or 114. Source comparison shows that this is the
+  Resort command `EvCmdResortGetData`, not a PWT save-record gate. The earlier
+  PWT interpretation of this member has been withdrawn.
+- Recovered SWAN WBT source (SVN revision 59995):
+  `prog/include/field/wbt.h` defines cup IDs 0–15, including
+  `WBTCUP_HODOMOE_EVENT` at ID 11; `prog/src/field/wbt_tool.c` implements
+  `checkCupEnable`, including ID 11 enabled when the ordinary Driftveil win
+  count is zero; and `resource/fldmapdata/script/wbt_lobby.ev` calls
+  `_WBT_CHECK_CUP_ENABLE` for each visible cup.
 - Overlay 55 disassembly: `EvCmdWBTSetWBTCup` (`CMD_3F3`) starts at
   `0x02237728`; `EvCmdWBTSetReceptionID` (`CMD_3F7`) starts at
   `0x022377CC`; `CMD_3F8` is the reception-ID getter at `0x022377F4`.
 - Overlay 55 dispatch table: `EvCmdWBTGetVictoryCount` is the separate
   `CMD_3FA` handler at `0x02237860`; this must not be relabeled as the
-  Overlay-58 `CMD_3EA` wrapper.
+  WBT `CMD_3EA` system-enable handler.
+- WBT source command table `branches/fes_rom/prog/src/field/scrcmd_wbt_table.cdat`:
+  `INIT_OVERLAY_CMD(wbt)` starts at 1000, so WBT `CMD_3EA` is
+  `EvCmdWBTSystemCheckEnable`; `EvCmdWBTGetVictoryCount` is `CMD_3FA`.
+- Source `branches/fes_rom/prog/src/field/scrcmd_wbt_st.c` wraps
+  `WBTTOOL_CheckCupEnable` and `WBTTOOL_CheckCupUnlock` for script calls.
+- Join Avenue Overlay 58/59 dispatch cross-check: Resort `CMD_3EA` enters the
+  Overlay-59 subcommand dispatcher at `0x02237618` (development) /
+  `0x021e5950` (retail). Cases 17–24 route to the common helper at
+  `0x02248d54` (development) / `0x021f522c` (retail), with selectors
+  `0,1,3,2,4,5,6,7`. The recovered source names this Resort command
+  `EvCmdResortGetData`; its command-table entry is `EV_SEQ_RESORT_GET_DATA`.
+- Recovered original source (local-only): SWAN mirror SVN revision `59995`,
+  extracted from `rom/original-builds/swanmirror.tar`. The relevant files are
+  `branches/fes_rom/prog/src/field/resonance_resort/scrcmd_resort.c` (function
+  `EvCmdResortGetData`, including cases 17–24),
+  `branches/fes_rom/prog/src/field/resonance_resort/scrcmd_resort_def.h`
+  (the named parameter constants), and
+  `branches/fes_rom/prog/src/field/resonance_resort/resort_people_def.h`
+  (the shop-type values used by the helper calls), and
+  `branches/fes_rom/prog/src/field/scrcmd_resort_table.cdat` (the
+  `EV_SEQ_RESORT_GET_DATA` registration). The shared
+  `resource/fldmapdata/script/scrcmd_table/def_table_macro.h` defines
+  `INIT_OVERLAY_CMD` as command base `1000`; the table's two preceding entries
+  therefore place `EvCmdResortGetData` at `1002` (`0x3EA`) exactly. The source
+  is used for symbol and constant identification and is not copied into this
+  repository. The same numeric slot is table-specific: WBT `CMD_3EA` is
+  `EvCmdWBTSystemCheckEnable` in `scrcmd_wbt_table.cdat`.
 - Text NARC `/a/0/0/5`, member 668: PWT description/menu strings used by that
   switch. Text NARC `/a/2/3/9`, member 11: the compact permanent-mode labels.
 - WBT NARC `/a/2/6/1`, resource 261, 128 16-byte records in the examined build;
   the built-in family inventory uses record byte 2.
-- `scripts/find_pwt_state_script.py`: static NARC scanner for the eight-record
-  `CMD_3EA` sequence and nearby message IDs 113/114; it reproduces member 1280
-  on both the development archive and the downloaded retail `/a/0/5/6`.
+- `scripts/find_pwt_state_script.py`: static NARC scanner for the Join Avenue
+  `CMD_3EA` sequence and nearby message IDs 113/114; it reproduces Resort
+  member 1280 on both the development archive and the downloaded retail
+  `/a/0/5/6`.
+- `scripts/find_pwt_menu_builder.py`: static NARC scanner for member 1277's
+  fifteen `CMD_3EE` availability blocks and matching `ListMenuAdd` UIDs; it
+  reproduces candidate UID 11 and the full candidate order in both archives.
 - Complete Black 2 USA/Europe retail ROM, downloaded from the Internet Archive
   item
   [`pokemon-black-version-2-usa-europe-ndsi-enhanced_202209`](https://archive.org/details/pokemon-black-version-2-usa-europe-ndsi-enhanced_202209).
@@ -58,7 +105,7 @@
 - [kwsch/PKHeX: PWTRecordID](https://github.com/kwsch/PKHeX/blob/master/PKHeX.Core/Saves/Substructures/Gen5/PWTRecordID.cs) (save-record labels; useful cross-check, but not assumed to be the constructor's 0–15 dispatch enum)
 - [kwsch/PKHeX: PWTBlock5](https://github.com/kwsch/PKHeX/blob/master/PKHeX.Core/Saves/Substructures/Gen5/PWTBlock5.cs) (16-bit PWT record access at `0x5C + 2 * id`)
 - [FlagBrew/PKSM: B2W2 scripts](https://github.com/FlagBrew/PKSM-Scripts/blob/master/src/scriptsB2W2.txt) (Champion unlock writes `10` at `0x2378C`; all-record PWT payload starts at `0x2375C`)
-- [ds-pokemon-hacking/PokeScriptSDK5: B2W2 Overlay 58 command table](https://github.com/ds-pokemon-hacking/PokeScriptSDK5/blob/92ae570f98e2eeb2ff1d8075edb3976e2c8b364e/yml/B2W2/Overlay%2058.yml) (public signature for `CMD_3EA`; the function brief remains TODO)
+- [ds-pokemon-hacking/PokeScriptSDK5: B2W2 Overlay 58 command table](https://github.com/ds-pokemon-hacking/PokeScriptSDK5/blob/92ae570f98e2eeb2ff1d8075edb3976e2c8b364e/yml/B2W2/Overlay%2058.yml) (public command signature; the recovered source supplies the previously missing symbol/behavior distinction)
 
 ## Scope warning
 
@@ -66,30 +113,28 @@
 for the raw `YY` histogram of a named built-in cup. The built-in cup inventory
 is documented separately in `data/in-game-tournaments.md`; the static menu
 branch maps all ordinary built-in names for the examined development build.
-Only dispatch ID 11 is left as a reserved/current-tournament branch without an
-ordinary menu label. Its entry-113 wording matches the first/story Driftveil
-tournament. The development script checks PWT save-record IDs
-`17,18,21,20,19,22,23,24`. Independent save-layout and unlock-script evidence
-resolves `CMD_3EA`'s returned value as the 16-bit PWT progress/victory count;
-the script's `== 1` is an exact one-win test. The exact Overlay-58 wrapper
-symbol is not recovered; Overlay 55's debug symbol `EvCmdWBTGetVictoryCount`
-is a separate `CMD_3FA` handler. The retail script member is now verified
-against a public
-Black 2 extraction: `/a/0/5/6`, member 1280, with the same offsets listed
-above. The source is retained locally only; a user-owned dump is still needed
-for a legally reproducible redistribution. ID 0 is the null/error path.
+ID 11 is now resolved by the recovered WBT source as
+`WBTCUP_HODOMOE_EVENT`, the Driftveil event cup. `wbt_tool.c` enables it when
+the ordinary Driftveil win count is zero; ID 4 is enabled when that count is
+nonzero. Member 1277 includes UID 11 in the dynamic availability/menu
+candidate list, and the selected UID is passed to `EvCmdWBTSetWBTCup`.
+The eight-call sequence in member 1280 is Join Avenue `resort_scr.bin`, not a
+PWT save-record gate. Source names are table-specific: WBT `CMD_3EA` is
+`EvCmdWBTSystemCheckEnable`, Resort `CMD_3EA` is `EvCmdResortGetData`, and WBT
+`EvCmdWBTGetVictoryCount` is `CMD_3FA`. The retail member is verified against
+the public Black 2 extraction `/a/0/5/6`; a user-owned dump is still needed
+for legally reproducible redistribution. ID 0 is the null/error path.
 
 The internal constructor/category evidence is documented in
 `data/in-game-constructor-categories.md`. Its raw family byte is record offset
 2; the constructor's category predicates and slot requests must not be
 relabeled as downloadable `YY` bytes without a demonstrated data mapping.
-The static menu branch now supplies that demonstrated numeric mapping for the
-ordinary built-in modes. Only dispatch ID 11 remains a reserved/current-
-tournament branch without an ordinary menu label; its gate is expressed in
-PWT save-record state. The exact Overlay-58 wrapper symbol is not recovered,
-but its returned value is resolved as the PWT progress/victory count. The
-retail script member is verified as member 1280 in the downloaded retail NARC.
-ID 0 is the null/error path.
+The static menu branch supplies the numeric mapping for ordinary built-in
+modes and dynamically includes candidate UID 11 when its `CMD_3EE` availability
+check passes. ID 11 is the source-defined Driftveil event cup, not an unresolved
+reserved branch. The recovered source distinguishes WBT
+`EvCmdWBTSystemCheckEnable` (`CMD_3EA`) from Resort `EvCmdResortGetData`
+(`CMD_3EA`) and WBT `EvCmdWBTGetVictoryCount` (`CMD_3FA`).
 
 The archived development artifact stores the analyzed scripts in NARC
 `/a/0/5/9` (1,291 entries, including zero-based entry 1280). Public retail
