@@ -12,6 +12,12 @@ Overlay 135 supplies the field meanings used here:
 * record byte 6: fixed-family selector for cup IDs 1 and 5--9;
 * record byte 7: Type Expert ``type_tournament_id``;
 * low three bits of record byte 8: internal constructor pool 1--5.
+
+For built-in NPC rows, Overlay 135's row-conversion path also copies raw byte 0
+to the packed result category and uses the low three bits of byte 8 as the
+packed priority.  The built-in path passes trainer-type flag 0.  These derived
+result fields are printed by ``--dump-records``; byte 7 remains a separate
+Type Expert constructor field.
 """
 
 from __future__ import annotations
@@ -30,6 +36,8 @@ MASK_OFFSET = 5
 FAMILY_OFFSET = 6
 TYPE_OFFSET = 7
 POOL_OFFSET = 8
+RESULT_CATEGORY_OFFSET = 0
+NPC_TRAINER_TYPE = 0
 
 # Overlay-135's predicate at 0x02241874.  IDs 1 and 5--9 compare the family
 # selector; these IDs are listed separately because they do not use byte 5.
@@ -124,13 +132,34 @@ def compact_indices(indices: list[int]) -> str:
     return ", ".join(ranges)
 
 
+def npc_result_fields(row: bytes) -> tuple[int, int, int]:
+    """Return (priority, category, trainer_type) for a built-in NPC row.
+
+    Overlay 135's built-in row converter prepares the common record packer at
+    ``0x0224208C`` with ``byte[8] & 7`` as the priority input and ``byte[0]``
+    as the packed category.  Its built-in source-table path uses trainer-type
+    flag 0; player/download records can use other paths and are outside this
+    helper's scope.
+    """
+
+    return (
+        row[POOL_OFFSET] & 7,
+        row[RESULT_CATEGORY_OFFSET],
+        NPC_TRAINER_TYPE,
+    )
+
+
 def format_record(index: int, row: bytes) -> str:
-    """Render one complete source row plus the constructor-visible fields."""
+    """Render one complete source row plus decoded constructor/result fields."""
+
+    priority, category, trainer_type = npc_result_fields(row)
 
     return (
         f"record {index:03d}: {row.hex(' ')} "
         f"mask=0x{row[MASK_OFFSET]:02x} family=0x{row[FAMILY_OFFSET]:02x} "
-        f"type=0x{row[TYPE_OFFSET]:02x} pool={row[POOL_OFFSET] & 7}"
+        f"type=0x{row[TYPE_OFFSET]:02x} pool={row[POOL_OFFSET] & 7} "
+        f"result_priority={priority} result_category={category} "
+        f"npc_trainer_type={trainer_type}"
     )
 
 
@@ -148,7 +177,10 @@ def main() -> int:
     parser.add_argument(
         "--dump-records",
         action="store_true",
-        help="print every complete 16-byte source row and decoded constructor fields",
+        help=(
+            "print every complete 16-byte source row and decoded constructor "
+            "and built-in NPC result fields"
+        ),
     )
     args = parser.parse_args()
     try:
@@ -160,7 +192,9 @@ def main() -> int:
     print(
         f"records={RECORD_COUNT} size={RECORD_SIZE} "
         f"fields=mask@{MASK_OFFSET},family@{FAMILY_OFFSET},"
-        f"type@{TYPE_OFFSET},pool=byte{POOL_OFFSET}&7"
+        f"type@{TYPE_OFFSET},pool=byte{POOL_OFFSET}&7,"
+        f"result_priority=byte{POOL_OFFSET}&7,result_category=byte{RESULT_CATEGORY_OFFSET},"
+        f"npc_trainer_type={NPC_TRAINER_TYPE}"
     )
     rows = records(table)
     if args.dump_records:

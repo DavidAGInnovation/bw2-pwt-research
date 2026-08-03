@@ -70,8 +70,14 @@ class ScannerTests(unittest.TestCase):
         self.assertEqual(wbt_table.candidate_indices(bytes(table), 13), [1])
         self.assertEqual(wbt_table.pool_indices(bytes(table), 12, 3), [0])
         self.assertEqual(wbt_table.compact_indices([0, 1, 2, 5, 7, 8]), "0–2, 5, 7–8")
-        self.assertIn("record 000:", wbt_table.format_record(0, bytes(table[:16])))
-        self.assertIn("mask=0x08", wbt_table.format_record(0, bytes(table[:16])))
+        row = bytes(table[:16])
+        self.assertEqual(wbt_table.npc_result_fields(row), (3, 0, 0))
+        formatted = wbt_table.format_record(0, row)
+        self.assertIn("record 000:", formatted)
+        self.assertIn("mask=0x08", formatted)
+        self.assertIn("result_priority=3", formatted)
+        self.assertIn("result_category=0", formatted)
+        self.assertIn("npc_trainer_type=0", formatted)
 
     def test_narc_and_menu_builder(self) -> None:
         members = menu_builder.narc_members(make_narc([make_menu_member()]))

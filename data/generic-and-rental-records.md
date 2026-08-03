@@ -102,6 +102,64 @@ Pokémon type. Although that wildcard is numerically the same as decimal 17,
 the Type Expert wildcard and the category-17 neutral sentinel belong to
 different fields and code paths.
 
+## Packed NPC-result fields for every generic row
+
+The constructor's byte-7 Type ID is not the field used by the displayed NPC
+winner routine. The built-in row-conversion path around `0x022421C6` copies a
+source row and prepares the common packer at `0x0224208C` as follows:
+
+| Source-table value | Packed runtime field | Meaning |
+|---|---|---|
+| `byte 8 & 7` | priority bits 4–6 of packed byte 0 | Priority compared first by the NPC result routine. |
+| `byte 0` | packed byte 1 | Matchup category read by the type-affinity helper. |
+| built-in source-row path | trainer-type flag `0` in packed byte 0 bits 0–2 | NPC record; the player override uses a different flag. |
+
+The converter passes the source row's byte 1 as sex and retains the remaining
+record words as trainer/team metadata. Those fields do not change the NPC
+winner calculation. The result below is therefore a complete mapping of the
+generic rows' relevant result fields, not a claim that each row is selected in
+every cup.
+
+| Source indices | Packed priority | Result category | Category meaning | NPC trainer type |
+|---|---:|---:|---|---:|
+| `54` | 4 | 17 (`0x11`) | neutral sentinel | 0 |
+| `55` | 3 | 17 (`0x11`) | neutral sentinel | 0 |
+| `56` | 4 | 17 (`0x11`) | neutral sentinel | 0 |
+| `57` | 5 | 17 (`0x11`) | neutral sentinel | 0 |
+| `58` | 2 | 3 | Poison | 0 |
+| `59` | 2 | 4 | Ground | 0 |
+| `60` | 2 | 13 | Psychic | 0 |
+| `61` | 2 | 6 | Bug | 0 |
+| `62` | 2 | 7 | Ghost | 0 |
+| `63` | 2 | 15 | Dragon | 0 |
+| `64` | 2 | 8 | Steel | 0 |
+| `65` | 2 | 16 | Dark | 0 |
+| `66` | 2 | 16 | Dark | 0 |
+| `67` | 2 | 16 | Dark | 0 |
+| `68–77` | 2 | 17 (`0x11`) | neutral sentinel | 0 |
+| `78–127` | 1 | 17 (`0x11`) | neutral sentinel | 0 |
+
+This explains why records `58–67` have ordinary type categories when they are
+selected by the Type Expert constructor, while Rental/Mix generic records are
+neutral in the NPC result routine even though their byte-7 constructor values
+are `0x12` or the `0x11` Type Expert wildcard. It also explains why a generic
+record does not acquire a category from the six Pokémon later associated with
+it: the packed category is copied from the source row before the winner
+routine runs.
+
+The complete raw rows and these derived fields are reproducible with
+`--dump-records`:
+
+```sh
+python3 scripts/inspect_wbt_table.py rom/extracted/a/2/6/1 --dump-records
+```
+
+For named Leader and Champion records, including the special Bianca row, see
+[`champions-and-leaders.md`](champions-and-leaders.md). Together, that table
+and the mapping above cover every source-table row's priority, category, and
+built-in NPC trainer-type fields: 46 standard Leaders, Bianca, 7 standard
+Champions, and 74 unnamed rows (`0–127` in total).
+
 ## Rental and Mix pools
 
 The constructor calls and the table predicates produce these exact pools:

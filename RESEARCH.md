@@ -201,6 +201,12 @@ not the same thing as the seven NPC slots selected for one run.
 The raw mask/type/pool fields and the exact generic, Rental, and Mix candidate
 sets are documented in
 [`data/generic-and-rental-records.md`](data/generic-and-rental-records.md).
+That page also records the result fields for every unnamed row: the built-in
+converter around `0x022421C6` maps source byte `8 & 7` to packed priority,
+source byte `0` to packed category, and uses trainer-type flag `0` for these
+NPC records. The named Leader, Champion, and Bianca mappings are in
+[`data/champions-and-leaders.md`](data/champions-and-leaders.md), so the two
+tables together cover every row that can enter the built-in NPC path.
 
 The development build's Japanese text archive independently names the
 permanent modes. NARC `/a/2/3/9`, member 11, entries 151–162 decode in order to

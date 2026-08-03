@@ -35,7 +35,12 @@ them.
   `analysis/disassembly/retail-ov55.dis`; the ROM itself is not redistributed.
   Extraction used `ndspy` 2.0.0's `NintendoDSRom.loadArm9Overlays()[55]` and
   Thumb disassembly used Capstone 5.0.7.
-- Overlay 135 disassembly: WBT record conversion/packing around `0x0224208C`.
+- Overlay 135 disassembly: WBT record conversion around `0x022421C6` loads each
+  16-byte source row and passes its byte-8 low three bits as the built-in
+  priority input and byte 0 as the result category to the common record packer
+  around `0x0224208C`. The built-in source-row call passes trainer-type flag
+  `0`; the packer writes priority into packed byte-0 bits 4–6 and category into
+  packed byte 1. Overlay 55 reads those fields at `0x0223831C–0x02238346`.
 - Overlay 135 constructor/selector/shuffle: cup dispatch at `0x02241D02`, candidate selection at `0x02241704`, and common eight-position shuffle at `0x02241DB8`.
 - Overlay 135 raw WBT-record predicates: `0x02241874` tests the mode mask at
   record byte 5, family selector at byte 6, and Type Expert type ID at byte 7;

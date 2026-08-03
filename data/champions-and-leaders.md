@@ -110,3 +110,11 @@ predicate requires `region_tournament_id == WBTCUP_ISSYU` (`5`), so this record
 is excluded from the Unova Leaders pool. Bianca's eligibility in other modes is
 controlled by their separate entry flags; reuse of the record does not change
 the regional family count.
+
+The common built-in row conversion still gives Bianca the same result-routine
+fields as the other source rows: priority `3` (raw byte 8 low bits), trainer
+type `0`, and category `17` (`0x11`, the neutral sentinel from raw byte 0).
+Thus Bianca is a fully mapped NPC record even though she is excluded from the
+standard Unova Leaders constructor predicate. Her result category is stored in
+the record; it is not derived from the Pokémon shown for her in a particular
+mode.
