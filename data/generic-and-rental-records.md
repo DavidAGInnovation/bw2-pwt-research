@@ -1,9 +1,9 @@
 # Generic and Rental candidate records
 
-This page closes the remaining candidate-pool question for the examined
-development build and the byte-identical USA/Europe retail WBT table. It is a
-mapping of source-table records and constructor eligibility; it is not a list
-of six-Pokémon battle outcomes.
+This page documents the candidate-pool mapping for the examined development
+build and the byte-identical USA/Europe retail WBT table. It maps source-table
+records and constructor eligibility; it is not a list of six-Pokémon battle
+outcomes.
 
 ## Source-record fields used by the constructor
 
