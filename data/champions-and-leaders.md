@@ -18,7 +18,7 @@ indices and names below are verified for both builds.
 | Alder | 19 | `0x0011` | `0x0061` | 4 | 0 | 17 |
 | Red | 53 | `0x0011` | `0x0177` | 4 | 0 | 17 |
 
-The different raw values (including Red's `0x00F4` field and Cynthia's `0x0111` word 0) encode team/record metadata. After the standard conversion, the result routine sees the same priority/category/trainer-type combination for all seven.
+The different raw values encode team/record metadata. After the standard conversion, the result routine sees the same priority/category/trainer-type combination for all seven.
 
 ### Meaning of Champion category `17`
 
