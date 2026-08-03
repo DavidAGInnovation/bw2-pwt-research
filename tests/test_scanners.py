@@ -72,6 +72,7 @@ class ScannerTests(unittest.TestCase):
 
         self.assertEqual(wbt_table.candidate_indices(bytes(table), 12), [0, 2, 3])
         self.assertEqual(wbt_table.candidate_indices(bytes(table), 13), [1])
+        self.assertEqual(wbt_table.candidate_indices(bytes(table), 5), [0, 1])
         self.assertEqual(wbt_table.pool_indices(bytes(table), 12, 3), [0])
         self.assertEqual(wbt_table.compact_indices([0, 1, 2, 5, 7, 8]), "0–2, 5, 7–8")
         row = bytes(table[:16])
@@ -85,6 +86,28 @@ class ScannerTests(unittest.TestCase):
         self.assertIn("sex=1", formatted)
         self.assertIn("mmdl_id=0x1234", formatted)
         self.assertIn("btl_tr_type=104", formatted)
+
+        table[2 * 16 + wbt_table.FAMILY_OFFSET] = 0x01
+        with tempfile.NamedTemporaryFile() as extracted:
+            extracted.write(table)
+            extracted.flush()
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    str(SCRIPTS / "inspect_wbt_table.py"),
+                    extracted.name,
+                    "--cup",
+                    "1",
+                    "--cup",
+                    "5",
+                ],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            self.assertEqual(result.returncode, 0, msg=result.stderr)
+            self.assertIn("cup 1 Champions", result.stdout)
+            self.assertIn("cup 5 Unova Leaders", result.stdout)
 
     def test_narc_and_menu_builder(self) -> None:
         members = menu_builder.narc_members(make_narc([make_menu_member()]))

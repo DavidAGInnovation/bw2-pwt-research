@@ -62,7 +62,13 @@ MASK_BITS = {
 }
 
 MODE_NAMES = {
+    1: "Champions",
     4: "Driftveil",
+    5: "Unova Leaders",
+    6: "Kanto Leaders",
+    7: "Johto Leaders",
+    8: "Hoenn Leaders",
+    9: "Sinnoh Leaders",
     10: "World Leaders",
     11: "Driftveil event",
     12: "Rental",
@@ -219,7 +225,10 @@ def main() -> int:
             else f"mask bit {MASK_BITS[cup_id]} (0x{1 << MASK_BITS[cup_id]:02x})"
         )
         print(f"cup {cup_id} {MODE_NAMES[cup_id]}: {predicate}; eligible={compact_indices(eligible)}")
-        for pool, count in sorted(REQUESTS[cup_id].items()):
+        # Family-selector cups have an eligibility predicate but no explicit
+        # pool/count request in this decoder. Their eligible rows are the
+        # useful output; later selection is documented separately.
+        for pool, count in sorted(REQUESTS.get(cup_id, {}).items()):
             indices = pool_indices(table, cup_id, pool)
             print(f"  pool {pool} request {count}: {compact_indices(indices)}")
     return 0
