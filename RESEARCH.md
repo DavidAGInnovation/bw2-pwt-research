@@ -23,11 +23,18 @@ else:
 # player in B loses. NPC-vs-NPC calls do not use that override.
 ```
 
-The source calls `GFL_STD_Rand(context, 2)` for equal affinities and
-`GFL_STD_Rand(context, 10) >= 7` for unequal affinities. Under a uniform RNG,
-the latter is three of ten outcomes, so the type-advantage result survives
-with 70% probability and is reversed with 30% probability. The second roll is
-not performed when the affinities tie.
+The two RNG calls are used in different situations:
+
+- **Equal affinities:** `GFL_STD_Rand(context, 2)` returns either `0` or `1`.
+  One value selects each side, so the result is exactly 50/50. There is no
+  second roll.
+- **Unequal affinities:** the side with the better type matchup is selected
+  first. Then `GFL_STD_Rand(context, 10)` returns a value from `0` through `9`.
+  Values `0–6` (7 of 10 outcomes) keep that type-advantage winner, while
+  values `7–9` (3 of 10 outcomes) reverse the result. Therefore, if Clay has
+  the type advantage over Elesa, Clay wins about 70% of these simulated
+  matches and Elesa wins about 30%. The same calculation applies when the
+  other Leader has the advantage.
 
 The source has a `PM_DEBUG`-only `DEBUG_WBT_ReverseJudgeMode` hook that can
 invert an unequal-affinity result for debugging. `DEBUG_WBT_ReverseJudgeMode`
