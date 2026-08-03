@@ -268,6 +268,32 @@ byte-identical table shared with the examined development build.
 | 126 | Gavin | 0 | `0x003E` | 0 |
 | 127 | Larry | 0 | `0x003E` | 0 |
 
+### Result categories for these identities
+
+For clarity, the NPC winner routine's stored result category is mapped to the
+identity-table rows as follows. This is raw source byte 0; it is not
+`mmdl_id`, `btl_tr_type`, or the Type Expert raw byte-7 field.
+
+| Indices | Result category | Meaning | Packed priority |
+|---|---:|---|---:|
+| 54–57 | 17 (`0x11`) | neutral sentinel | 4, 3, 4, 5 respectively |
+| 58 | 3 | Poison | 2 |
+| 59 | 4 | Ground | 2 |
+| 60 | 13 | Psychic | 2 |
+| 61 | 6 | Bug | 2 |
+| 62 | 7 | Ghost | 2 |
+| 63 | 15 | Dragon | 2 |
+| 64 | 8 | Steel | 2 |
+| 65–67 | 16 | Dark | 2 |
+| 68–77 | 17 (`0x11`) | neutral sentinel | 2 |
+| 78–127 | 17 (`0x11`) | neutral sentinel | 1 |
+
+Thus the Rental/Mix generic pools (68–127) are neutral in the displayed NPC
+result routine. The ordinary type categories occur in the Type Expert-oriented
+rows 58–67. The `0x11` value in rows 54–57 and 68–127 is the NPC routine's
+neutral sentinel; it must not be confused with the Type Expert wildcard in
+raw byte 7.
+
 This answers the identity question at the level supported by the recovered
 data: we can name every row and identify its model resource and internal
 battle-trainer-type value. We cannot yet attach a canonical portrait or a
