@@ -142,7 +142,7 @@ assignment does not change the source's 50/50 result.
 
 ### Champion versus standard Gym Leader
 
-Champions decode to priority 4; standard Gym Leaders decode to priority 3. Since the priorities differ, the routine selects the Champion immediately and skips the equal-priority upside check. Thus a standard Champion-vs-Leader simulation is Champion 100% in this routine (subject to any separate special-mode code not covered by this analysis).
+Champions decode to priority 4; standard Gym Leaders decode to priority 3. Since the priorities differ, the routine selects the Champion immediately and skips the equal-priority upside check. Thus, a standard Champion-vs-Leader simulation is Champion 100% in this routine.
 
 ### Gym Leader versus Gym Leader
 
