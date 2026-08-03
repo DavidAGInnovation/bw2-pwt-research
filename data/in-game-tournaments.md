@@ -7,7 +7,7 @@ in the examined development build.
 
 ## Scope
 
-This covers the ten permanent, in-game tournament families in Pokémon Black 2
+This covers the ten unlockable permanent tournament families in Pokémon Black 2
 and White 2:
 
 1. Unova/Teselia Leaders
@@ -20,6 +20,11 @@ and White 2:
 8. Super Rental (Rental Master)
 9. Super Mix (Mix Master)
 10. Type Expert
+
+For completeness, the mapping table below also records the five additional
+cup IDs used by the base Driftveil, Download, Rental, Mix, and Driftveil-event
+modes. Those IDs are constructor/menu mappings, not additional unlockable
+families in the ten-family inventory above.
 
 The downloadable/Wi-Fi `.pwt` files are deliberately out of scope. Their raw
 `XX YY ZZZZ` records are tabulated separately in [`yy-counts.md`](yy-counts.md).
@@ -80,20 +85,24 @@ player's eight-trainer field.
 | Download | 3 | `0x02241998` | generic/download-style shuffle | Mapped in this build |
 | Driftveil event | 11 | `0x02241B4C` | 4 cat. 1 + 1 each cat. 3/4/5 | `WBTCUP_HODOMOE_EVENT`; enabled while ordinary Driftveil wins are zero |
 
-The named mappings are based on the exact cup-ID dispatch, the matching
-family slices, and the published rosters.  The Champions slice agrees with the
-[Serebii Champions roster](https://www.serebii.net/black2white2/pwt/champion.shtml),
-and the regional cup names/rosters are listed in [Serebii's PWT overview](https://www.serebii.net/black2white2/worldtournament.shtml).
+The named mappings are based on the exact cup-ID dispatch and matching
+family slices. The Champions slice agrees with the
+[Serebii Champions roster](https://www.serebii.net/black2white2/pwt/champion.shtml).
+Serebii's regional pages provide useful public names and team listings, but the
+Unova page also lists Bianca; that conflicts with the source-backed cup-5
+predicate and the examined retail/development table. The source predicate is
+authoritative for the build analyzed here.
 
 ## Champion placement
 
 The Champion constructor fixes the participant set: the seven records whose
-offset-6 family selector equals `0x01` are all used in the examined build. After that selection, the common match
-builder shuffles eight participant pointers (the player plus seven NPCs) with
-RNG at `0x02241DB8` and finalizes the player's position. Thus Champion names
-can occupy different bracket slots on different runs even though the Champion
-roster itself is fixed. This slot shuffle is separate from the NPC winner
-routine and is not a downloadable `YY` field.
+offset-6 family selector equals `0x01` are all used in the examined build. The
+common match builder first randomizes the eight participant pointers (the
+player plus seven NPCs) with RNG at `0x02241DB8`, then applies the priority
+placement rules and finalizes the player's position. Thus Champion names can
+occupy different bracket slots on different runs even though the Champion
+roster itself is fixed. This placement is separate from the NPC winner routine
+and is not a downloadable `YY` field.
 
 ## USA/Europe retail cross-check
 
@@ -105,16 +114,19 @@ contains the same relevant control-flow roles:
 
 | Role | Development build | USA/Europe retail |
 |---|---:|---:|
-| candidate/category selector | `0x02241704` | `0x021EEE08` |
-| category/type-affinity helper | `0x022418E2` | `0x021EEF90` |
+| candidate/priority selector | `0x02241704` | `0x021EEE08` |
+| Type Expert eligibility predicate | `0x022418E2` | `0x021EEF90` |
 | cup-ID dispatch and 16-entry switch | `0x02241CF8` / `0x02241D20` | `0x021EF298` / `0x021EF2C0` |
 | common eight-position shuffle | `0x02241DB8` | `0x021EF344` |
 
-The retail selector still filters records by the packed category bits, the
-helper still treats category `0x11` as neutral/sentinel, the dispatch still
-accepts cup IDs `0..15`, and the common builder still performs the RNG-based
-participant-position shuffle. The compiler-generated addresses and some stack
-layout differ, so this establishes behavior rather than address identity.
+The retail selector still filters records by the packed category bits, and the
+Type Expert predicate still accepts `POKETYPE_NULL` (`0x11`) as a wildcard.
+That predicate is separate from the Overlay-55 matchup-affinity helper, which
+handles category-17 neutrality during NPC result calculation. The dispatch
+still accepts cup IDs `0..15`, and the common builder still performs the
+RNG-based participant-position shuffle. The compiler-generated addresses and
+some stack layout differ, so this establishes behavior rather than address
+identity.
 
 The retail file-system path for this same WBT table is `/a/2/4/7`, not
 `/a/2/6/1`: it is a 2,108-byte NARC with one 2,048-byte member and its

@@ -96,8 +96,11 @@ tournaments:
 [Johto](https://www.serebii.net/black2white2/pwt/johto.shtml),
 [Hoenn](https://www.serebii.net/black2white2/pwt/hoenn.shtml), and
 [Sinnoh](https://www.serebii.net/black2white2/pwt/sinnoh.shtml). The Unova
-pool has 13 possible NPC trainers: the 13 standard Gym Leaders; Iris is
-excluded. The table above lists the complete regional pool.
+pool selected by the examined source predicate has 13 possible NPC trainers:
+the 13 standard Gym Leaders; Iris is excluded. Serebii's Unova page also lists
+Bianca, so that public roster disagrees with the source-backed result here. The
+table above is the complete cup-5 pool for the examined development and
+USA/Europe retail builds.
 
 ### Bianca special record
 

@@ -37,13 +37,13 @@ retained locally and are not redistributed here.
 - Retail Overlay 55: base `0x021E5800`, result routine `0x021E614C`, type-chart helper `0x021E6338`; its control flow matches the development routine.
 - Record packing/conversion: overlay 135, including the packer around `0x0224208C`.
 - Development WBT table: NARC `/a/2/6/1` (ARC resource 261; 128 records of 16 bytes in the examined build).
-- USA/Europe retail cross-check: Overlay 135 has the same constructor, category helper, 16-case cup dispatch, and eight-position shuffle roles at relocated addresses. The retail WBT table is `/a/2/4/7`, whose SHA-256 exactly matches the development `/a/2/6/1` table; the retail `/a/2/6/1` path is a different 1,000-member NARC.
+- USA/Europe retail cross-check: Overlay 135 has the same constructor, Type Expert eligibility predicate, 16-case cup dispatch, and eight-position shuffle roles at relocated addresses. The retail WBT table is `/a/2/4/7`, whose SHA-256 exactly matches the development `/a/2/6/1` table; the retail `/a/2/6/1` path is a different 1,000-member NARC.
 - Only the USA/Europe retail ROM is available in the local evidence set; Japanese, Korean, and other regional/revision retail builds remain unverified.
 - Examined development-build main image SHA-256: `ac4fb3e97b90831bd878f4e6ab0bed4ad355311ff90becba79ab79456f4e12da`.
 
 See [`RESEARCH.md`](RESEARCH.md) for the routine and [`data/champions-and-leaders.md`](data/champions-and-leaders.md) for decoded records.
 See [`data/bracket-settings.md`](data/bracket-settings.md) for the bracket-setting fields and the selector trace.
-See [`data/in-game-tournaments.md`](data/in-game-tournaments.md) for the ten built-in tournament families, source-table family counts, and cup-ID mappings established for the examined development build.
+See [`data/in-game-tournaments.md`](data/in-game-tournaments.md) for the ten unlockable built-in tournament families, source-table family counts, and the additional base/event cup-ID mappings established for the examined development build.
 See [`data/in-game-constructor-categories.md`](data/in-game-constructor-categories.md) for the constructor dispatch, internal category pools, and confirmed slot-request patterns.
 See [`data/yy-counts.md`](data/yy-counts.md) only for the separate downloadable `.pwt` appendix; it is not a count for the built-in tournaments.
 

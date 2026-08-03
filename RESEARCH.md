@@ -130,15 +130,18 @@ The built-in Champion cup has two separate steps:
    records match: Blue, Lance, Steven, Wallace, Cynthia, Alder, and Red. This
    path does not use the category-selection RNG to choose a subset of Champions.
 2. The common match builder then creates eight participant pointers (the player
-   plus seven NPCs) and calls the shuffle routine at `0x02241DB8` with a count
-   of 8. The routine performs an RNG-based permutation; subsequent code records
-   the player's position and finalizes the match slots.
+   plus seven NPCs) and first calls the shuffle routine at `0x02241DB8` with a
+   count of 8. It records the randomized player position, sorts the NPCs by
+   priority, places the highest three into the structured final, semifinal, and
+   first-round positions, and fills the remaining slots from the shuffled
+   remainder.
 
 Therefore, the Champion roster is fixed, but the participant positions and the
-player's scheduled path can change from run to run. The shuffle does not favor
-Red, Blue, or any other name. It only determines which name receives the A/left
-or B/right slot in an automatic NPC match; for equivalent Champions, that slot
-assignment does not change the source's 50/50 result.
+player's scheduled path can change from run to run. The shuffle and subsequent
+priority placement do not favor Red, Blue, or any other name. For equivalent
+Champions, all priorities are equal, so the randomized ordering determines
+which name receives each structured slot; that slot assignment does not change
+the source's 50/50 result.
 
 ### Champion versus standard Gym Leader
 
@@ -299,19 +302,22 @@ bytes at `0x021EEC80`, SHA-256
 corresponding constructor anchors are:
 
 ```text
-candidate/category selector   0x021EEE08
-category-17 affinity helper   0x021EEF90
+candidate/priority selector   0x021EEE08
+Type Expert eligibility predicate   0x021EEF90
 cup dispatch                  0x021EF298
 16-entry switch table         0x021EF2C0
 eight-position shuffle        0x021EF344
 ```
 
-The retail code retains the development behavior: category filtering is done
-by packed record bits, category `0x11` is accepted as the neutral/sentinel
-affinity, cup IDs `0..15` dispatch through the same 16-case structure, and the
-common builder uses RNG to shuffle the eight participant positions. The
-addresses and compiler stack layout are relocated, so these are behavioral
-cross-checks, not claims of identical address values.
+The retail code retains the development behavior: candidate filtering is done
+by packed record bits, and the Type Expert predicate compares the requested
+type with the record's `type_tournament_id`, accepting `POKETYPE_NULL`
+(`0x11`) as a wildcard. This is separate from the Overlay-55 matchup-affinity
+helper, where category `0x11` is neutral during NPC result calculation. Cup IDs
+`0..15` dispatch through the same 16-case structure, and the common builder
+uses RNG to shuffle the eight participant positions. The addresses and
+compiler stack layout are relocated, so these are behavioral cross-checks, not
+claims of identical address values.
 
 The retail file-system path for this WBT table is `/a/2/4/7`, not
 `/a/2/6/1`. It is a 2,108-byte NARC with one 2,048-byte member and SHA-256

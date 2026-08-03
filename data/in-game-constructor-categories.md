@@ -291,21 +291,23 @@ cup ID
 ```
 
 The constructor decides which records are present. The common match builder
-then shuffles the eight participant pointers with RNG at `0x02241DB8` before
-recording the player's position and finalizing slots. The winner routine
-receives packed records and evaluates their priority, type category, and
-player/NPC trainer-type flag; it does not read a bracket-slot field, the trainer
-name, or the family byte as a hidden win bonus.
+first randomizes the eight participant pointers with RNG at `0x02241DB8`, then
+sorts the NPC pointers by priority and places the highest three into the
+structured final, semifinal, and first-round positions before filling the
+remaining slots. The winner routine receives packed records and evaluates their
+priority, type category, and player/NPC trainer-type flag; it does not read a
+bracket-slot field, the trainer name, or the family byte as a hidden win bonus.
 
 ## USA/Europe retail code-path check
 
 Retail Overlay 135 was decompressed at base `0x021EEC80` (4,032 bytes;
 SHA-256 `30b48d2cc1e724470351f57fa6fa28d2844f195732737052bc9ce41e57ef98b8`).
 The corresponding retail anchors are candidate selector `0x021EEE08`,
-category-17 helper `0x021EEF90`, cup dispatch `0x021EF298` with its 16-entry
-switch at `0x021EF2C0`, and common eight-position shuffle `0x021EF344`.
-The decoded control flow preserves category filtering, the neutral/sentinel
-`0x11` test, cup IDs `0..15`, and RNG-based slot shuffling.
+Type Expert eligibility predicate `0x021EEF90`, cup dispatch `0x021EF298`
+with its 16-entry switch at `0x021EF2C0`, and common eight-position shuffle
+`0x021EF344`. The decoded control flow preserves category filtering and the
+Type Expert `POKETYPE_NULL` (`0x11`) wildcard, while the separate Overlay-55
+result helper handles category-17 neutrality during matchup calculation.
 
 The USA/Europe retail WBT table is `/a/2/4/7`, not `/a/2/6/1`. Its 2,108-byte
 NARC (one 2,048-byte member) has the same SHA-256 as the development table,

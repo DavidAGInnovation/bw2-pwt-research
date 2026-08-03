@@ -16,7 +16,7 @@
 - Retail USA/Europe Overlay 55 cross-check: compressed overlay file ID 55 is
   ROM range `0x0011D200–0x0011EAE0` (6,368 bytes); decompressed base
   `0x021E5800`, size 7,616 bytes, with result routine at `0x021E614C` and
-  category helper at `0x021E6338`. The same priority/equal-affinity,
+  matchup-affinity helper at `0x021E6338`. The same priority/equal-affinity,
   unequal-affinity threshold-7, toggle, and player-override branches occur at
   `0x021E6184`, `0x021E618E`, `0x021E61BE`, `0x021E61F4–0x021E6202`, and
   `0x021E620E`. Decompressed SHA-256 is
@@ -27,7 +27,7 @@
   Thumb disassembly used Capstone 5.0.7.
 - Overlay 135 disassembly: WBT record conversion/packing around `0x0224208C`.
 - Overlay 135 constructor/selector/shuffle: cup dispatch at `0x02241D02`, candidate selection at `0x02241704`, and common eight-position shuffle at `0x02241DB8`.
-- USA/Europe retail Overlay 135 cross-check: decompressed base `0x021EEC80`, size 4,032 bytes, SHA-256 `30b48d2cc1e724470351f57fa6fa28d2844f195732737052bc9ce41e57ef98b8`; corresponding selector `0x021EEE08`, category helper `0x021EEF90`, cup dispatch `0x021EF298` with switch table `0x021EF2C0`, and common shuffle `0x021EF344`.
+- USA/Europe retail Overlay 135 cross-check: decompressed base `0x021EEC80`, size 4,032 bytes, SHA-256 `30b48d2cc1e724470351f57fa6fa28d2844f195732737052bc9ce41e57ef98b8`; corresponding selector `0x021EEE08`, Type Expert eligibility predicate `0x021EEF90`, cup dispatch `0x021EF298` with switch table `0x021EF2C0`, and common shuffle `0x021EF344`.
 - Script NARC `/a/0/5/9`, member 1277: the PWT menu result (`ListMenuInitTL` at
   member offset `0x05E2`), the cup-ID setter (`CMD_3F3` at `0x02E7`, passing
   the selected work variable), and the ID-to-description switch at
@@ -129,7 +129,7 @@ the verified evidence set.
 - [namofure/TournamentSearcher](https://github.com/namofure/TournamentSearcher) (fan-made search tool, not official Nintendo source)
 - [Serebii: Champion Tournament](https://www.serebii.net/black2white2/pwt/champion.shtml)
 - [Serebii: Pokémon World Tournament overview](https://www.serebii.net/black2white2/worldtournament.shtml)
-- [Serebii: Unova Leaders Tournament](https://www.serebii.net/black2white2/pwt/unova.shtml) (external roster reference; the source predicate is authoritative for the examined build)
+- [Serebii: Unova Leaders Tournament](https://www.serebii.net/black2white2/pwt/unova.shtml) (public roster reference; it lists Bianca, contrary to the source predicate, which is authoritative for the examined build)
 - [Serebii: Kanto Leaders Tournament](https://www.serebii.net/black2white2/pwt/kanto.shtml)
 - [WikiDex: Pokémon World Tournament](https://www.wikidex.net/wiki/Pok%C3%A9mon_World_Tournament) (family names and unlock-condition reference; attribution retained in `data/in-game-tournaments.md`)
 - [WikiDex: Copyrights](https://www.wikidex.net/wiki/WikiDex%3ACopyrights) (CC BY-SA attribution/share-alike terms for text contributions)

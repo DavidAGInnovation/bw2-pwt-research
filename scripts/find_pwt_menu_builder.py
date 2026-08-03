@@ -29,15 +29,19 @@ def narc_members(blob: bytes) -> list[bytes]:
     if btaf < 0 or gmif < 0:
         raise ValueError("input is not a NARC (BTAF/GMIF block missing)")
     count = struct.unpack_from("<H", blob, btaf + 8)[0]
-    starts = [
-        struct.unpack_from("<I", blob, btaf + 0x0C + 8 * i)[0]
+    entries = [
+        struct.unpack_from("<II", blob, btaf + 0x0C + 8 * i)
         for i in range(count)
     ]
-    ends = starts[1:] + [
-        struct.unpack_from("<I", blob, btaf + 0x0C + 8 * count)[0]
-    ]
     data_start = gmif + 8
-    return [blob[data_start + a : data_start + z] for a, z in zip(starts, ends)]
+    gmif_size = struct.unpack_from("<I", blob, gmif + 4)[0]
+    if gmif_size < 8 or gmif + gmif_size > len(blob):
+        raise ValueError("invalid GMIF block size")
+    payload_size = gmif_size - 8
+    for start, end in entries:
+        if start > end or end > payload_size:
+            raise ValueError("NARC member range exceeds GMIF payload")
+    return [blob[data_start + start : data_start + end] for start, end in entries]
 
 
 def find_builder(member: bytes):
