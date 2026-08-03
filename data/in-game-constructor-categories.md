@@ -311,6 +311,12 @@ different 24,052-byte, 1,000-member NARC and is not used for this WBT table.
 
 ## Reproducibility and limits
 
+The mapping above is confirmed for the archived development build and the
+matching USA/Europe retail cross-check: the menu/description branch, cup
+dispatch, constructor behavior, source enum, and ID-11 enable predicate agree.
+“Confirmed” is therefore definitive for this examined build, but does not
+guarantee identical addresses or data in untested regional/revision ROMs.
+
 - The source artifact is an archived development build, SHA-256
   `ac4fb3e97b90831bd878f4e6ab0bed4ad355311ff90becba79ab79456f4e12da`.
 - NARC `/a/2/6/1` (resource 261) contains 128 records of 16 bytes each in that
@@ -323,8 +329,9 @@ different 24,052-byte, 1,000-member NARC and is not used for this WBT table.
 - Earlier scans of `CMD_3EF` with literal value `11` in members `980` and
   `1280` were not cup assignments. No literal `CMD_3F3 11` occurs in the
   examined script archive; the menu result can instead be supplied dynamically.
-- The recovered SWAN source mirror (revision 59995) supplies the original C
-  symbols: WBT `CMD_3EA` is `EvCmdWBTSystemCheckEnable`, WBT `CMD_3FA` is
+- The recovered SWAN source mirror (revision 59995) supplies original C
+  symbols and source-level implementation evidence: WBT `CMD_3EA` is
+  `EvCmdWBTSystemCheckEnable`, WBT `CMD_3FA` is
   `EvCmdWBTGetVictoryCount`, and Resort `CMD_3EA` is `EvCmdResortGetData`.
   It is retained locally under the artifact's
   `rom/original-builds/swanmirror.tar` and is not copied into this repository.
@@ -333,4 +340,4 @@ different 24,052-byte, 1,000-member NARC and is not used for this WBT table.
   table `/a/2/4/7` are now cross-checked as described above. Other
   regional/revision builds should still be checked before treating every
   address or roster byte as universal; the source-level enum and enable
-  predicate for ID 11 are resolved.
+  predicate for ID 11 are resolved for this examined build.
