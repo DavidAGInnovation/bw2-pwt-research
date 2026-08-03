@@ -114,28 +114,6 @@ For 100 hypothetical unequal-affinity calls where A has the advantage:
 If B has the advantage, the probabilities swap. For equal affinities, the
 source uses only `GFL_STD_Rand(context, 2)`, giving A and B 50% each.
 
-### Why the earlier 65/35 model was wrong
-
-The earlier reverse-engineering did not misidentify the RNG threshold; it
-misread the control-flow scope in the stripped disassembly. The second RNG
-check was incorrectly treated as if it followed every equal-priority result,
-and the reversal was modeled as “if B wins, change B to A.” The source shows
-both assumptions are wrong:
-
-```c
-if (aff_a == aff_b)
-    result->upside_win = (GFL_STD_Rand(context, 2) == 0);
-else {
-    result->upside_win = (aff_a > aff_b);
-    if (GFL_STD_Rand(context, 10) >= 7)
-        result->upside_win = !(result->upside_win);
-}
-```
-
-The reversal is inside the unequal-affinity branch and toggles either side's
-initial result. Thus the old calculation (50 initial A, 50 initial B, then
-flipping only 30% of B to A) described a branch the game does not execute.
-
 ## Examples
 
 ### Champion versus Champion
