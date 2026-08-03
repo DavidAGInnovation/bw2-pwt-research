@@ -11,6 +11,7 @@ This repository documents a reverse-engineering result for the Pokémon World To
 - A priority-4 Champion beats a standard priority-3 Gym Leader before the tie/random branch, so the standard Champion-vs-Leader result is deterministic in favor of the Champion.
 - Leader-vs-Leader matches can be type-directed. If the two affinity values tie, the result is 50/50. If one side has the type advantage, that side wins about 70% and the other about 30%; the source's 30% reversal applies in either direction.
 - A downloadable `YY=04` or `YY=05` tag is a placement/candidate tier for the player's semifinal or final path; it is not a win bonus. If several records share a tier, the selector can choose among them. Built-in constructor categories must not be relabeled as `YY` without a demonstrated data mapping.
+- `YY=00` is a `Trainer Rank` value in the public downloadable-format notes, but the bracket role of rank `0x00` remains unresolved. It is not inferred to be a built-in cup category.
 - The built-in menu mapping is now recoverable statically, without an emulator: ID 1 is Champions, ID 2 Type Expert, ID 3 Download, ID 4 Driftveil, IDs 5–9 the regional Leaders cups, ID 10 World Leaders, ID 11 the source-defined Driftveil event cup, and IDs 12–15 Rental/Mix plus their Master variants. ID 0 is the null/error path.
 - The original SWAN source now resolves the built-in cup IDs and unlock logic.
   `WBTCUP_HODOMOE_EVENT` is ID 11 and is enabled while the ordinary Driftveil
@@ -56,7 +57,9 @@ documented separately and is not a legally verified dump.
 - Type-chart helper: `0x02238554`; type table: `0x022399EC`.
 - Retail Overlay 55: base `0x021E5800`, result routine `0x021E614C`, type-chart helper `0x021E6338`; its control flow matches the development routine.
 - Record packing/conversion: overlay 135, including the packer around `0x0224208C`.
-- WBT table: NARC `/a/2/6/1` (ARC resource 261; 128 records of 16 bytes in the examined build).
+- Development WBT table: NARC `/a/2/6/1` (ARC resource 261; 128 records of 16 bytes in the examined build).
+- USA/Europe retail cross-check: Overlay 135 has the same constructor, category helper, 16-case cup dispatch, and eight-position shuffle roles at relocated addresses. The retail WBT table is `/a/2/4/7`, whose SHA-256 exactly matches the development `/a/2/6/1` table; the retail `/a/2/6/1` path is a different 1,000-member NARC.
+- Only the USA/Europe retail ROM is available in the local evidence set; Japanese, Korean, and other regional/revision retail builds remain unverified.
 - Examined development-build main image SHA-256: `ac4fb3e97b90831bd878f4e6ab0bed4ad355311ff90becba79ab79456f4e12da`.
 
 See [`RESEARCH.md`](RESEARCH.md) for the routine and [`data/champions-and-leaders.md`](data/champions-and-leaders.md) for decoded records.

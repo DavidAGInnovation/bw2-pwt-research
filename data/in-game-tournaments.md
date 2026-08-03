@@ -94,6 +94,37 @@ can occupy different bracket slots on different runs even though the Champion
 roster itself is fixed. This slot shuffle is separate from the NPC winner
 routine and is not a downloadable `YY` field.
 
+## USA/Europe retail cross-check
+
+The complete USA/Europe Black 2 retail ROM was checked against the development
+artifact for the WBT constructor code. Retail Overlay 135 is decompressed at
+base `0x021EEC80` (4,032 bytes, SHA-256
+`30b48d2cc1e724470351f57fa6fa28d2844f195732737052bc9ce41e57ef98b8`). It
+contains the same relevant control-flow roles:
+
+| Role | Development build | USA/Europe retail |
+|---|---:|---:|
+| candidate/category selector | `0x02241704` | `0x021EEE08` |
+| category/type-affinity helper | `0x022418E2` | `0x021EEF90` |
+| cup-ID dispatch and 16-entry switch | `0x02241CF8` / `0x02241D20` | `0x021EF298` / `0x021EF2C0` |
+| common eight-position shuffle | `0x02241DB8` | `0x021EF344` |
+
+The retail selector still filters records by the packed category bits, the
+helper still treats category `0x11` as neutral/sentinel, the dispatch still
+accepts cup IDs `0..15`, and the common builder still performs the RNG-based
+participant-position shuffle. The compiler-generated addresses and some stack
+layout differ, so this establishes behavior rather than address identity.
+
+The retail file-system path for this same WBT table is `/a/2/4/7`, not
+`/a/2/6/1`: it is a 2,108-byte NARC with one 2,048-byte member and its
+SHA-256 is exactly the development table's
+`0a32d2956f75a6e6365f292eb20e129c5247fe9ec093ca881dd469ea698d00ca`.
+Therefore the development record indices and named roster mapping carry over
+byte-for-byte to the examined USA/Europe retail ROM. The retail
+`/a/2/6/1` file is a different 24,052-byte NARC with 1,000 16-byte members
+(SHA-256 `416ddd7a37b89bcada27e977dc0a59df818ccddf4b9e47dd2f3ae39d742b5980`)
+and is not the WBT table used for this mapping.
+
 ## Constructor slot requests
 
 The internal request pattern should not be confused with source-record counts:

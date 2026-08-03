@@ -12,12 +12,23 @@ format to built-in cups.
 
 | `YY` | Documented role | Practical meaning |
 |---:|---|---|
-| `00` | Unknown/special | Not fully identified in the public notes. |
+| `00` | Trainer Rank value `0x00` | The public notes identify byte 1 as Trainer Rank, but do not establish what rank `0x00` does in bracket construction. |
 | `01` | Filler Trainer | Used to fill ordinary opponent slots. |
 | `02` | Possible First Battle | Eligible for the player's first-round encounter. |
 | `03` | Possible Whenever battle | Flexible opponent category. |
 | `04` | Required Semifinalist Battle | Candidate reserved for the player's semifinal encounter. |
 | `05` | Required Finalist Battle | Candidate reserved for the player's final encounter. |
+
+### `YY=00` remains unresolved in the downloadable notes
+
+The public reverse-engineering notes call byte 1 the **Trainer Rank** field;
+they do not assign a proven bracket role to the rank value `0x00`. The available
+source and retail checks resolve the built-in constructor categories separately;
+they do not turn `YY=00` into a named built-in-cup category. It should therefore
+be reported as **present in the downloadable format, bracket role unresolved**,
+rather than guessed as a first-round, semifinal, or finalist flag. The cited
+notes also document the other bytes in the record, but that does not resolve
+the meaning of this particular rank value.
 
 ## What the selector does
 

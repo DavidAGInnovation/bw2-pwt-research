@@ -1,6 +1,12 @@
 # WBT records used by the result routine
 
-The table below lists the standard Champion records recovered from the examined WBT table. “Relevant packed fields” are the fields consumed by `wbt_calc_result`; other raw words identify the trainer/team but are not read by that routine.
+The table below lists the standard Champion records recovered from the examined
+WBT table. “Relevant packed fields” are the fields consumed by
+`wbt_calc_result`; other raw words identify the trainer/team but are not read by
+that routine. The USA/Europe retail WBT NARC is `/a/2/4/7`; it is byte-for-byte
+identical to the development `/a/2/6/1` table (SHA-256
+`0a32d2956f75a6e6365f292eb20e129c5247fe9ec093ca881dd469ea698d00ca`), so the
+indices and names below are verified for both builds.
 
 | Trainer | WBT index | Raw word 0 | Raw word 1 | Priority | Trainer type | Category |
 |---|---:|---:|---:|---:|---:|---:|
