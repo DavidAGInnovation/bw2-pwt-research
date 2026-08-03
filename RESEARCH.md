@@ -170,14 +170,9 @@ Download `YY=01`: filler opponent
 ```
 
 For downloadable files, if several entries share a tier, the selector uses RNG
-to choose among them. If only Red has `YY=05`, there is no Red-versus-Steven
-qualifying match whose NPC result decides whether Red becomes the finalist;
-Red is the selected final-category opponent. The player's battle against Red
-is a player battle, so `wbt_calc_result` is not used for that encounter.
+to choose among them.
 
-The earlier illustrative full-bracket diagram that put Cynthia versus Lance or Red versus Steven before the player's later round was therefore not a faithful model of the required `YY=04/05` schedule. It is possible for the game to simulate other all-NPC matches elsewhere, but the bracket tag itself does not invoke or modify the NPC winner routine.
-
-This bracket selection affects who the player meets and in which round. It does not give a trainer an intrinsic win advantage in an all-NPC match. When two NPC records are actually passed to `wbt_calc_result`, the source priority/type-affinity/RNG rules documented above apply independently.
+This bracket selection affects who the player meets and in which round they meet. It does not give a trainer an intrinsic win advantage in an all-NPC match. When two NPC records are actually passed to `wbt_calc_result`, the source priority/type-affinity/RNG rules documented above apply independently.
 
 ## Built-in cup constructor mapping
 
