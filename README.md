@@ -1,6 +1,6 @@
 # Pokémon Black 2 / White 2 PWT NPC-vs-NPC result research
 
-This repository documents a reverse-engineering result for the Pokémon World Tournament (PWT) in Pokémon Black 2 and White 2. It answers a long-standing practical question: when the game displays a match between two NPC trainers, is the winner always a 50/50 random choice?
+This repository documents how Pokémon Black 2 and White 2 construct and resolve Pokémon World Tournament (PWT) matches between NPC trainers. It answers a practical question: are NPC-vs-NPC winners always selected 50/50, or do trainer priority and matchup categories affect the result?
 
 ## Short answer
 
