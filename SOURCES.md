@@ -13,6 +13,18 @@
   `0x02238358` and rejoins at `0x022383EA`; unequal-affinity branch targets
   `0x02238386` and alone reaches the threshold/reversal sequence at
   `0x022383A8–0x022383E0`; player override begins at `0x022383EC`.
+- Retail USA/Europe Overlay 55 cross-check: compressed overlay file ID 55 is
+  ROM range `0x0011D200–0x0011EAE0` (6,368 bytes); decompressed base
+  `0x021E5800`, size 7,616 bytes, with result routine at `0x021E614C` and
+  category helper at `0x021E6338`. The same priority/equal-affinity,
+  unequal-affinity threshold-7, toggle, and player-override branches occur at
+  `0x021E6184`, `0x021E618E`, `0x021E61BE`, `0x021E61F4–0x021E6202`, and
+  `0x021E620E`. Decompressed SHA-256 is
+  `1d7ed4cc8ffb33a1bd715f621a38203f45e2a4453864a8fafb287aa5d744ad33`.
+- Local-only retail artifacts: `rom/retail-extracted/overlays/055.bin` and
+  `analysis/disassembly/retail-ov55.dis`; the ROM itself is not redistributed.
+  Extraction used `ndspy` 2.0.0's `NintendoDSRom.loadArm9Overlays()[55]` and
+  Thumb disassembly used Capstone 5.0.7.
 - Overlay 135 disassembly: WBT record conversion/packing around `0x0224208C`.
 - Overlay 135 constructor/selector/shuffle: cup dispatch at `0x02241D02`, candidate selection at `0x02241704`, and common eight-position shuffle at `0x02241DB8`.
 - Script NARC `/a/0/5/9`, member 1277: the PWT menu result (`ListMenuInitTL` at

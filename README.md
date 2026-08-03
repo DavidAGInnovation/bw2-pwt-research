@@ -44,15 +44,17 @@ These percentages are for the observed normal NPC path and are approximate becau
 ## Evidence
 
 The analysis was performed on an archived BW2 development build and cross-checked
-against a complete, locally retained Black 2 retail ROM and its extracted script
-NARC. The recovered SWAN source mirror is used only to identify the original
-command symbol and constants; it is retained locally and not redistributed here.
+against a complete, locally retained Black 2 retail ROM. The recovered SWAN
+source mirror is used only to identify the original command symbol and
+constants; it is retained locally and not redistributed here. The result
+routine was also independently checked in the decompressed retail Overlay 55.
 The repository records hashes, table indexes, decoded fields, disassembly
 locations, and reproducible pseudocode; the ROM/source mirror provenance is
 documented separately and is not a legally verified dump.
 
 - Result routine: overlay 55, RAM address `0x02238314` (`wbt_calc_result.c` debug string nearby).
 - Type-chart helper: `0x02238554`; type table: `0x022399EC`.
+- Retail Overlay 55: base `0x021E5800`, result routine `0x021E614C`, type-chart helper `0x021E6338`; its control flow matches the development routine.
 - Record packing/conversion: overlay 135, including the packer around `0x0224208C`.
 - WBT table: NARC `/a/2/6/1` (ARC resource 261; 128 records of 16 bytes in the examined build).
 - Examined development-build main image SHA-256: `ac4fb3e97b90831bd878f4e6ab0bed4ad355311ff90becba79ab79456f4e12da`.
@@ -71,10 +73,17 @@ members. Member 1280 matches the development `resort_scr.bin` Join Avenue
 script, not a PWT unlock script. The PWT unlock behavior is instead directly
 identified by the recovered SWAN source: `wbt_lobby.ev` requests
 `_WBT_CHECK_CUP_ENABLE` and `wbt_tool.c` evaluates the corresponding counters.
+The retail ROM's compressed Overlay 55 (file ID 55) was also extracted and
+decompressed: its 7,616-byte image has SHA-256
+`1d7ed4cc8ffb33a1bd715f621a38203f45e2a4453864a8fafb287aa5d744ad33`. The
+retail result routine at `0x021E614C` has the same equal-affinity `rand(2)`
+branch and the same symmetric unequal-affinity threshold-7 toggle as the
+development routine. The extracted binary and full disassembly are retained
+locally under the artifact directory and are not redistributed.
 
 ## Important scope note
 
-The public `namofure/TournamentSearcher` project is a fan-made RNG/trainer-ID search tool, not official Nintendo source. Community posts should treat this repository as a development-build reverse-engineering report and invite retail-ROM verification.
+The public `namofure/TournamentSearcher` project is a fan-made RNG/trainer-ID search tool, not official Nintendo source. Community posts should treat this repository as a source/development reverse-engineering report with a USA/Europe retail cross-check, and invite verification of other regional or revision ROMs.
 
 ## Sources and discussion
 
