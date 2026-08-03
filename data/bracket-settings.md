@@ -66,7 +66,7 @@ The relevant selector call sequence is in overlay 135 around `0x02241B4C`, with 
 
 ### Same-tier selection
 
-If two or more downloadable records share `YY=04`, the game chooses among those semifinal-tier candidates using RNG. If two or more share `YY=05`, it chooses among those finalist-tier candidates using RNG. If only Red has `YY=05`, Red is selected without a same-tier name choice. The count of records carrying each tier is fixed by the file; built-in per-family histograms are documented separately in [`in-game-tournaments.md`](in-game-tournaments.md).
+If two or more downloadable records share `YY=04`, the game chooses among those semifinal-tier candidates using RNG. If two or more share `YY=05`, it chooses among those finalist-tier candidates using RNG. Built-in per-family histograms are documented separately in [`in-game-tournaments.md`](in-game-tournaments.md).
 
 ### No hidden victory roll
 
