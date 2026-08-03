@@ -136,10 +136,12 @@ separate seven-category-3 constructor path.
 ## Static menu-to-ID evidence
 
 The names are linked to numeric IDs without an emulator. In `/a/0/5/9`, member
-1277, the script initializes a list whose result is work variable `0x8023`
-(`0x05D6`), passes that variable to `EvCmdWBTSetWBTCup` (`CMD_3F3` at
-`0x02E7`), and then compares it in the description switch at
-`0x0B95–0x0DC0`. The description lines are from `/a/0/0/5`, member 668:
+1277, the script shows the tournament prompt at `0x05D6`; the list-menu
+command begins at `0x05E2` and writes its result to work variable `0x8023`.
+At `0x02E7`, `CMD_3F3` (`EvCmdWBTSetWBTCup`) stores that value as the cup ID,
+and the description switch at `0x0B95–0x0DC0` compares the same value. The
+neighboring reception-ID setter is `CMD_3F7`; `CMD_3EF` is a different WBT
+command. The description lines are from `/a/0/0/5`, member 668:
 
 | ID | Text line | Mode |
 |---:|---:|---|
@@ -158,7 +160,31 @@ The names are linked to numeric IDs without an emulator. In `/a/0/5/9`, member
 Text line 113 says “this Driftveil tournament” and is distinct from the
 ordinary Driftveil description at line 10, so ID 11 is retained as a
 special/reserved branch rather than guessed as a second Driftveil mode. ID 0
-is the null/error path.
+is the null/error path. Neighboring text entry 112 says that a special
+tournament is being prepared, reinforcing the temporary/event interpretation.
+
+ID 11 is not merely a dead dispatch value: the description branch and the WBT
+state script reference it. However, the earlier scan of `CMD_3EF` arguments was
+misinterpreted; `CMD_3EF` is not `EvCmdWBTSetWBTCup`. No literal
+`CMD_3F3 11` appears in the examined script archive. The safest current label
+is **introductory/story Driftveil tournament state (reserved special slot)**,
+based on the exact wording of text entry 113 and its use alongside the
+eight-record `CMD_3EA` check in zero-based NARC entry 1280.
+
+`CMD_3EA` is a PWT progress-record getter in this script context. It reads the
+16-bit value for the supplied record ID and writes it to the output variable;
+the script's comparison with `1` is an exact one-win test, not a boolean
+unlock test. PKHeX's record map and PKSM's unlock script independently confirm
+that these values are victory/progress counters (see the links in
+`data/in-game-constructor-categories.md`). The exact original C symbol for the
+Overlay-58 wrapper remains unidentified, but its data behavior is no longer
+unresolved.
+
+The retail member is now verified against a downloaded Black 2 USA/Europe
+extraction: retail stores the script in `/a/0/5/6` (1,289 entries), with the
+same state-check sequence in member 1280 and the offsets recorded in
+`data/in-game-constructor-categories.md`. The binary is retained locally for
+comparison; its public-mirror provenance is not a legally verified user dump.
 
 This also corrects the earlier tentative ID assignment: ID 2 is Type Expert,
 not World Leaders; ID 10 is World Leaders.
@@ -178,6 +204,5 @@ NPC winner routine, and ordinary menu-name-to-ID mapping can all be reproduced
 from the archived ROM files, disassembly, and NARC tables without an emulator.
 The only built-in dispatch value still without an ordinary player-facing name
 is the special ID 11 branch described above. Member 1277 is a menu/controller
-script; the standard command table is used correctly here (`0xAB`/`0xAC` are
-`PVPlay`/`PVWait`), while the menu result and setter are identified by their
-actual `ListMenuInitTL`/`CMD_3F3` commands.
+script; the menu result is stored with `CMD_3F3` (`EvCmdWBTSetWBTCup`).
+`CMD_3F7` is the reception-ID setter.

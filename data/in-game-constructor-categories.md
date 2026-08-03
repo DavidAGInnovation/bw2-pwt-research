@@ -104,6 +104,96 @@ Driftveil menu description (ID 4, text entry 10), so the available static data
 does not justify renaming ID 11 as a second Driftveil cup.  ID 0 is the null
 / error path and likewise is not a named cup.
 
+The neighboring text entry 112 says that a special tournament is being
+prepared and asks the player to wait.  Together with entry 113 and the absence
+of an ID-11 short label in the permanent-mode table, this is consistent with
+a temporary/event slot rather than a normal selectable cup.
+
+The branch is nevertheless used by real script data.  The command IDs must be
+read from the overlay-55 dispatch table: `CMD_3F3` is
+`EvCmdWBTSetWBTCup`, while `CMD_3F7` is `EvCmdWBTSetReceptionID`.
+The apparent `CMD_3EF` occurrences with an argument of `11` are a different
+WBT command and are not proof of a cup-11 assignment.  No literal
+`CMD_3F3`/`EvCmdWBTSetWBTCup` call with value `11` was found in the examined
+script archive.
+
+This changes the strength of the static claim: ID 11 is definitely a real
+constructor/description branch, but its invocation is dynamic or comes from
+code/resource data that is not represented as a literal `CMD_3F3 11` in this
+archive.
+
+### Evidence for a story/current Driftveil state
+
+The best identification comes from three independent pieces of the
+development build:
+
+1. Text NARC `/a/0/0/5`, member 668, entry 113 says that “this Driftveil
+   tournament” allows any Pokémon and held item.  This is distinct from the
+   permanent Driftveil menu description (entry 10).
+2. The neighboring entry 112 says that a special tournament is being prepared
+   and asks the player to wait.
+3. Script NARC `/a/0/5/9`, zero-based NARC entry 1280, sequence 7 at raw
+   member offset `0x3807` (the eight calls run through `0x38E0`) calls the
+   generic `CMD_3EA` with first arguments `17, 18, 21, 20, 19, 22, 23, 24`
+   and compares each returned value with `1`. It accumulates the matching
+   results and then selects between text entries 113 and 114. The public
+   Overlay-58 command definition gives `CMD_3EA` only the generic signature
+   `(ushort, ref ushort)`, so its source-level name is not recovered here.
+   The arguments match the PWT save-record IDs used by PKHeX: Champion,
+   Driftveil, Johto, Kanto, Unova, Hoenn, Sinnoh, and World (the order in the
+   script is `17,18,21,20,19,22,23,24`).
+
+The wording of entry 113 matches the first/story Driftveil tournament
+description documented by [Bulbapedia](https://bulbapedia.bulbagarden.net/wiki/Driftveil_Tournament)
+and [Serebii](https://www.serebii.net/black2white2/pwt/driftveil.shtml).
+Therefore the current best label is **introductory/story Driftveil tournament
+state (reserved special slot)**. The development-build script identifies the
+gate in terms of PWT save-record state rather than a separately named map flag.
+
+### What `CMD_3EA` returns
+
+The return convention is now resolved at the data/behavior level. In this
+state script, `CMD_3EA(record_id, out)` reads the 16-bit progress value for a
+PWT save record and writes that value to `out`; it is not a general boolean
+"is unlocked" test. The script's `out == 1` comparisons therefore mean
+**exactly one recorded win** for each tested cup. A value such as World
+Leaders' `10` remains `10` and does not become `1` merely because the cup is
+unlocked.
+
+The conclusion is supported by three independent cross-checks:
+
+1. The eight arguments are PWT record IDs 17–24. PKHeX maps those records to
+   the save block at `0x5C + 2 * id` and labels them Champion, Driftveil,
+   Unova, Kanto, Johto, Hoenn, Sinnoh, and World ([PWTBlock5.cs](https://github.com/kwsch/PKHeX/blob/master/PKHeX.Core/Saves/Substructures/Gen5/PWTBlock5.cs),
+   [PWTRecordID.cs](https://github.com/kwsch/PKHeX/blob/master/PKHeX.Core/Saves/Substructures/Gen5/PWTRecordID.cs)).
+2. The examined development save contains ordinary counter values in those
+   slots, including `10` for record 24 (World Leaders), rather than only
+   zero/one flags.
+3. PKSM's B2W2 scripts write `10` at save offset `0x2378C` to unlock the
+   Champions tournament and identify the 58-byte region at `0x2375C` as all
+   PWT records ([scriptsB2W2.txt](https://github.com/FlagBrew/PKSM-Scripts/blob/master/src/scriptsB2W2.txt)).
+
+Overlay 55 also contains the corresponding WBT subsystem operations named
+`EvCmdWBTGetVictoryCount` and `EvCmdWBTIncVictoryCount`; the latter asserts
+`stage == WBTSTAGE_WIN`. Those debug names corroborate that these values are
+victory counters. The original source-level symbol for the Overlay-58
+`CMD_3EA` wrapper is still not recovered (the public command table leaves it
+as TODO), so the claim is about its observable save-data behavior, not a
+recovered Nintendo function name.
+
+The equivalent retail script member is now verified: the downloaded Black 2
+USA/Europe `/a/0/5/6` NARC has 1,289 entries, and its zero-based member 1280
+contains the same eight-record check at offsets `0x3807–0x38E0`, followed by
+the message-113/114 calls at `0x3926` and `0x3958`. The binary and provenance
+note are retained under `rom/retail-extracted/`; the public mirror source is
+not a legally verified user dump.
+
+The script archive also contains the general menu flow: member 1277 stores the
+list result in `0x8023` and passes it to `CMD_3F3` (the cup setter) at member
+offset `0x02E7`; the description switch then compares that same value.  The
+menu/resource path can therefore produce the cup ID dynamically, even though
+the archive has no literal `CMD_3F3 11`.
+
 The source table's family-`0x00` records (indices `8, 54–127`, 75 records) are
 special/other data.  Index 8 is the known Unova-cup wildcard (Bianca); the
 remaining `54–127` records are special or download-related and should not be
@@ -141,10 +231,12 @@ The menu-to-ID link is recoverable from the archived script data alone. In
 these relevant commands (offsets below are member-relative, including that
 prefix):
 
-* `0x05D6` shows the tournament prompt and calls `ListMenuInitTL` with result
-  work variable `0x8023`.
-* `0x02E7` calls `CMD_3F3` (`EvCmdWBTSetWBTCup`) with `0x8023`, proving that
-  the selected menu value is the cup ID passed to the constructor.
+* `0x05D6` shows the tournament prompt; the list-menu command begins at
+  `0x05E2` and writes its result to work variable `0x8023`.
+* `0x02E7` calls `CMD_3F3` (`EvCmdWBTSetWBTCup`) with `0x8023`.  The menu
+  result is therefore the cup ID consumed by the WBT constructor.  The
+  neighboring reception-ID setter is `CMD_3F7`; `CMD_3EF` is a different WBT
+  command and must not be used as evidence for a literal cup 11.
 * `0x0B95–0x0DC0` compares `0x8023` with each ID and calls `MsgActorEx` with
   the corresponding description-text line.
 
@@ -232,16 +324,14 @@ not read the trainer name or the family byte as a hidden win bonus.
   `ac4fb3e97b90831bd878f4e6ab0bed4ad355311ff90becba79ab79456f4e12da`.
 - NARC `/a/2/6/1` (resource 261) contains 128 records of 16 bytes each in that
   build; the family inventory above is based on raw byte 2.
-- The overlay-55 WBT cup setter begins at `0x02237724`, logs
+- The overlay-55 WBT cup setter begins at `0x02237728`, logs
   `EvCmdWBTSetWBTCup <= %d.`, and stores the parsed 16-bit value in the WBT
-  work structure at offset `0x0C`. In the examined script streams the command
-  is followed by the next opcode after that one value. The archived public
-  PokeSDK YAML also describes command `0x3F3` as one `ushort`; the disassembly
-  is the authoritative source for the handler's actual write.
-- A static scan of the script NARC found command `0x3F3` with literal value `4`
-  in member `1278` (two entry scripts). This confirms a real script-side use of
-  cup ID 4, but the script archive does not label that value with a menu name;
-  it therefore does not by itself prove “Driftveil.”
+  work structure at offset `0x0C`. Its command is `CMD_3F3`. The neighboring
+  reception-ID setter begins at `0x022377CC` (`CMD_3F7`) and writes a separate
+  WBT field; `0x022377F4` is the reception-ID getter (`CMD_3F8`).
+- Earlier scans of `CMD_3EF` with literal value `11` in members `980` and
+  `1280` were not cup assignments. No literal `CMD_3F3 11` occurs in the
+  examined script archive; the menu result can instead be supplied dynamically.
 - No original Nintendo C/C++ source was obtained. These are disassembly
   addresses, not official source symbols.
 - Retail verification is still desirable before treating every address or

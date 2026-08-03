@@ -17,7 +17,11 @@ These percentages are for the observed normal NPC path and are approximate becau
 
 ## Evidence
 
-The analysis was performed on an archived BW2 development build. It is not Nintendo source code, and the ROM is not included here. The repository records hashes, table indexes, decoded fields, disassembly locations, and reproducible pseudocode only.
+The analysis was performed on an archived BW2 development build and cross-checked
+against a locally retained Black 2 retail script NARC. It is not Nintendo
+source code. The repository records hashes, table indexes, decoded fields,
+disassembly locations, and reproducible pseudocode; the retail NARC's public
+mirror provenance is documented separately and is not a legally verified dump.
 
 - Result routine: overlay 55, RAM address `0x02238314` (`wbt_calc_result.c` debug string nearby).
 - Type-chart helper: `0x02238554`; type table: `0x022399EC`.
@@ -30,6 +34,13 @@ See [`data/bracket-settings.md`](data/bracket-settings.md) for the bracket-setti
 See [`data/in-game-tournaments.md`](data/in-game-tournaments.md) for the ten built-in tournament families, source-table family counts, and cup-ID mappings established for the examined development build.
 See [`data/in-game-constructor-categories.md`](data/in-game-constructor-categories.md) for the constructor dispatch, internal category pools, and confirmed slot-request patterns.
 See [`data/yy-counts.md`](data/yy-counts.md) only for the separate downloadable `.pwt` appendix; it is not a count for the built-in tournaments.
+
+## Retail script cross-check
+
+The downloaded retail `/a/0/5/6` archive has 1,289 members. The static scanner
+finds the same state/reception sequence in zero-based member 1280 as in the
+development `/a/0/5/9` archive, with the eight `CMD_3EA` offsets and message
+branches recorded in `SOURCES.md` and `RESEARCH.md`.
 
 ## Important scope note
 
