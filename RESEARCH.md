@@ -198,6 +198,9 @@ documented in [`data/in-game-constructor-categories.md`](data/in-game-constructo
 and [`data/in-game-tournaments.md`](data/in-game-tournaments.md). These family
 bytes are not downloadable `YY` values, and the number of source records is
 not the same thing as the seven NPC slots selected for one run.
+The raw mask/type/pool fields and the exact generic, Rental, and Mix candidate
+sets are documented in
+[`data/generic-and-rental-records.md`](data/generic-and-rental-records.md).
 
 The development build's Japanese text archive independently names the
 permanent modes. NARC `/a/2/3/9`, member 11, entries 151–162 decode in order to

@@ -37,6 +37,12 @@ them.
   Thumb disassembly used Capstone 5.0.7.
 - Overlay 135 disassembly: WBT record conversion/packing around `0x0224208C`.
 - Overlay 135 constructor/selector/shuffle: cup dispatch at `0x02241D02`, candidate selection at `0x02241704`, and common eight-position shuffle at `0x02241DB8`.
+- Overlay 135 raw WBT-record predicates: `0x02241874` tests the mode mask at
+  record byte 5, family selector at byte 6, and Type Expert type ID at byte 7;
+  `0x02241630` compares the low three bits of record byte 8 with the requested
+  internal pool. The resulting Rental/Mix candidate map is reproduced by
+  `scripts/inspect_wbt_table.py` and documented in
+  `data/generic-and-rental-records.md`.
 - USA/Europe retail Overlay 135 cross-check: decompressed base `0x021EEC80`, size 4,032 bytes, SHA-256 `30b48d2cc1e724470351f57fa6fa28d2844f195732737052bc9ce41e57ef98b8`; corresponding selector `0x021EEE08`, Type Expert eligibility predicate `0x021EEF90`, cup dispatch `0x021EF298` with switch table `0x021EF2C0`, and common shuffle `0x021EF344`.
 - Script NARC `/a/0/5/9`, member 1277: the PWT menu result (`ListMenuInitTL` at
   member offset `0x05E2`), the cup-ID setter (`CMD_3F3` at `0x02E7`, passing

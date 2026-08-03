@@ -14,6 +14,7 @@ sys.path.insert(0, str(SCRIPTS))
 
 import find_pwt_menu_builder as menu_builder  # noqa: E402
 import find_pwt_state_script as state_script  # noqa: E402
+import inspect_wbt_table as wbt_table  # noqa: E402
 
 
 def make_narc(members: list[bytes]) -> bytes:
@@ -50,6 +51,26 @@ def make_menu_member() -> bytes:
 
 
 class ScannerTests(unittest.TestCase):
+    def test_wbt_constructor_pool_decoder(self) -> None:
+        table = bytearray(wbt_table.TABLE_SIZE)
+        # Synthetic rows exercising the Rental and Rental Master masks and
+        # the low-three-bit constructor pool field.
+        table[0 * 16 + wbt_table.MASK_OFFSET] = 0x08
+        table[0 * 16 + wbt_table.FAMILY_OFFSET] = 0x05
+        table[0 * 16 + wbt_table.POOL_OFFSET] = 0x03
+        table[1 * 16 + wbt_table.MASK_OFFSET] = 0x20
+        table[1 * 16 + wbt_table.FAMILY_OFFSET] = 0x05
+        table[1 * 16 + wbt_table.POOL_OFFSET] = 0x03
+        table[2 * 16 + wbt_table.MASK_OFFSET] = 0x08
+        table[2 * 16 + wbt_table.POOL_OFFSET] = 0x02
+        table[3 * 16 + wbt_table.MASK_OFFSET] = 0x08
+        table[3 * 16 + wbt_table.POOL_OFFSET] = 0x01
+
+        self.assertEqual(wbt_table.candidate_indices(bytes(table), 12), [0, 2, 3])
+        self.assertEqual(wbt_table.candidate_indices(bytes(table), 13), [1])
+        self.assertEqual(wbt_table.pool_indices(bytes(table), 12, 3), [0])
+        self.assertEqual(wbt_table.compact_indices([0, 1, 2, 5, 7, 8]), "0–2, 5, 7–8")
+
     def test_narc_and_menu_builder(self) -> None:
         members = menu_builder.narc_members(make_narc([make_menu_member()]))
         self.assertEqual(len(members), 1)

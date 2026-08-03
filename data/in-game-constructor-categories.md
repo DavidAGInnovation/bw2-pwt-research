@@ -60,6 +60,13 @@ The rows above are the result of evaluating that switch table directly. In
 particular, ID 12 branches to `0x02241B84`, ID 14 to `0x02241BB0`, and ID 15
 to `0x02241BF4`.
 
+The exact raw-record masks and pool memberships for the generic, Rental, and
+Mix paths are tabulated in
+[`generic-and-rental-records.md`](generic-and-rental-records.md). In particular,
+ordinary Rental pool 3 is records `0–4, 8` (Cheren, Roxie, Burgh, Elesa, Clay,
+and Bianca), while Rental Master pool 3 is records `0–13, 20–52`; the seven
+standard Champion records are absent from both.
+
 ## Mapping to named permanent cups
 
 The script-level mapping below resolves the player-facing names for every
