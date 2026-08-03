@@ -194,7 +194,7 @@ downloadable `.pwt` role bytes. The same names also occur in the
 menu-description bank used by the static script branch below: NARC
 `/a/0/0/5`, member 668, entries 7–20 and 23–36.
 
-## Static script mapping (no emulator)
+## Static script mapping
 
 The menu-to-ID link is recoverable from the archived script data alone. In
 `/a/0/5/9`, member 1277, the member's four-byte data prefix is followed by
