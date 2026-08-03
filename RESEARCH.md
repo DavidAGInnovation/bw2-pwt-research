@@ -46,9 +46,34 @@ winner at `0x022383D6–0x022383E0`. The player override begins at
 `0x022383EC`. The category-17 neutral check is also present at
 `0x02238554–0x02238560`.
 
-Thus the source and the development ROM agree. The locally retained retail
-extraction has been cross-checked for the script/NARC data; a separately
-extracted retail Overlay 55 binary is not currently part of the artifact.
+The retail Overlay 55 was then extracted from the retained USA/Europe ROM and
+decompressed. It has overlay base `0x021E5800`; the result routine is at
+`0x021E614C`, and the category-affinity helper is at `0x021E6338`. Its control
+flow is the same as the development build, with the corresponding retail
+branches at:
+
+| Decision | Retail address evidence |
+|---|---|
+| Priority comparison | `0x021E6184` → priority path `0x021E6204` |
+| Equal-affinity split | `0x021E618E`; equal path calls the two-way RNG at `0x021E6190–0x021E6198` |
+| Unequal-affinity path | `0x021E61BE–0x021E61C8` |
+| 30% reversal check | `0x021E61CA–0x021E61F6`, threshold `7` |
+| Symmetric toggle | `0x021E61F8–0x021E6202` |
+| Player override | begins at `0x021E620E` |
+| Category-17 neutral check | `0x021E6338–0x021E6342` |
+
+The compressed retail file is overlay file ID 55, ROM range
+`0x0011D200–0x0011EAE0` (6,368 bytes); decompression produces 7,616 bytes.
+The local decompressed artifact is
+`rom/retail-extracted/overlays/055.bin`, SHA-256
+`1d7ed4cc8ffb33a1bd715f621a38203f45e2a4453864a8fafb287aa5d744ad33`.
+The complete retail disassembly is retained locally as
+`analysis/disassembly/retail-ov55.dis`.
+
+Therefore the recovered source, development Overlay 55, and this retail
+Overlay 55 all agree on the A/B-symmetric winner routine. The remaining
+provenance caveat is that the retail input is a public ROM mirror rather than
+a user-owned dump.
 
 ### Category `17` (`0x11`) is a neutral sentinel
 
