@@ -250,8 +250,6 @@ why Bianca's selectable Unova roster entry and the special Driftveil event are
 not excluded: roster membership and cup availability are separate source
 decisions.
 
-ID 2 is Type Expert, not World Leaders; ID 10 is World Leaders.
-
 ## Remaining uncertainty
 
 The mapping is for the archived development build and the matching Black 2
