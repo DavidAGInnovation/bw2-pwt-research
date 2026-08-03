@@ -26,7 +26,7 @@ The relevant overlay-135 routines are:
 | `0x02241A88` | Fixed/flagged path; selects records whose packed flag at offset `6` is set. |
 | `0x02241C0C` | Dynamic leader/mob/weak-mob path used by Type Expert. |
 
-## Cup-ID dispatch (confirmed)
+## Cup-ID dispatch
 
 The jump table at `0x02241D20–0x02241D3E` and the calls following it give this
 exact mapping in the examined build.  The switch reads one signed 16-bit
