@@ -217,10 +217,10 @@ The text bank is NARC `/a/0/0/5`, member 668: lines 7–20 are the long
 descriptions and lines 23–36 are the short labels. ID 11 instead selects line
 113, a special message saying “this Driftveil tournament”; it has no ordinary
 menu label. ID 0 is the null/error path. The static script mapping assigns ID 2
-to Type Expert and ID 10 to World Leaders. The external retail symbol
-`LoadPWTTournamentTypeText` at `0x021C98F5` is consistent with a separate text
-loader, but the retail address is not treated as a development-build code
-address.
+to Type Expert and ID 10 to World Leaders. The public BW2 retail symbol
+database lists `LoadPWTTournamentTypeText` at `0x021C98F5`, independently
+confirming a retail tournament-type text-loader symbol. That address is not
+used as a development-build constructor address.
 
 `CMD_3EF` is a different WBT command. No literal
 `CMD_3F3`/`EvCmdWBTSetWBTCup` call with value `11` occurs in the examined

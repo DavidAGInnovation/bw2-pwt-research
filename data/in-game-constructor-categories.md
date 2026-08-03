@@ -240,10 +240,11 @@ The direct script branch assigns ID 2 to Type Expert and ID 10 to World Leaders;
 the constructor code independently agrees that ID 2 is the dynamic
 leader/mob/weak-mob path while ID 10 requests seven category-3 records.
 
-The retail reverse-engineering symbol `LoadPWTTournamentTypeText` (listed at
-`0x021C98F5` in the public BW2 symbol database) supports the existence of such
-a loader, but that retail address is not assumed to be identical to the
-development-build layout used for the constructor disassembly.
+The public BW2 retail symbol database lists `LoadPWTTournamentTypeText` at
+`0x021C98F5`. This independently confirms a retail tournament-type text-loader
+symbol. It does not map that retail address onto the development constructor;
+the cup names here come from the development menu/description script and source
+enum evidence.
 
 ## Type Expert special path
 
