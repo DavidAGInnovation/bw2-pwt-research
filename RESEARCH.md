@@ -181,11 +181,13 @@ The earlier scan of `CMD_3EF` arguments was misinterpreted: it is not
 `11` was found in the examined script archive. Member 1277 supplies the
 general menu result and description mapping. Zero-based NARC entry 1280,
 sequence 7 at raw member offset `0x3807` (through `0x38E0`), calls `CMD_3EA` for PWT save-record IDs
-`17,18,21,20,19,22,23,24`, compares each returned value with `1`, accumulates
-the matches, and selects messages 113 or 114. Entry 113 says “this Driftveil
-tournament,” matching the documented first/story Driftveil wording. This is
-strong evidence that ID 11 is an introductory/story Driftveil state whose gate
-is represented by PWT save-record state.
+`17,18,21,20,19,22,23,24`, increments an accumulator for each returned value
+that equals `1`, then tests whether the accumulator equals `1` before selecting
+messages 113 or 114. Entry 113 says “this Driftveil tournament,” matching the
+documented first/story Driftveil wording. The exact gate is therefore **exactly
+one** of the eight records at one, not “all eight unlocked.” This is strong
+evidence that ID 11 is an introductory/story Driftveil state whose gate is
+represented by PWT save-record state.
 
 The `CMD_3EA` behavior is resolved at the save-data level: it returns the
 16-bit PWT progress/victory value for the supplied record ID, so `== 1` means
@@ -193,8 +195,9 @@ exactly one recorded win. PKHeX maps the IDs to `0x5C + 2 * id` in the PWT
 save block, the examined save contains values such as World Leaders `10`, and
 PKSM's B2W2 scripts write `10` at `0x2378C` to unlock Champions. Overlay 55
 also exposes `EvCmdWBTGetVictoryCount`/`EvCmdWBTIncVictoryCount` with a
-`WBTSTAGE_WIN` assertion. The original Nintendo symbol for the Overlay-58
-wrapper remains unknown, but the returned value is not an unresolved boolean.
+`WBTSTAGE_WIN` assertion; its dispatch entry is the separate `CMD_3FA` handler
+at `0x02237860`. The exact Overlay-58 `CMD_3EA` Nintendo symbol remains
+unknown, but the returned value is not an unresolved boolean.
 
 As a static-analysis correction, the overlay-135 switch table is a signed
 halfword table at `0x02241D20–0x02241D3E` with Thumb PC base `0x02241D22`.
@@ -206,9 +209,10 @@ order.
 ## Reproducibility and limitations
 
 - The findings come from an archived development build, with the relevant
-  script sequence now cross-checked against a Black 2 USA/Europe retail
-  extraction. The retail bytes are retained locally under
-  `rom/retail-extracted/a/0/5/6`; see the artifact-level README for provenance.
+  script sequence now cross-checked against a complete Black 2 USA/Europe
+  retail ROM. The ROM is retained locally under `rom/retail-source/`, and its
+  `/a/0/5/6` extraction is retained under `rom/retail-extracted/a/0/5/6`; see
+  the artifact-level README for provenance.
 - In this development artifact the relevant script NARC is `/a/0/5/9`, with
   zero-based entry 1280 containing the state check. Public retail file-system
   listings use `/a/0/5/6` for the large B2W2 script archive, so the member
@@ -219,8 +223,8 @@ order.
   `0x3926` and `0x3958`. The repository scanner
   `scripts/find_pwt_state_script.py` reproduces these findings.
 - No original Nintendo C/C++ source was obtained. The addresses above are disassembly locations.
-- The retail NARC was downloaded from a public ROM mirror for local analysis;
-  its legal extraction provenance is not established, and it should not be
-  redistributed. A user-owned cartridge extraction remains the appropriate
-  source for a legally reproducible artifact.
+- The complete retail ROM was downloaded from a public ROM mirror for local
+  analysis; its legal extraction provenance is not established, and it should
+  not be redistributed. A user-owned cartridge extraction remains the
+  appropriate source for a legally reproducible artifact.
 - Exact raw record names and IDs are not inputs to the result calculation; only the packed fields described above are read.

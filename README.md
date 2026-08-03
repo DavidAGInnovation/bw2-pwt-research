@@ -12,16 +12,22 @@ This repository documents a reverse-engineering result for the Pokémon World To
 - Leader-vs-Leader matches can be type-directed. If the two relevant values tie, the same A-slot adjustment applies; if B has the type advantage, the approximate result is A 30% / B 70%.
 - A downloadable `YY=04` or `YY=05` tag is a placement/candidate tier for the player's semifinal or final path; it is not a win bonus. If several records share a tier, the selector can choose among them. Built-in constructor categories must not be relabeled as `YY` without a demonstrated data mapping.
 - The built-in menu mapping is now recoverable statically, without an emulator: ID 1 is Champions, ID 2 Type Expert, ID 3 Download, ID 4 Driftveil, IDs 5–9 the regional Leaders cups, ID 10 World Leaders, and IDs 12–15 Rental/Mix plus their Master variants. ID 11 is a reserved/current-tournament branch without an ordinary menu label; ID 0 is the null/error path.
+- The ID-11 story gate is also resolved statically: the state script counts how
+  many of eight PWT progress records equal exactly one win and selects the
+  special Driftveil text only when that count is exactly one. This branch does
+  not itself write cup ID 11; the runtime producer of that numeric menu value
+  is not present as a literal script call.
 
 These percentages are for the observed normal NPC path and are approximate because the game uses integer arithmetic on its RNG output. They describe the encoded routine, not the strength of the teams in an actual battle.
 
 ## Evidence
 
 The analysis was performed on an archived BW2 development build and cross-checked
-against a locally retained Black 2 retail script NARC. It is not Nintendo
-source code. The repository records hashes, table indexes, decoded fields,
-disassembly locations, and reproducible pseudocode; the retail NARC's public
-mirror provenance is documented separately and is not a legally verified dump.
+against a complete, locally retained Black 2 retail ROM and its extracted script
+NARC. It is not Nintendo source code. The repository records hashes, table
+indexes, decoded fields, disassembly locations, and reproducible pseudocode;
+the retail source's public-mirror provenance is documented separately and is
+not a legally verified dump.
 
 - Result routine: overlay 55, RAM address `0x02238314` (`wbt_calc_result.c` debug string nearby).
 - Type-chart helper: `0x02238554`; type table: `0x022399EC`.
@@ -37,10 +43,12 @@ See [`data/yy-counts.md`](data/yy-counts.md) only for the separate downloadable 
 
 ## Retail script cross-check
 
-The downloaded retail `/a/0/5/6` archive has 1,289 members. The static scanner
-finds the same state/reception sequence in zero-based member 1280 as in the
-development `/a/0/5/9` archive, with the eight `CMD_3EA` offsets and message
-branches recorded in `SOURCES.md` and `RESEARCH.md`.
+The complete Black 2 USA/Europe ROM is retained at the artifact level under
+`rom/retail-source/`; its header/FAT extraction of `/a/0/5/6` has 1,289
+members. The static scanner finds the same state/reception sequence in
+zero-based member 1280 as in the development `/a/0/5/9` archive, with the
+eight `CMD_3EA` offsets and message branches recorded in `SOURCES.md` and
+`RESEARCH.md`.
 
 ## Important scope note
 

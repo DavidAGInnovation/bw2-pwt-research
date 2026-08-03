@@ -171,20 +171,33 @@ is **introductory/story Driftveil tournament state (reserved special slot)**,
 based on the exact wording of text entry 113 and its use alongside the
 eight-record `CMD_3EA` check in zero-based NARC entry 1280.
 
+The eight-record gate is exact, not hypothetical. The script sets accumulator
+`0x8055` to zero, reads records `17, 18, 21, 20, 19, 22, 23, 24` with
+`CMD_3EA`, and adds one only when a returned counter equals `1`. It then
+compares the accumulator with `1`: message 113 (the unrestricted/current
+Driftveil text) is selected when **exactly one** of the eight records is at one;
+message 114 is selected otherwise. The scanner records the final comparison at
+member offset `0x38FF` and reproduces it in both development and retail
+archives. This resolves the event condition without an emulator. It should not
+be described as a direct assignment of cup ID 11, because the branch does not
+call the cup setter.
+
 `CMD_3EA` is a PWT progress-record getter in this script context. It reads the
 16-bit value for the supplied record ID and writes it to the output variable;
 the script's comparison with `1` is an exact one-win test, not a boolean
 unlock test. PKHeX's record map and PKSM's unlock script independently confirm
 that these values are victory/progress counters (see the links in
-`data/in-game-constructor-categories.md`). The exact original C symbol for the
-Overlay-58 wrapper remains unidentified, but its data behavior is no longer
-unresolved.
+`data/in-game-constructor-categories.md`). Overlay 55's debug name
+`EvCmdWBTGetVictoryCount` belongs to its separate `CMD_3FA` handler; the
+Overlay-58 `CMD_3EA` wrapper has no recovered Nintendo symbol. The behavior,
+however, is no longer unresolved.
 
-The retail member is now verified against a downloaded Black 2 USA/Europe
-extraction: retail stores the script in `/a/0/5/6` (1,289 entries), with the
-same state-check sequence in member 1280 and the offsets recorded in
-`data/in-game-constructor-categories.md`. The binary is retained locally for
-comparison; its public-mirror provenance is not a legally verified user dump.
+The retail member is now verified against the complete downloaded Black 2
+USA/Europe ROM: retail stores the script in `/a/0/5/6` (1,289 entries), with
+the same state-check sequence in member 1280 and the offsets recorded in
+`data/in-game-constructor-categories.md`. The ROM and extracted NARC are
+retained locally for comparison; their public-mirror provenance is not a
+legally verified user dump.
 
 This also corrects the earlier tentative ID assignment: ID 2 is Type Expert,
 not World Leaders; ID 10 is World Leaders.
@@ -192,10 +205,12 @@ not World Leaders; ID 10 is World Leaders.
 ## Remaining uncertainty
 
 The mapping is for the archived development build identified in the companion
-page. Retail regional builds should be checked before assuming that the same
-special ID 11 and family-`0x00` assignments apply everywhere. No original
-Nintendo source code was obtained; the evidence is disassembly, script/text
-tables, the extracted WBT table, and public roster references.
+page and its matching Black 2 USA/Europe retail script. Retail regional builds
+should be checked before assuming that the same special ID 11 and family-`0x00`
+assignments apply everywhere. No original Nintendo source code was obtained;
+the only remaining ID-11 question is which runtime menu/resource path can
+return numeric value 11 to the cup setter. The event gate and the `CMD_3EA`
+counter semantics are statically resolved.
 
 ## Static-only status
 
@@ -205,4 +220,6 @@ from the archived ROM files, disassembly, and NARC tables without an emulator.
 The only built-in dispatch value still without an ordinary player-facing name
 is the special ID 11 branch described above. Member 1277 is a menu/controller
 script; the menu result is stored with `CMD_3F3` (`EvCmdWBTSetWBTCup`).
-`CMD_3F7` is the reception-ID setter.
+`CMD_3F7` is the reception-ID setter. The event condition that selects the
+special Driftveil text is fully reproducible from member 1280 and is not an
+unresolved flag hypothesis.

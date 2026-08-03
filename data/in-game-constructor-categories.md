@@ -122,6 +122,30 @@ constructor/description branch, but its invocation is dynamic or comes from
 code/resource data that is not represented as a literal `CMD_3F3 11` in this
 archive.
 
+The event gate itself is now decoded exactly. In member 1280, sequence 7
+initializes work variable `0x8055` to zero, then performs these eight checks:
+
+```text
+record IDs: 17, 18, 21, 20, 19, 22, 23, 24
+value = CMD_3EA(record_id, 0x8026)
+if value == 1: 0x8055 += 1
+```
+
+The script then tests `0x8055` against `1`. The branch to message 114 is the
+non-equal path; message 113 is reached only when **exactly one** of those eight
+PWT records has a stored victory count of exactly one. This is not an “all cups
+unlocked” test and it is not a hidden map flag. The scanner verifies the
+accumulator sequence and final comparison at `0x38FF` in both development and
+retail copies. The interpretation of script comparison mode 1 and the `0xFF`
+stack-result jump follows the documented BW2 VM conventions in the
+[Project Pokémon scripting reference](https://projectpokemon.org/home/forums/topic/25852-b2w2-scripting-thread/).
+
+This resolves the **event/unlock condition** statically. It does not prove that
+the branch itself writes cup ID 11: the branch selects text 113/114, while the
+general menu/controller path supplies a runtime value to `CMD_3F3`. No literal
+`CMD_3F3 11` exists in the examined script archive, so the exact runtime
+producer of numeric ID 11 remains unobserved.
+
 ### Evidence for a story/current Driftveil state
 
 The best identification comes from three independent pieces of the
@@ -175,18 +199,20 @@ The conclusion is supported by three independent cross-checks:
 
 Overlay 55 also contains the corresponding WBT subsystem operations named
 `EvCmdWBTGetVictoryCount` and `EvCmdWBTIncVictoryCount`; the latter asserts
-`stage == WBTSTAGE_WIN`. Those debug names corroborate that these values are
-victory counters. The original source-level symbol for the Overlay-58
-`CMD_3EA` wrapper is still not recovered (the public command table leaves it
-as TODO), so the claim is about its observable save-data behavior, not a
-recovered Nintendo function name.
+`stage == WBTSTAGE_WIN`. The overlay-55 dispatch table places
+`EvCmdWBTGetVictoryCount` at command `CMD_3FA` (handler `0x02237860`), not at
+Overlay-58 `CMD_3EA`. Overlay 58's public command table gives `CMD_3EA` only
+the signature `(ushort, ref ushort)` and no Nintendo symbol. Therefore the
+symbol name is unresolved, but the returned-value behavior used by the state
+script is resolved from the script, save layout, and counter-writing code.
 
-The equivalent retail script member is now verified: the downloaded Black 2
-USA/Europe `/a/0/5/6` NARC has 1,289 entries, and its zero-based member 1280
-contains the same eight-record check at offsets `0x3807–0x38E0`, followed by
-the message-113/114 calls at `0x3926` and `0x3958`. The binary and provenance
-note are retained under `rom/retail-extracted/`; the public mirror source is
-not a legally verified user dump.
+The equivalent retail script member is now verified from the complete downloaded
+Black 2 USA/Europe ROM: its `/a/0/5/6` NARC has 1,289 entries, and zero-based
+member 1280 contains the same eight-record check at offsets `0x3807–0x38E0`,
+followed by the message-113/114 calls at `0x3926` and `0x3958`. The complete
+ROM and extracted NARC are retained under `rom/retail-source/` and
+`rom/retail-extracted/`; the public mirror source is not a legally verified
+user dump.
 
 The script archive also contains the general menu flow: member 1277 stores the
 list result in `0x8023` and passes it to `CMD_3F3` (the cup setter) at member
