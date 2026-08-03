@@ -31,10 +31,10 @@ The two RNG calls are used in different situations:
 - **Unequal affinities:** the side with the better type matchup is selected
   first. Then `GFL_STD_Rand(context, 10)` returns a value from `0` through `9`.
   Values `0–6` (7 of 10 outcomes) keep that type-advantage winner, while
-  values `7–9` (3 of 10 outcomes) reverse the result. Therefore, if Clay has
-  the type advantage over Elesa, Clay wins about 70% of these simulated
-  matches and Elesa wins about 30%. The same calculation applies when the
-  other Leader has the advantage.
+  values `7–9` (3 of 10 outcomes) reverse the result. For example, Clay's
+  Ground type has the advantage over Elesa's Electric type, so Clay wins about
+  70% of these simulated matches and Elesa wins about 30%. The same calculation
+  applies when another Leader has the type advantage.
 
 The source has a `PM_DEBUG`-only `DEBUG_WBT_ReverseJudgeMode` hook that can
 invert an unequal-affinity result for debugging. `DEBUG_WBT_ReverseJudgeMode`
