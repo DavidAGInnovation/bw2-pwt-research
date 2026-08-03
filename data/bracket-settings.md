@@ -12,23 +12,44 @@ format to built-in cups.
 
 | `YY` | Documented role | Practical meaning |
 |---:|---|---|
-| `00` | Trainer Rank value `0x00` | The public notes identify byte 1 as Trainer Rank, but do not establish what rank `0x00` does in bracket construction. |
+| `00` | `WBT_TRPRI_NULL` (`pri = 0`, undefined) | Lowest/unprioritized numeric value. It does not request a particular player round. |
 | `01` | Filler Trainer | Used to fill ordinary opponent slots. |
 | `02` | Possible First Battle | Eligible for the player's first-round encounter. |
 | `03` | Possible Whenever battle | Flexible opponent category. |
 | `04` | Required Semifinalist Battle | Candidate reserved for the player's semifinal encounter. |
 | `05` | Required Finalist Battle | Candidate reserved for the player's final encounter. |
 
-### `YY=00` remains unresolved in the downloadable notes
+### `YY=00` is the source-defined null/lowest priority
 
-The public reverse-engineering notes call byte 1 the **Trainer Rank** field;
-they do not assign a proven bracket role to the rank value `0x00`. The available
-source and retail checks resolve the built-in constructor categories separately;
-they do not turn `YY=00` into a named built-in-cup category. It should therefore
-be reported as **present in the downloadable format, bracket role unresolved**,
-rather than guessed as a first-round, semifinal, or finalist flag. The cited
-notes also document the other bytes in the record, but that does not resolve
-the meaning of this particular rank value.
+The recovered SWAN source removes the earlier ambiguity. A downloadable record
+is declared as `WBTDL_MATCH { type, pri, id }` in
+`include/savedata/wbt_download.h`, so byte 1 (`YY`) is copied as `pri`. The
+priority enum in `include/field/wbt.h` defines `WBT_TRPRI_NULL = 0`, followed
+by priorities 1 through 5. `NULL` means **undefined** in the source enum; it is
+not an extra named bracket tier.
+
+During downloadable setup, `wbt_system_lobby.c` assigns each non-player
+trainer's `wbt_tr->pri` from the record's `pri`. `WBTSYS_SortTrainer` in
+`wbt_makematch.c` then sorts the seven NPCs in descending priority before
+placing the highest-priority records into the structured player-path slots and
+shuffling the remainder. Consequently, `YY=00` is simply the lowest/
+unprioritized value. In a mixed list it sorts behind every record with
+`YY=01`–`05`, so it does not itself request a semifinal or final slot. The
+sorter is generic, however: if there are not enough higher-priority records, a
+priority-0 record can still fill one of the structured positions because the
+constructor always places its highest three available records there. `YY=00`
+therefore supplies no special guarantee; its effect is only the numeric
+priority value.
+
+The same value also reaches `wbt_calc_result.c`. Against another `YY=00`
+record, priorities tie and the normal affinity/RNG rule runs; against a record
+with `YY=01`–`05`, the higher-priority record wins deterministically before the
+affinity branch. This result behavior is separate from the player override.
+
+The public reverse-engineering notes still use behavioral labels such as
+“Filler,” “Possible First,” “Semifinalist,” and “Finalist.” Those labels remain
+useful descriptions of the downloadable selector, but the source-level field
+behind them is the numeric `pri` value above—not a separate `YY=00` category.
 
 ## What the selector does
 
@@ -59,6 +80,12 @@ The bracket settings answer “which opponent is scheduled for which player roun
 
 - Project Pokémon notes label the fields “Required Finalist” and “Required Semifinalist” and state that same-setting entries are selected randomly.
 - The archived development build contains the selector trace and debug format `SELECT TRAINER(...):pri(... )btl(... )candidate(...)` in overlay 135.
+- The recovered SWAN source mirror (SVN revision 59995, branch
+  `branches/upper_version`) confirms the field and its consumers in
+  `include/savedata/wbt_download.h`, `include/field/wbt.h`,
+  `field/wbt_system_lobby.c`, `field/wbt_makematch.c`, and
+  `field/wbt_calc_result.c`. The source is retained locally and is not
+  redistributed in this repository.
 - The recovered SWAN source identifies the separate Join Avenue/Resort
   `CMD_3EA` wrapper as `EvCmdResortGetData`. WBT uses the same numeric slot for
   `EvCmdWBTSystemCheckEnable`; neither symbol changes the bracket semantics,

@@ -346,9 +346,15 @@ unchanged to the examined USA/Europe retail ROM. The separate retail
 `416ddd7a37b89bcada27e977dc0a59df818ccddf4b9e47dd2f3ae39d742b5980`) and is
 not the WBT roster table.
 
-The downloadable-format notes call the second record byte `Trainer Rank`, but
-do not establish a bracket role for rank `0x00`; that value remains unresolved
-in the research data. Only this USA/Europe retail ROM was available locally,
+The downloadable-format notes call the second record byte `Trainer Rank`. The
+recovered SWAN source makes its implementation precise: `WBTDL_MATCH.pri` is
+the second byte, `WBT_TRPRI_NULL` is the explicit value 0 (“undefined”), and
+downloadable setup copies `pri` into each non-player `WBTTRAINER`. The common
+sorter orders trainers by this value, so `YY=00` is the lowest/unprioritized
+value; the result routine likewise treats it as priority 0. Two `YY=00`
+records therefore reach the equal-priority affinity/RNG path, while a
+`YY=00` record loses deterministically to any record with `YY=01`–`05` in an
+NPC-vs-NPC comparison. Only this USA/Europe retail ROM was available locally,
 so other regional or revision ROMs have not been cross-checked.
 
 ## Reproducibility and limitations

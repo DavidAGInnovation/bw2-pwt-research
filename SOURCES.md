@@ -115,7 +115,15 @@
 - [PWT RNG analysis](https://namofure.hatenablog.com/entry/2025/05/29/214716)
 
 The Project Pokémon PWT notes identify byte 1 of a downloadable bracket record
-as `Trainer Rank`; they do not resolve the bracket behavior of rank `0x00`.
+as `Trainer Rank` and provide the observed placement labels for values 01–05.
+The recovered SWAN source mirror resolves the previously open value: byte 1 is
+`WBTDL_MATCH.pri`, and `WBT_TRPRI_NULL = 0` is the source-defined undefined/null
+priority. `wbt_system_lobby.c` copies it into `WBTTRAINER.pri`,
+`wbt_makematch.c` sorts by it, and `wbt_calc_result.c` compares it before the
+affinity/RNG branch. The source mirror is SVN revision 59995 on
+`branches/upper_version`, retained locally under the research artifact and not
+redistributed here.
+
 Only a USA/Europe retail ROM was available for the retail cross-check in this
 repository. Japanese, Korean, and other regional/revision ROMs remain outside
 the verified evidence set.

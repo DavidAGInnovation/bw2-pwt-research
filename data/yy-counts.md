@@ -75,10 +75,12 @@ it is an observed format detail, not a claim that every future/custom file has
 the same absolute offset.
 
 `YY=00` is retained in the histograms because it occurs in the published
-format/preset data. The public notes identify byte 1 as the Trainer Rank field,
-but do not establish the bracket role of rank `0x00`. See
-[`bracket-settings.md`](bracket-settings.md); do not infer a built-in cup name
-or a first-round/finalist meaning from the value alone.
+format/preset data. The recovered source identifies byte 1 as
+`WBTDL_MATCH.pri`, with `WBT_TRPRI_NULL = 0` as the explicit undefined/null
+priority. In downloadable setup that value is copied into the trainer's
+priority, where it is the lowest numeric value for bracket sorting and NPC
+result comparison. See [`bracket-settings.md`](bracket-settings.md); do not
+interpret it as a hidden win bonus or as a built-in cup ID/category.
 
 ## Scope limitation
 
