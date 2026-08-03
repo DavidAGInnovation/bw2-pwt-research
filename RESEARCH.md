@@ -163,7 +163,7 @@ Champions decode to priority 4; standard Gym Leaders decode to priority 3. Since
 
 ### Gym Leader versus Gym Leader
 
-Both records normally have priority 3, so the type-chart fields matter. For example, Elesa's category is Electric (12) and Clay's is Ground (4). If A=Elesa and B=Clay, the chart favors B; the source reversal check gives Clay about 70% and Elesa about 30%. If A=Clay and B=Elesa, Clay has the advantage and likewise wins about 70%, while Elesa wins about 30%. The result is not 100% for the type-favored side.
+Both records normally have priority 3, so their matchup categories decide the odds. If the categories tie, either Leader wins 50% of the time. If one category has the advantage, that Leader wins about 70% of the time, while the other still has about a 30% chance. The same rule applies whichever Leader has the advantage. For example, Clay's Ground category has the advantage over Elesa's Electric category, so Clay wins about 70% and Elesa about 30%; reversing their A/B positions does not change those percentages.
 
 ## Bracket settings are a separate selection process
 
