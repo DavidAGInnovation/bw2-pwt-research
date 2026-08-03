@@ -263,14 +263,6 @@ the special Driftveil event's availability separate from regional roster
 membership: Bianca's family-`0x00` record is not admitted by the cup-5 regional
 predicate, even though the same record can be reused by other modes.
 
-## Remaining uncertainty
-
-The mapping is for the archived development build and the matching Black 2
-USA/Europe retail script. Other regional/revision builds should still be
-checked before assuming that every address and roster byte is identical.
-The source-level cup enum, ID-11 predicate, menu producer, and command symbols
-are documented by the source and script evidence.
-
 ## Static-only status
 
 The constructor dispatch, source-table counts, Champion roster, slot shuffle,
