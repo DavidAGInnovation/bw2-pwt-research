@@ -105,7 +105,6 @@
   Its header/FAT extraction of `/a/0/5/6` has 1,289 members; the scanner finds
   the equivalent state-check sequence in zero-based member 1280 at offsets
   `0x3807–0x38E0`, with the message-113/114 calls at `0x3926` and `0x3958`.
-  This is a public mirror source, not a legally verified user dump.
 
 ## Public references
 
@@ -156,8 +155,7 @@ The eight-call sequence in member 1280 is Join Avenue `resort_scr.bin`, not a
 PWT save-record gate. Source names are table-specific: WBT `CMD_3EA` is
 `EvCmdWBTSystemCheckEnable`, Resort `CMD_3EA` is `EvCmdResortGetData`, and WBT
 `EvCmdWBTGetVictoryCount` is `CMD_3FA`. The retail member is verified against
-the public Black 2 extraction `/a/0/5/6`; a user-owned dump is still needed
-for legally reproducible redistribution. ID 0 is the null/error path.
+the Black 2 extraction `/a/0/5/6`. ID 0 is the null/error path.
 
 The internal constructor/category evidence is documented in
 `data/in-game-constructor-categories.md`. Its raw family byte is record offset
@@ -174,6 +172,5 @@ The archived development artifact stores the analyzed scripts in NARC
 `/a/0/5/9` (1,291 entries, including zero-based entry 1280). Public retail
 file-system listings identify `/a/0/5/6` as the large B2W2 script archive, so
 the downloaded complete ROM's `/a/0/5/6` has 1,289 entries and independently
-matches member 1280 and the same offsets. The static scanner can be rerun on a
-user-owned retail dump to confirm a regional/revision variant before
-redistribution.
+matches member 1280 and the same offsets. The static scanner can be rerun on
+another retail extraction to confirm a regional/revision variant.

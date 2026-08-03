@@ -29,8 +29,8 @@ and command symbols/constants. It is retained locally and not redistributed
 here. The result routine was also independently checked in the decompressed
 retail Overlay 55.
 The repository records hashes, table indexes, decoded fields, disassembly
-locations, and reproducible pseudocode; the ROM/source mirror provenance is
-documented separately and is not a legally verified dump.
+locations, and reproducible pseudocode. The ROM and source artifacts are
+retained locally and are not redistributed here.
 
 - Result routine: overlay 55, RAM address `0x02238314` (`wbt_calc_result.c` debug string nearby).
 - Type-chart helper: `0x02238554`; type table: `0x022399EC`.

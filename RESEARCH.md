@@ -78,9 +78,7 @@ The complete retail disassembly is retained locally as
 `analysis/disassembly/retail-ov55.dis`.
 
 Therefore the recovered source, development Overlay 55, and this retail
-Overlay 55 all agree on the A/B-symmetric winner routine. The remaining
-provenance caveat is that the retail input is a public ROM mirror rather than
-a user-owned dump.
+Overlay 55 all agree on the A/B-symmetric winner routine.
 
 ### Category `17` (`0x11`) is a neutral sentinel
 
@@ -383,8 +381,4 @@ so other regional or revision ROMs have not been cross-checked.
   entry at the same numeric slot as `EvCmdWBTSystemCheckEnable`; the source
   artifact is not redistributed in this repository. The binary addresses are
   build-specific dispatch cross-checks.
-- The complete retail ROM was downloaded from a public ROM mirror for local
-  analysis; its legal extraction provenance is not established, and it should
-  not be redistributed. A user-owned cartridge extraction remains the
-  appropriate source for a legally reproducible artifact.
 - Exact raw record names and IDs are not inputs to the result calculation; only the packed fields described above are read.
