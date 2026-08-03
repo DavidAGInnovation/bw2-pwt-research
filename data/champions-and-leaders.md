@@ -102,6 +102,29 @@ Bianca, so that public roster disagrees with the source-backed result here. The
 table above is the complete cup-5 pool for the examined development and
 USA/Europe retail builds.
 
+### Two distinct WBT records named Cheren
+
+The retail PWT-name table reuses the display name **Cheren** at two different
+source-table indices. They are separate records and must not be merged when
+describing priorities, categories, or tournament eligibility:
+
+| WBT index | Record identity | Built-in role | Packed priority | Result category |
+|---:|---|---|---:|---:|
+| `0` | Standard Unova Gym Leader Cheren | Standard Unova Leader record; also eligible for modes whose constructors reuse the named Leader pool | 3 | `0` (Normal) |
+| `56` | Special/event Cheren record | Driftveil event's priority-4 slot; a separate non-regional record | 4 | `17` (`0x11`, neutral sentinel) |
+
+Index `0` is the Cheren listed in the standard Leader table above. Index `56`
+is the Cheren row listed in
+[`generic-and-rental-records.md`](generic-and-rental-records.md); its family
+byte is `0x00`, its static eligibility mask is `0x01`, and its constructor pool
+is `4`. The Driftveil-event constructor selects that row for its one
+priority-4/category-4 slot. A downloadable tournament can also reference
+either source index explicitly, depending on the `.pwt` match records.
+
+Therefore, statements that “Cheren has priority 3” refer to the standard Leader
+record at index `0`; statements that “Cheren has priority 4” refer only to the
+special/event record at index `56`.
+
 ### Bianca special record
 
 Index 8 is Bianca's record. Its family byte is `0x00`, so it is not part of the

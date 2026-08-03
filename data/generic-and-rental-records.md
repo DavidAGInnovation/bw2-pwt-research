@@ -173,6 +173,11 @@ The following table maps every non-regional/generic row. Names and class text
 are the USA/Europe retail labels; the WBT bytes and identity fields are the
 byte-identical table shared with the examined development build.
 
+The `Cheren` row at index `56` is a separate special/event record from the
+standard Unova Leader Cheren at index `0`. Their priorities and categories are
+therefore different; the side-by-side explanation is in
+[`champions-and-leaders.md`](champions-and-leaders.md#two-distinct-wbt-records-named-cheren).
+
 | Index | Retail PWT name | Sex | `mmdl_id` | `btl_tr_type` | Packed priority | Result category | Category meaning | NPC trainer type |
 |---:|---|---:|---:|---:|---:|---:|---|---:|
 | 54 | Hilda | 1 | `0x0004` | 183 | 4 | 17 (`0x11`) | neutral sentinel | 0 |
