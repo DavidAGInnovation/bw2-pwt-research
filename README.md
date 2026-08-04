@@ -8,7 +8,7 @@ This repository documents how Pokémon Black 2 and White 2 construct and resolve
 - Standard Champion records (Blue, Lance, Steven, Wallace, Cynthia, Alder, and Red) all decode to the same relevant values: priority 4, trainer type 0, and category 17. The result routine does not read the trainer name or ID.
 - Therefore, a Champion-vs-Champion tie is exactly 50/50 in the source routine: both have equal priority and neutral category-17 affinity, so the code calls `GFL_STD_Rand(context, 2)`.
 - A priority-4 Champion beats a standard priority-3 Gym Leader before the tie/random branch, so the standard Champion-vs-Leader result is deterministic in favor of the Champion.
-- Leader-vs-Leader matches depend on their matchup categories. The routine compares both directions of the type chart, so an advantage can come from a neutral-versus-resisted matchup even when neither side is super-effective. If neither Leader has an advantage, the winner is chosen 50/50. If one Leader has the advantage, that Leader wins about 70% of the time, while the other can still win about 30%.
+- Standard Leaders all have priority 3, so Leader-vs-Leader matches proceed to their stored matchup categories. The routine compares both directions of the type chart—not the Leaders' current six-Pokémon teams—so one Leader can have the better affinity even when neither side is super-effective; for example, Steel is neutral against Grass while Grass is resisted by Steel. Equal directional affinities produce an exact 50/50 result. If one Leader's affinity is better, that Leader is selected first and wins about 70% of the time, while the routine's reversal roll gives the other about 30%.
 
 ## Verified scope
 

@@ -158,7 +158,15 @@ Champions decode to priority 4; standard Gym Leaders decode to priority 3. Since
 
 ### Gym Leader versus Gym Leader
 
-Both records normally have priority 3, so their matchup categories decide the odds. If the categories tie, either Leader wins 50% of the time. If one category has the advantage, that Leader wins about 70% of the time, while the other still has about a 30% chance. For example, Clay's Ground category has the advantage over Elesa's Electric category, so Clay wins about 70% and Elesa about 30%; reversing their A/B positions does not change those percentages.
+Both standard Leader records have priority 3, so their stored matchup
+categories decide the odds; the routine does not inspect their current
+six-Pokémon teams. It compares the type-affinity score in both directions. If
+those scores tie, either Leader wins 50% of the time. If one score is higher,
+that Leader is selected first and wins about 70% of the time, while the
+routine's reversal roll gives the other about 30%. For example, Clay's Ground
+category has the advantage over Elesa's Electric category, so Clay wins about
+70% and Elesa about 30%; reversing their A/B positions does not change those
+percentages.
 
 An unequal-affinity result does not imply that one category must be
 super-effective against the other. A neutral-versus-resisted pairing is also
