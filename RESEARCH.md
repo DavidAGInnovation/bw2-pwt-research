@@ -159,22 +159,15 @@ Champions decode to priority 4; standard Gym Leaders decode to priority 3. Since
 ### Gym Leader versus Gym Leader
 
 Both standard Leader records have priority 3, so their stored matchup
-categories decide the odds. The routine looks up Leader A's category against
-Leader B's category, then performs the reverse lookup. If those two scores tie,
-either Leader wins 50% of the time. If one score is higher, that Leader is
-selected as the initial winner; the routine keeps that result seven times out
-of ten and reverses it three times out of ten, giving approximately 70/30 odds.
-For example, Clay's Ground category has the advantage over Elesa's Electric
-category, so Clay wins about 70% and Elesa about 30%; reversing their A/B
-positions does not change those percentages.
-
-An unequal-affinity result does not imply that one category must be
-super-effective against the other. A neutral-versus-resisted pairing is also
-unequal: Steel versus Grass gives Steel the better score because Grass attacks
-Steel for reduced effectiveness while Steel attacks Grass neutrally. Thus a
-same-priority Jasmine-versus-Erika (or Gardenia/Cilan) simulation is also about
-70/30 in Jasmine's favor. If the two directional scores are equal, including
-mutual resistance or mutual immunity, the routine takes its exact 50/50 branch.
+categories decide the odds. The routine compares both directions of the type
+chart. At the comparison level, a super-effective result is better than a
+neutral result, a neutral result is better than a resisted result, and a
+resisted result is better than an ineffective result. Thus a super-effective
+matchup is not required for one Leader to have the advantage: any difference
+between the two directional results can produce the approximately 70/30
+outcome. If the directional results are equal, including mutual resistance or
+mutual ineffectiveness, the routine takes its exact 50/50 branch. Reversing
+the A/B positions does not change those percentages.
 
 ## Bracket settings are a separate selection process
 
