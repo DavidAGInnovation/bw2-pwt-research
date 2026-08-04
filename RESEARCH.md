@@ -176,6 +176,24 @@ Jasmine consequently has the better matchup against a Grass Leader such as
 Erika, Gardenia, or Cilan and wins about 70% of the displayed NPC results; the
 Grass Leader still wins about 30% through the routine's reversal roll.
 
+#### Directional affinity outcome matrix
+
+The matrix below assumes equal priority, as in a standard Leader-vs-Leader
+match. Rows show A's effectiveness against B; columns show B's effectiveness
+against A. `A ≈70%` means A wins about 70% and B about 30%; `B ≈70%` means the
+reverse. Equal entries use the routine's exact 50/50 branch.
+
+| A → B / B → A | Super effective | Neutral | Not very effective | No effect |
+|---|---:|---:|---:|---:|
+| **Super effective** | 50/50 | A ≈70% | A ≈70% | A ≈70% |
+| **Neutral** | B ≈70% | 50/50 | A ≈70% | A ≈70% |
+| **Not very effective** | B ≈70% | B ≈70% | 50/50 | A ≈70% |
+| **No effect** | B ≈70% | B ≈70% | B ≈70% | 50/50 |
+
+This is the result routine's affinity comparison, not a simulation of a full
+Pokémon battle. If priorities differ, the higher-priority record wins before
+this matrix is reached.
+
 ## Bracket settings are a separate selection process
 
 The public downloadable PWT format notes describe `YY=04` as a semifinalist
