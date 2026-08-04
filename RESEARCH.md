@@ -36,6 +36,15 @@ The two RNG calls are used in different situations:
   70% of these simulated matches and Elesa wins about 30%. The same calculation
   applies when another Leader has the type advantage.
 
+The routine compares the two directional type-affinity scores; it does not
+require a super-effective relationship for the scores to differ. For example,
+Steel attacking Grass is neutral, while Grass attacking Steel is resisted.
+Therefore, a same-priority Steel Leader such as Jasmine has the better
+affinity against a Grass Leader such as Erika, Gardenia, or Cilan and wins
+about 70% of the displayed NPC results. Conversely, if both directions have
+the same score—including two neutral, two resisted, or two ineffective
+directions—the affinities tie and the result is 50/50.
+
 The source has a `PM_DEBUG`-only `DEBUG_WBT_ReverseJudgeMode` hook that can
 invert an unequal-affinity result for debugging. `DEBUG_WBT_ReverseJudgeMode`
 defaults to `FALSE`; this is not the normal retail behavior.
@@ -150,6 +159,14 @@ Champions decode to priority 4; standard Gym Leaders decode to priority 3. Since
 ### Gym Leader versus Gym Leader
 
 Both records normally have priority 3, so their matchup categories decide the odds. If the categories tie, either Leader wins 50% of the time. If one category has the advantage, that Leader wins about 70% of the time, while the other still has about a 30% chance. For example, Clay's Ground category has the advantage over Elesa's Electric category, so Clay wins about 70% and Elesa about 30%; reversing their A/B positions does not change those percentages.
+
+An unequal-affinity result does not imply that one category must be
+super-effective against the other. A neutral-versus-resisted pairing is also
+unequal: Steel versus Grass gives Steel the better score because Grass attacks
+Steel for reduced effectiveness while Steel attacks Grass neutrally. Thus a
+same-priority Jasmine-versus-Erika (or Gardenia/Cilan) simulation is also about
+70/30 in Jasmine's favor. If the two directional scores are equal, including
+mutual resistance or mutual immunity, the routine takes its exact 50/50 branch.
 
 ## Bracket settings are a separate selection process
 
