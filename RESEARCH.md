@@ -169,6 +169,13 @@ outcome. If the directional results are equal, including mutual resistance or
 mutual ineffectiveness, the routine takes its exact 50/50 branch. Reversing
 the A/B positions does not change those percentages.
 
+For example, Steel attacking Grass is neutral, while Grass attacking Steel is
+not very effective. The two directional results are therefore unequal even
+though neither one is super effective. A same-priority Steel Leader such as
+Jasmine consequently has the better matchup against a Grass Leader such as
+Erika, Gardenia, or Cilan and wins about 70% of the displayed NPC results; the
+Grass Leader still wins about 30% through the routine's reversal roll.
+
 ## Bracket settings are a separate selection process
 
 The public downloadable PWT format notes describe `YY=04` as a semifinalist
