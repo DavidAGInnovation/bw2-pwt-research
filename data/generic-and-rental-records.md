@@ -319,6 +319,14 @@ independently. It reads the selected opponent Trainer's fixed `PowerRnd` and
 copies that one value to all six IVs of every rental Pokémon created for that
 Trainer. Consequently, Trainer selection determines the opponent's IV tier:
 
+The `20` shown for the named Rental and Rental Master opponents is not a
+special value assigned only by those tournaments. Every one of the 46 standard
+Gym Leader source rows already stores `PowerRnd = 20`, and the normal WBT party
+builder uses the same value for their regional Leader and World Leaders teams.
+Bianca's separate named record also stores `20`. The complete Leader mapping
+and the normal-party scope are documented in
+[`champions-and-leaders.md`](champions-and-leaders.md#standard-gym-leader-records).
+
 | Tournament | IVs in every stat | Eligible Trainer records and English names |
 |---|---:|---|
 | Rental | `20` | `0–4, 8`: Cheren, Roxie, Burgh, Elesa, Clay, and Bianca |
