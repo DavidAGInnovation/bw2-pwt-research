@@ -65,7 +65,7 @@ trainers.
 | Kanto | Erika | `RGLEADER4` | Red/Green Gym Leader | 23 | 3 | 11 (Grass) |
 | Kanto | Sabrina | `RGLEADER5` | Red/Green Gym Leader | 24 | 3 | 13 (Psychic) |
 | Kanto | Blaine | `RGLEADER6` | Red/Green Gym Leader | 25 | 3 | 9 (Fire) |
-| Kanto | Giovanni | `RGLEADER7` | Red/Green Gym Leader / enemy character | 26 | 3 | 4 (Ground) |
+| Kanto | Giovanni | `RGLEADER7` | Red/Green Gym Leader | 26 | 3 | 4 (Ground) |
 | Kanto | Janine | `GSLEADER9` | Gold/Silver Gym Leader / Kanto Gym Leader | 35 | 3 | 3 (Poison) |
 | Johto | Falkner | `GSLEADER1` | Gold/Silver Gym Leader | 27 | 3 | 2 (Flying) |
 | Johto | Bugsy | `GSLEADER2` | Gold/Silver Gym Leader | 28 | 3 | 6 (Bug) |
