@@ -23,6 +23,14 @@ them.
 - Ace-party species mapping: `branches/upper_version/resource/wbt/wbt_btd/wbt1a_tr.tdm`, `wbt2a_tr.tdm`, and `wbt3a_tr.tdm` supply ace indices; matching `wbt1a_pd.narc`, `wbt2a_pd.narc`, and `wbt3a_pd.narc` records supply species IDs. The examined ROM resources are `/a/2/6/2`→`/a/2/6/4`, `/a/2/6/5`→`/a/2/6/7`, and `/a/2/6/8`→`/a/2/7/0`. In the normal-ROM-party path, `wbt_battle.c` reads that first ace index before random selection. `WBTTournamentData` configures WBT1 for Driftveil/event/Download/Rental/Mix, WBT2 for the five regional Leader cups, and WBT3 for Champions/World/Type Expert/Rental Master/Mix Master. The actual Rental and Rental Master opponent setup bypasses those normal ROM-party families and uses the dedicated Rental Pokémon archive, so the named participant's ace is not forced; trainer-list flags still determine which Trainers can appear in those cups.
 - `scripts/audit_wbt_party.py` checks the disassembly signatures used for the player's six-entry Rental builder, Rental-type branches, random-without-replacement selector, party-size getter, and all four battle-rule party-size table bytes.
 - Dedicated Rental Pokémon archive: development `/a/2/7/1` and USA/Europe retail `/a/2/5/7` are byte-identical 1,000-member NARCs (SHA-256 `2644c167f8a5775b5161c8e9b878255d2ae7cf5c0ec7431ae1dad257051d1110`). Source `wbt_party.c` maps Rental weak/strong to indices `1–132`/`133–208` and Rental Master weak/strong to `209–558`/`559–908`. `BSUBWAY_POKEMON_ROM_DATA` in `bsubway_battle_data.h` establishes the 16-byte species/moves/EV-mask/nature/item/form layout. `FBI_TOOL_MakePokemonParam` in `fld_btl_inst_tool.c` proves the EV-mask expansion, uniform runtime `pow_rnd` IV assignment, personality-derived normal ability and gender, form copy, and friendship behavior. `wbt_party.c` supplies player IV value 20 and passes the opponent Trainer's `PowerRnd`; the trainer source table proves values 0/8/20 for ordinary Rental eligibility and 20 for every Rental Master-eligible built-in Trainer. `scripts/decode_rental_pokemon.py` combines those fields with USA/Europe retail text `/a/0/0/2` and personal data `/a/0/1/6` to generate `data/rental-pokemon-builds.csv`.
+- Normal WBT Trainer IV input: source-record byte 8 packs `power_rnd` in its
+  high five bits. All 46 standard Leader rows decode to `20`, Bianca decodes
+  to `20`, Champion rows 14–19 decode to `25`, and Red decodes to `30`.
+  `makeRomTrainerData` in `wbt_battle.c` reads this value through
+  `WBTTRAINER_GetPowerRnd` and passes it to `FBI_TOOL_MakePokemonParam` for
+  both the fixed ace and every normally selected Pokémon. The same helper is
+  used by the dedicated Rental builder with its tournament-eligible Trainer.
+  `scripts/inspect_wbt_table.py --dump-records` reproduces each packed value.
 - Rental-ticket mapping: local-only source
   `branches/upper_version/resource/fldmapdata/script/wbt_lobby.ev` adds the
   right, middle, and left ticket labels with values

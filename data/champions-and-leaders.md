@@ -55,6 +55,20 @@ Pokémon teams. The WBT index is the record index in the examined development
 build's `/a/2/6/1` table, not the order in which a tournament displays the
 trainers.
 
+All 46 standard Gym Leader rows store `PowerRnd = 20`. The normal WBT party
+builder passes that fixed Trainer value to `FBI_TOOL_MakePokemonParam` for the
+ace, when present, and for every normally selected party member. Consequently,
+each Pokémon constructed for these Leaders has IV `20` in all six stats in the
+regional Leader and World Leaders tournaments. This is a party-construction
+field and does not affect the separate NPC result routine described by the
+Priority and Category columns.
+
+Rental Master reuses the same 46 Leader records, so those opponents also have
+IV `20` in every stat when the dedicated Rental builder assigns their Pokémon.
+Ordinary Rental admits only Cheren, Roxie, Burgh, Elesa, and Clay from this
+Leader group; Bianca is a separate named record and also stores
+`PowerRnd = 20`.
+
 | Region | Trainer | Display code | Code meaning | WBT index | Priority | Category (type) |
 |---|---|---|---|---:|---:|---:|
 | Unova | Cheren | `SWLEADER1` | BW2 Gym Leader | 0 | 3 | 0 (Normal) |
