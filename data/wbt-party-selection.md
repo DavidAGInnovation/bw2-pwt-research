@@ -139,9 +139,7 @@ playable battle.
 
 Consequently, an eligible Trainer such as Volkner can appear in Rental Master
 without Electivire. If Electivire is assigned there, it comes from the Rental
-selection itself, not from Volkner's normal ace metadata. The fixed first-
-Pokémon statements and the `Ace Pokémon` column below therefore exclude Rental
-and Rental Master appearances.
+selection itself, not from Volkner's normal ace metadata.
 
 Mix and Super Mix / Mix Master begin by constructing the opponent's normal
 ROM party, so the ace is initially placed in position `0`. Before the battle,
@@ -149,6 +147,11 @@ however, `WBTSYS_SetupMixParty` exchanges selected Pokémon between the two
 parties (two exchanges in Triple battles). If the opponent's ace is selected
 for exchange, that Trainer enters the battle without it. The ace is therefore
 not unconditionally used in Mix modes either.
+
+Accordingly, the `Ace-guaranteed tournaments` column below excludes Rental,
+Rental Master, Mix, and Mix Master. Mix still executes the fixed-first step
+before the exchange, but that intermediate state is not a guarantee about the
+opponent's party or lead when the battle begins.
 
 ## Complete trainer coverage
 
@@ -196,12 +199,14 @@ English interpretation of the source role, normally translated from the
 separate `ポジション` field; it should not be read as a literal expansion of
 every display code.
 
-The table lists each trainer's built-in ace and the tournaments in which the
-normal ROM-party builder initially places that ace in position `0`. Rental and
-Rental Master are omitted because they use the separate random Rental-party
-builder. Mix modes remain listed because they initially construct the ace,
-although the exchange step can subsequently move it to the player's party.
-Randomized cups may not include every eligible Trainer on every run.
+The table lists each trainer's built-in ace and the tournaments in which that
+Pokémon is guaranteed to remain in position `0` when the battle begins.
+Rental modes are omitted because they use the separate random Rental-party
+builder. Mix modes are omitted because their exchange step can move the ace to
+the player's party after initially constructing it in position `0`. Randomized
+cups may not include every eligible Trainer on every run. An em dash means the
+Trainer is ace-marked but has no built-in appearance in which the ace remains
+guaranteed under this definition.
 
 Download is omitted from the per-trainer cells because its roster comes from a
 user-supplied `.pwt` payload; the runtime permits any ROM trainer there, so it
@@ -231,17 +236,17 @@ Pokémon archive with different candidate ranges:
 | 14 | Mix | WBT1 |
 | 15 | Super Mix / Mix Master | WBT3 |
 
-| ID | Trainer | Display code | Code meaning | Ace Pokémon | Ace-applicable tournaments |
+| ID | Trainer | Display code | Code meaning | Ace Pokémon | Ace-guaranteed tournaments |
 |---:|---|---|---|---|---|
-| 000 | Cheren | `SWLEADER1` | BW2 Gym Leader | Stoutland | Driftveil, Mix, Unova/Teselia Leaders, World Leaders, Super Mix / Mix Master, Type Expert |
-| 001 | Roxie | `SWLEADER2` | BW2 Gym Leader | Scolipede | Driftveil, Mix, Unova/Teselia Leaders, World Leaders, Super Mix / Mix Master, Type Expert |
-| 002 | Burgh | `SWLEADER3` | BW2 Gym Leader | Leavanny | Driftveil, Mix, Unova/Teselia Leaders, World Leaders, Super Mix / Mix Master, Type Expert |
-| 003 | Elesa | `SWLEADER4` | BW2 Gym Leader | Zebstrika | Driftveil, Mix, Unova/Teselia Leaders, World Leaders, Super Mix / Mix Master, Type Expert |
-| 004 | Clay | `SWLEADER5` | BW2 Gym Leader | Excadrill | Driftveil, Mix, Unova/Teselia Leaders, World Leaders, Super Mix / Mix Master, Type Expert |
-| 005 | Skyla | `SWLEADER6` | BW2 Gym Leader | Swanna | Unova/Teselia Leaders, World Leaders, Super Mix / Mix Master, Type Expert |
-| 006 | Drayden | `SWLEADER7` | BW2 Gym Leader | Haxorus | Unova/Teselia Leaders, World Leaders, Super Mix / Mix Master, Type Expert |
-| 007 | Marlon | `SWLEADER8` | BW2 Gym Leader | Jellicent | Unova/Teselia Leaders, World Leaders, Super Mix / Mix Master, Type Expert |
-| 008 | Bianca | `SWBELL` | BW character / support | Musharna | Mix |
+| 000 | Cheren | `SWLEADER1` | BW2 Gym Leader | Stoutland | Driftveil, Unova/Teselia Leaders, World Leaders, Type Expert |
+| 001 | Roxie | `SWLEADER2` | BW2 Gym Leader | Scolipede | Driftveil, Unova/Teselia Leaders, World Leaders, Type Expert |
+| 002 | Burgh | `SWLEADER3` | BW2 Gym Leader | Leavanny | Driftveil, Unova/Teselia Leaders, World Leaders, Type Expert |
+| 003 | Elesa | `SWLEADER4` | BW2 Gym Leader | Zebstrika | Driftveil, Unova/Teselia Leaders, World Leaders, Type Expert |
+| 004 | Clay | `SWLEADER5` | BW2 Gym Leader | Excadrill | Driftveil, Unova/Teselia Leaders, World Leaders, Type Expert |
+| 005 | Skyla | `SWLEADER6` | BW2 Gym Leader | Swanna | Unova/Teselia Leaders, World Leaders, Type Expert |
+| 006 | Drayden | `SWLEADER7` | BW2 Gym Leader | Haxorus | Unova/Teselia Leaders, World Leaders, Type Expert |
+| 007 | Marlon | `SWLEADER8` | BW2 Gym Leader | Jellicent | Unova/Teselia Leaders, World Leaders, Type Expert |
+| 008 | Bianca | `SWBELL` | BW character / support | Musharna | — |
 | 009 | Chili | `LEADER1A` | BW Gym Leader | Simisear | Unova/Teselia Leaders, World Leaders, Type Expert |
 | 010 | Cress | `LEADER1B` | BW Gym Leader | Simipour | Unova/Teselia Leaders, World Leaders, Type Expert |
 | 011 | Cilan | `LEADER1C` | BW Gym Leader | Simisage | Unova/Teselia Leaders, World Leaders, Type Expert |
@@ -297,16 +302,16 @@ Pokémon archive with different candidate ranges:
 | 065 | Vito | `VETERANM` | Veteran Trainer (male) | Shiftry | Type Expert |
 | 066 | Impera | `VETERANW` | Veteran Trainer (female) | Umbreon | Type Expert |
 | 067 | Bonnie | `TRAINERW` | Elite Trainer (female) | Drapion | Type Expert |
-| 068 | X | `TRAINERM` | Elite Trainer (male) | Archeops | Driftveil, Mix |
-| 069 | Makina | `TRAINERW` | Elite Trainer (female) | Tirtouga | Driftveil, Mix |
-| 070 | Fidel | `VETERANM` | Veteran Trainer (male) | Whimsicott | Driftveil, Mix |
-| 071 | Theodora | `VETERANW` | Veteran Trainer (female) | Lilligant | Driftveil, Mix |
-| 072 | Allan | `FIGHTERM` | Black Belt | Throh | Driftveil, Mix |
-| 073 | Jocelyn | `FIGHTERW` | Battle Girl | Sawk | Driftveil, Mix |
-| 074 | Dmitri | `ASSISTANTM` | Scientist (male) | Golduck | Driftveil, Mix |
-| 075 | Levina | `ASSISTANTW` | Scientist (female) | Lopunny | Driftveil, Mix |
-| 076 | Rylan | `ESPM` | Psychic (male) | Cofagrigus | Driftveil, Mix |
-| 077 | Destiny | `ESPW` | Psychic (female) | Mr. Mime | Driftveil, Mix |
+| 068 | X | `TRAINERM` | Elite Trainer (male) | Archeops | Driftveil |
+| 069 | Makina | `TRAINERW` | Elite Trainer (female) | Tirtouga | Driftveil |
+| 070 | Fidel | `VETERANM` | Veteran Trainer (male) | Whimsicott | Driftveil |
+| 071 | Theodora | `VETERANW` | Veteran Trainer (female) | Lilligant | Driftveil |
+| 072 | Allan | `FIGHTERM` | Black Belt | Throh | Driftveil |
+| 073 | Jocelyn | `FIGHTERW` | Battle Girl | Sawk | Driftveil |
+| 074 | Dmitri | `ASSISTANTM` | Scientist (male) | Golduck | Driftveil |
+| 075 | Levina | `ASSISTANTW` | Scientist (female) | Lopunny | Driftveil |
+| 076 | Rylan | `ESPM` | Psychic (male) | Cofagrigus | Driftveil |
+| 077 | Destiny | `ESPW` | Psychic (female) | Mr. Mime | Driftveil |
 
 The unmarked rows do not enter the ace branch at all: their complete party is
 selected from the normal candidate list by the no-replacement chooser. The
