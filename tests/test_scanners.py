@@ -16,6 +16,7 @@ import find_pwt_menu_builder as menu_builder  # noqa: E402
 import find_pwt_state_script as state_script  # noqa: E402
 import inspect_wbt_table as wbt_table  # noqa: E402
 import audit_wbt_party as wbt_party  # noqa: E402
+import decode_rental_pokemon as rental_pokemon  # noqa: E402
 
 
 def make_narc(members: list[bytes]) -> bytes:
@@ -52,6 +53,28 @@ def make_menu_member() -> bytes:
 
 
 class ScannerTests(unittest.TestCase):
+    def test_rental_pokemon_record_decoder(self) -> None:
+        # Rental Master Milotic record 369 from the examined archive.
+        record = rental_pokemon.decode_record(
+            bytes.fromhex("5e0139006900f3006d000505d0000000")
+        )
+        self.assertEqual(record.species, 350)
+        self.assertEqual(record.moves, (57, 105, 243, 109))
+        self.assertEqual(record.ev_mask, 0x05)
+        self.assertEqual(rental_pokemon.NATURES[record.nature], "Bold")
+        self.assertEqual(record.item, 208)
+        self.assertEqual(record.form, 0)
+        evs = rental_pokemon.ev_values(record.ev_mask)
+        self.assertEqual(evs, (255, 0, 255, 0, 0, 0))
+        self.assertEqual(rental_pokemon.ev_summary(evs), "255 HP / 255 Defense")
+        self.assertEqual(
+            rental_pokemon.opponent_ivs("Rental"),
+            "Trainer PowerRnd: 0, 8, or 20 in every stat",
+        )
+        self.assertEqual(
+            rental_pokemon.opponent_ivs("Rental Master"), "20 in every stat"
+        )
+
     def test_wbt_party_audit_signatures(self) -> None:
         # Keep this unit test independent of the large ROM/disassembly
         # artifacts. The real audit is run separately against ov55.dis.

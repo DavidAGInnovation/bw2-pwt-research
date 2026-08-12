@@ -22,11 +22,68 @@ uses only indices `1–908`:
 A record includes the species together with its held item, moves, and other
 battle parameters. The two records for a species within one tier are distinct.
 
+The complete record-level decode is available as
+[`rental-pokemon-builds.csv`](rental-pokemon-builds.csv). It lists all 908
+selectable records with their species, form, held item, four moves, nature,
+EV allocation, player and opponent IV rules, possible normal abilities,
+gender rule, and friendship.
+
 For ordinary Rental, the weak and strong tiers contain different species
 sets. For Rental Master, both tiers contain the same 175 species, but the 350
 weak records and 350 strong records are different configurations. Therefore,
 a species appearing in both Rental Master tiers can still have a weaker or
 stronger build.
+
+## What each configured record controls
+
+The source defines each 16-byte archive member as
+`BSUBWAY_POKEMON_ROM_DATA`:
+
+| Offset | Size | Field | Runtime use |
+|---:|---:|---|---|
+| `0x00` | 2 | Species | Copied directly. |
+| `0x02` | 8 | Four moves | Copied directly. |
+| `0x0A` | 1 | EV mask | Selects which of HP, Attack, Defense, Speed, Sp. Atk, and Sp. Def receive EVs. |
+| `0x0B` | 1 | Nature | Copied directly. |
+| `0x0C` | 2 | Held item | Copied directly. |
+| `0x0E` | 2 | Form | Copied directly; all selectable records in the examined archive use form `0`. |
+
+EVs are not stored as six individual values. The builder counts the selected
+bits in the EV mask and gives each selected stat `510 / selected-stat count`,
+capped at `255`; unselected stats receive `0`. Thus the common two-stat mask
+produces `255/255`, while a three-stat mask produces `170/170/170`.
+
+IVs are not stored in these records. `FBI_TOOL_MakePokemonParam` receives one
+`pow_rnd` value and assigns it to all six IVs:
+
+| Rental Pokémon owner | IV rule |
+|---|---|
+| Player | Always `20` in every stat (`MY_RENTAL_POWER_RND`). |
+| Built-in Rental opponent | Its selected Trainer's `PowerRnd`: `0`, `8`, or `20` in every stat. |
+| Built-in Rental Master opponent | `20` in every stat; every eligible built-in Trainer has `PowerRnd = 20`. |
+
+The personal RNG value is generated at runtime. The builder permits either
+normal ability and then selects ability 1 or ability 2 from the generated
+personality value; Hidden Abilities are not selected by this path. Gender is
+also personality-derived under the species' normal gender ratio. The form is
+record-controlled, not random. Friendship defaults to `255`, except that a
+record containing Frustration receives friendship `0`.
+
+### Record-level example: Milotic
+
+Milotic illustrates why Rental Master cannot be separated into weak and
+strong species lists:
+
+| Tier | Index | Item | Moves | Nature | EVs | IVs | Ability | Gender |
+|---|---:|---|---|---|---|---|---|---|
+| Weak | `369` | Enigma Berry | Surf, Recover, Mirror Coat, Confuse Ray | Bold | 255 HP / 255 Defense | 20 all stats | Marvel Scale | PID-derived, 50% female |
+| Weak | `544` | Leftovers | Hydro Pump, Toxic, Attract, Aqua Ring | Quiet | 255 HP / 255 Defense | 20 all stats | Marvel Scale | PID-derived, 50% female |
+| Strong | `719` | Wide Lens | Hydro Pump, Blizzard, Mirror Coat, Recover | Calm | 255 Sp. Atk / 255 Sp. Def | 20 all stats | Marvel Scale | PID-derived, 50% female |
+| Strong | `894` | Leftovers | Ice Beam, Rest, Sleep Talk, Surf | Impish | 255 HP / 255 Sp. Def | 20 all stats | Marvel Scale | PID-derived, 50% female |
+
+These IV values are fixed here because the example is specifically Rental
+Master. The same archive record would still receive the runtime owner's IV
+value if invoked through a different code path.
 
 ## How the `all` tier is assembled
 
@@ -103,3 +160,20 @@ Hydreigon, and Slaking.
 The lists above are unique-species summaries in first-appearance order. They
 do not collapse the underlying configured records when the game performs its
 random selection.
+
+## Reproduction
+
+With the three extracted USA/Europe retail NARCs, regenerate the complete CSV:
+
+```sh
+python3 scripts/decode_rental_pokemon.py \
+  rom/retail-extracted/a/2/5/7 \
+  rom/retail-extracted/a/0/0/2 \
+  rom/retail-extracted/a/0/1/6 \
+  --output data/rental-pokemon-builds.csv
+```
+
+The examined development `/a/2/7/1` can replace the first argument because
+its contents are byte-identical. The script reads names from the retail text
+archive and normal-ability and gender information from retail personal data;
+neither ROM resource is redistributed by this repository.
