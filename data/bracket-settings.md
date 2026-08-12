@@ -94,7 +94,12 @@ actually passed to `wbt_calc_result` for an all-NPC simulated match.
 
 ## Relation to the bracket screen
 
-The bracket settings answer “which opponent is scheduled for which player round?” They do not by themselves answer “which NPC wins an NPC-vs-NPC match?” Those are separate pieces of code and separate RNG uses.
+The bracket settings answer “which opponent is scheduled for which player
+round?” They do not by themselves answer “which NPC wins an NPC-vs-NPC
+match?” Those are separate pieces of code and separate RNG uses. The seed
+construction, private result stream, six-call bracket order, and practical
+prediction limits for those simulated winners are documented in
+[`../RESEARCH.md`](../RESEARCH.md#rng-seed-call-order-and-bracket-reproducibility).
 
 ## Evidence and scope
 

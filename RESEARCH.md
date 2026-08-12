@@ -89,6 +89,94 @@ The complete retail disassembly is retained locally as
 Therefore the recovered source, development Overlay 55, and this retail
 Overlay 55 all agree on the A/B-symmetric winner routine.
 
+## RNG seed, call order, and bracket reproducibility
+
+The 50/50 and 70/30 branches are deterministic once the tournament's stored
+64-bit seed and its eight packed participant records are known. They do not
+consult the clock when each displayed result is calculated.
+
+### How the PWT seed is created
+
+When the PWT system object is created, development Overlay 55 calls the
+game-global MT19937 generator twice at `0x022379D0` and `0x022379D6`. The
+first 32-bit output becomes the upper half of the seed and the second becomes
+the lower half. The completed seed is stored at object offsets `+0x20` and
+`+0x24`; a copy initializes the private PWT random context beginning at
+`+0x28`.
+
+The examined USA/Europe retail Overlay 55 independently has the same setup:
+the constructor beginning at `0x021E5B98` calls its relocated global
+generator twice at `0x021E5BBC` and `0x021E5BC2`, then stores the combined
+seed and initializes the same private context.
+
+The recovered `GFL_STD_RandContext` implementation is a 64-bit linear
+congruential generator. Its update and range conversion are:
+
+```text
+state = state * 0x5D588B656C078965 + 0x269EC3  (mod 2^64)
+result(range) = ((state >> 32) * range) >> 32
+```
+
+The game-global MT19937 is initialized earlier during startup. The recovered
+API documents `GFL_STD_RandGeneralInit` as deriving its initial seed from the
+RTC; startup obtains an output from that general context and uses it to seed
+MT19937. PWT creation therefore receives two outputs from an already-running,
+shared global generator. The wall clock is not read directly by the PWT
+winner routine, and clock time alone does not identify the PWT seed because
+the global generator may already have been advanced by other calls.
+
+### The result stream is restarted from the stored seed
+
+Participant and Pokémon selection can advance the PWT object's working random
+context, but that does not shift the later NPC-result stream. At
+`0x02238CAA–0x02238CC8`, the result setup reads the original seed from object
+offsets `+0x20/+0x24`, constructs a fresh local context with the constants
+above, and passes it to the complete result pass at `0x022384A4`.
+
+That pass calls `calcWBTResult` in bracket order:
+
+1. the four first-round matches, from the first bracket pair to the fourth;
+2. the two semifinal matches, in bracket order.
+
+Each call advances the local generator either zero or one time:
+
+| Match condition | RNG consumption | Result |
+|---|---:|---|
+| Different priorities | 0 advances | Higher priority wins. |
+| Equal priority and equal directional affinity | 1 advance, `range = 2` | Exact 50/50. |
+| Equal priority and unequal directional affinity | 1 advance, `range = 10` | Values `0–6` retain the better-affinity side; `7–9` reverse it. |
+
+The player override occurs after this priority/affinity calculation. A call
+involving the player can therefore consume an RNG value before the winner is
+forced to the player, if its preliminary comparison reaches one of the random
+branches. This consumption must be included when reproducing which value is
+used by a later NPC-vs-NPC match. A different-priority player call consumes no
+value.
+
+### What can be predicted or manipulated
+
+Once the 64-bit PWT seed and the ordered participant records are available,
+all six calls above can be reproduced exactly. In an emulator or debugger,
+the seed can be read from the PWT object at `+0x20/+0x24`; alternatively, a
+breakpoint immediately after the seed stores at development addresses
+`0x022379E0–0x022379E4`, or at retail addresses
+`0x021E5BCC–0x021E5BD0`, exposes it directly.
+
+Waiting after the PWT object has been created cannot change this result
+stream: it neither replaces the stored seed nor advances the freshly rebuilt
+result context. Recreating the PWT object does normally change the seed,
+because it consumes the next two outputs from the shared MT19937. Actions
+before creation can also change which global outputs PWT receives if those
+actions consume that generator, but this is a global-state/call-count effect,
+not a bracket-specific favorable time of day.
+
+An emulator save state preserves the relevant runtime RNG state, so restoring
+the same state and repeating the same inputs can reproduce a bracket. A normal
+in-game save followed by a fresh program start does not by itself preserve the
+same startup-generated MT19937 state. Consequently, exact prediction is
+practical with direct seed/state access, while prediction from the displayed
+clock alone is not supported by the recovered path.
+
 ### Category `17` (`0x11`) is a neutral sentinel
 
 The type-chart helper at `0x02238554` checks for category `0x11` before it

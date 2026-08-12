@@ -1,14 +1,40 @@
-# Pokémon Black 2 / White 2 PWT NPC-vs-NPC result research
+# Pokémon Black 2 / White 2 — Pokémon World Tournament mechanics research
 
-This repository documents how Pokémon Black 2 and White 2 construct and resolve Pokémon World Tournament (PWT) matches between NPC trainers. It answers a practical question: when two NPC trainers are shown battling, is either one equally likely to win, or does the game use another rule?
+This repository documents how Pokémon Black 2 and White 2 construct and
+resolve Pokémon World Tournament (PWT) brackets, opponents, parties, Rental
+Pokémon, and simulated NPC results. It began with a practical question: when
+two NPC Trainers are shown battling, are they equally likely to win, or does
+the game use another rule?
 
 ## Short answer
 
-- In the normal NPC simulation path, trainer records are reduced to a small set of fields: a priority, a type-chart category, and a trainer-type flag.
+- In the normal NPC simulation path, priority and type-chart category determine
+  the NPC winner. The packed trainer-type field is used for the separate player
+  override; it is not an additional NPC strength value.
 - Standard Champion records (Blue, Lance, Steven, Wallace, Cynthia, Alder, and Red) all decode to the same relevant values: priority 4, trainer type 0, and category 17. The result routine does not read the trainer name or ID.
 - Therefore, a Champion-vs-Champion tie is exactly 50/50 in the source routine: both have equal priority and neutral category-17 affinity, so the code calls `GFL_STD_Rand(context, 2)`.
 - A priority-4 Champion beats a standard priority-3 Gym Leader before the tie/random branch, so the standard Champion-vs-Leader result is deterministic in favor of the Champion.
 - Standard Gym Leaders all have priority 3, so Leader-vs-Leader results are decided by comparing their stored type categories in both directions. The effectiveness levels are ranked from best to worst as super effective, neutral, not very effective, and no effect. If both directions produce the same effectiveness, the match is exactly 50/50. If one Leader has the better result—even if it is super effective versus no effect, or neutral versus not very effective—that Leader wins about 70% of the time, while the other still wins about 30% of the time.
+
+## Other verified findings
+
+- Red's normal party receives 30 IVs in every stat. The other six standard
+  Champions receive 25, and all 46 standard Gym Leader records receive 20.
+- Every built-in opponent uses the same complete battle-AI configuration. Red
+  has higher IVs, but not a stronger AI setting.
+- Ace-marked Trainers place their ace in party position 0 when the normal ROM
+  party builder is used. Rental modes bypass that party, while Mix modes can
+  exchange the ace away before battle.
+- The three visible Rental tickets secretly select the Weak, Strong, and All
+  record ranges. Under All, the opponent receives three strong records and
+  fills any remaining party positions from the weak range.
+- Simulated bracket results are deterministic once the stored 64-bit PWT seed
+  and ordered participant records are known. Waiting after PWT creation does
+  not change that result stream.
+- Rental Pokémon records 909–988 contain complete legendary builds, but every
+  built-in Rental range ends at 908, so those records cannot be selected.
+- Trainer IDs 78–127 are NPC-only bracket fillers. They can occupy simulated
+  bracket positions but cannot become the player's opponent.
 
 ## Verified scope
 
@@ -35,36 +61,52 @@ retained locally and are not redistributed here.
 - Result routine: overlay 55, RAM address `0x02238314` (`wbt_calc_result.c` debug string nearby).
 - Type-chart helper: `0x02238554`; type table: `0x022399EC`.
 - Retail Overlay 55: base `0x021E5800`, result routine `0x021E614C`, type-chart helper `0x021E6338`; its control flow matches the development routine.
+- PWT RNG initialization: development Overlay 55 calls the global MT19937 generator twice at `0x022379D0/0x022379D6`; retail does the same at `0x021E5BBC/0x021E5BC2`. The resulting 64-bit seed is replayed by a private LCG for bracket-result calculation.
 - Record packing/conversion: overlay 135, including the packer around `0x0224208C`.
 - Development WBT table: NARC `/a/2/6/1` (ARC resource 261; 128 records of 16 bytes in the examined build).
 - USA/Europe retail cross-check: Overlay 135 has the same constructor, Type Expert eligibility predicate, 16-case cup dispatch, and eight-position shuffle roles at relocated addresses. The retail WBT table is `/a/2/4/7`, whose SHA-256 exactly matches the development `/a/2/6/1` table; the retail `/a/2/6/1` path is a different 1,000-member NARC.
 - Only the USA/Europe retail ROM is available in the local evidence set; Japanese, Korean, and other regional/revision retail builds remain unverified.
 - Examined development-build main image SHA-256: `ac4fb3e97b90831bd878f4e6ab0bed4ad355311ff90becba79ab79456f4e12da`.
 
-See [`RESEARCH.md`](RESEARCH.md) for the routine and [`data/champions-and-leaders.md`](data/champions-and-leaders.md) for decoded records.
-See [`data/bracket-settings.md`](data/bracket-settings.md) for the bracket-setting fields and the selector trace.
-See [`data/in-game-tournaments.md`](data/in-game-tournaments.md) for the ten unlockable built-in tournament families, source-table family counts, and the additional base/event cup-ID mappings established for the examined development build.
-See [`data/in-game-constructor-categories.md`](data/in-game-constructor-categories.md) for the constructor dispatch, internal category pools, and confirmed slot-request patterns.
-See [`data/wbt-party-selection.md`](data/wbt-party-selection.md) for the Rental party builder, verified 3/4/6/4 active-party mapping, complete ace/no-ace trainer coverage, fixed-ace lead path, and random-without-replacement selector audit.
-See [`data/rental-pokemon-pools.md`](data/rental-pokemon-pools.md) for the dedicated Rental archive's weak/strong index ranges, configured-record counts, complete unique-species membership, and the record-level build table covering moves, items, natures, EVs, IV rules, abilities, forms, gender, and friendship.
-See [`data/generic-and-rental-records.md`](data/generic-and-rental-records.md) for the complete source-record masks, generic record groups, retail PWT names, model IDs, battle-trainer-type fields, derived priority/category/trainer-type fields, and the proved Rental/Mix candidate pools.
-See [`data/yy-counts.md`](data/yy-counts.md) only for the separate downloadable `.pwt` appendix; it is not a count for the built-in tournaments.
+## Documentation map
+
+- [`RESEARCH.md`](RESEARCH.md): winner routine, probability model, exact PWT
+  RNG transition, bracket call order, and practical prediction limits.
+- [`data/champions-and-leaders.md`](data/champions-and-leaders.md): Champion
+  and Gym Leader display codes, meanings, priorities, categories, IVs, and
+  shared AI behavior.
+- [`data/bracket-settings.md`](data/bracket-settings.md): downloadable `.pwt`
+  priority field and bracket-selector behavior.
+- [`data/in-game-tournaments.md`](data/in-game-tournaments.md): built-in cup
+  families, source-table counts, cup IDs, and unlock predicates.
+- [`data/in-game-constructor-categories.md`](data/in-game-constructor-categories.md):
+  constructor dispatch, candidate pools, and slot-request patterns.
+- [`data/wbt-party-selection.md`](data/wbt-party-selection.md): active-party
+  sizes, random selection without replacement, fixed-ace construction, Rental
+  and Mix exceptions, and complete ace/no-ace coverage.
+- [`data/rental-pokemon-pools.md`](data/rental-pokemon-pools.md): Rental and
+  Rental Master ranges, hidden ticket choices, IV rules, selectable species,
+  excluded legendary records, and build-field interpretation.
+- [`data/rental-pokemon-builds.csv`](data/rental-pokemon-builds.csv): all 908
+  selectable builds and 80 valid excluded legendary builds, including species,
+  form, item, moves, nature, EVs, IV rules, abilities, gender, and friendship.
+- [`data/generic-and-rental-records.md`](data/generic-and-rental-records.md):
+  generic and special Trainer names, display codes and meanings, source
+  groups, priorities, categories, IV assignments, and verified Rental/Mix
+  candidate pools.
+- [`data/yy-counts.md`](data/yy-counts.md): separate downloadable `.pwt`
+  appendix; these counts do not describe the built-in tournaments.
 
 ## Retail/source cross-check
 
-The complete Black 2 USA/Europe ROM is retained at the artifact level under
-`rom/retail-source/`; its header/FAT extraction of `/a/0/5/6` has 1,289
-members. Member 1280 matches the development `resort_scr.bin` Join Avenue
-script, not a PWT unlock script. The PWT unlock behavior is instead directly
-identified by the recovered SWAN source: `wbt_lobby.ev` requests
-`_WBT_CHECK_CUP_ENABLE` and `wbt_tool.c` evaluates the corresponding counters.
-The retail ROM's compressed Overlay 55 (file ID 55) was also extracted and
-decompressed: its 7,616-byte image has SHA-256
-`1d7ed4cc8ffb33a1bd715f621a38203f45e2a4453864a8fafb287aa5d744ad33`. The
-retail result routine at `0x021E614C` has the same equal-affinity `rand(2)`
-branch and the same symmetric unequal-affinity threshold-7 toggle as the
-development routine. The extracted binary and full disassembly are retained
-locally under the artifact directory and are not redistributed.
+The USA/Europe Black 2 retail ROM independently confirms the relocated winner
+routine, seed initialization, built-in constructor dispatch, Type Expert
+predicate, participant shuffle, and WBT source table used in the development
+analysis. The relevant retail table is byte-identical to the examined
+development table. Detailed addresses, archive paths, hashes, and the resolved
+Join Avenue/PWT command distinction are retained in [`RESEARCH.md`](RESEARCH.md)
+and the corresponding pages under [`data/`](data/); ROM and recovered source
+artifacts are not redistributed.
 
 ## Sources and discussion
 
