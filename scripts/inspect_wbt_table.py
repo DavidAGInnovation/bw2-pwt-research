@@ -11,7 +11,9 @@ Overlay 135 supplies the field meanings used here:
 * record byte 5: constructor eligibility mask;
 * record byte 6: fixed-family selector for cup IDs 1 and 5--9;
 * record byte 7: Type Expert ``type_tournament_id``;
-* low three bits of record byte 8: internal constructor pool 1--5.
+* low three bits of record byte 8: internal constructor pool 1--5;
+* high five bits of record byte 8: ``power_rnd``, passed to the normal and
+  Rental Pokémon builders as the value for all six IVs.
 
 The source row also carries the runtime identity fields copied by the common
 WBT record packer: byte 1 is the sex selector, bytes 2--3 are ``mmdl_id``
@@ -42,6 +44,7 @@ MASK_OFFSET = 5
 FAMILY_OFFSET = 6
 TYPE_OFFSET = 7
 POOL_OFFSET = 8
+POWER_RND_OFFSET = 8
 SEX_OFFSET = 1
 MMDL_OFFSET = 2
 BTL_TRAINER_TYPE_OFFSET = 4
@@ -164,6 +167,12 @@ def npc_result_fields(row: bytes) -> tuple[int, int, int]:
     )
 
 
+def trainer_power_rnd(row: bytes) -> int:
+    """Return the fixed all-stat IV input packed into source-record byte 8."""
+
+    return row[POWER_RND_OFFSET] >> 3
+
+
 def format_record(index: int, row: bytes) -> str:
     """Render one complete source row plus decoded constructor/result fields."""
 
@@ -173,6 +182,7 @@ def format_record(index: int, row: bytes) -> str:
         f"record {index:03d}: {row.hex(' ')} "
         f"mask=0x{row[MASK_OFFSET]:02x} family=0x{row[FAMILY_OFFSET]:02x} "
         f"type=0x{row[TYPE_OFFSET]:02x} pool={row[POOL_OFFSET] & 7} "
+        f"power_rnd={trainer_power_rnd(row)} "
         f"sex={row[SEX_OFFSET]} mmdl_id=0x{int.from_bytes(row[MMDL_OFFSET:MMDL_OFFSET + 2], 'little'):04x} "
         f"btl_tr_type={row[BTL_TRAINER_TYPE_OFFSET]} "
         f"result_priority={priority} result_category={category} "
@@ -210,6 +220,7 @@ def main() -> int:
         f"records={RECORD_COUNT} size={RECORD_SIZE} "
         f"fields=mask@{MASK_OFFSET},family@{FAMILY_OFFSET},"
         f"type@{TYPE_OFFSET},pool=byte{POOL_OFFSET}&7,"
+        f"power_rnd=byte{POWER_RND_OFFSET}>>3,"
         f"result_priority=byte{POOL_OFFSET}&7,result_category=byte{RESULT_CATEGORY_OFFSET},"
         f"npc_trainer_type={NPC_TRAINER_TYPE}"
     )

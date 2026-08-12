@@ -89,10 +89,11 @@ class ScannerTests(unittest.TestCase):
     def test_wbt_constructor_pool_decoder(self) -> None:
         table = bytearray(wbt_table.TABLE_SIZE)
         # Synthetic rows exercising the Rental and Rental Master masks and
-        # the low-three-bit constructor pool field.
+        # the packed PowerRnd/high-five-bit and constructor-pool/low-three-bit
+        # fields.
         table[0 * 16 + wbt_table.MASK_OFFSET] = 0x08
         table[0 * 16 + wbt_table.FAMILY_OFFSET] = 0x05
-        table[0 * 16 + wbt_table.POOL_OFFSET] = 0x03
+        table[0 * 16 + wbt_table.POOL_OFFSET] = (20 << 3) | 0x03
         table[0 * 16 + wbt_table.SEX_OFFSET] = 1
         table[0 * 16 + wbt_table.MMDL_OFFSET] = 0x34
         table[0 * 16 + wbt_table.MMDL_OFFSET + 1] = 0x12
@@ -117,6 +118,7 @@ class ScannerTests(unittest.TestCase):
         self.assertIn("mask=0x08", formatted)
         self.assertIn("result_priority=3", formatted)
         self.assertIn("result_category=0", formatted)
+        self.assertIn("power_rnd=20", formatted)
         self.assertIn("npc_trainer_type=0", formatted)
         self.assertIn("sex=1", formatted)
         self.assertIn("mmdl_id=0x1234", formatted)
