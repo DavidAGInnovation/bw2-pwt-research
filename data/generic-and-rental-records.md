@@ -312,6 +312,26 @@ assign a permanent personal win/loss record to a trainer.
   their mask byte is `0x00`, while each Rental/Mix predicate requires a set
   mask bit.
 
+### Rental opponent IV assignments
+
+The dedicated Rental party builder does not roll each opponent Pokémon's IVs
+independently. It reads the selected opponent Trainer's fixed `PowerRnd` and
+copies that one value to all six IVs of every rental Pokémon created for that
+Trainer. Consequently, Trainer selection determines the opponent's IV tier:
+
+| Tournament | IVs in every stat | Eligible Trainer records and English names |
+|---|---:|---|
+| Rental | `20` | `0–4, 8`: Cheren, Roxie, Burgh, Elesa, Clay, and Bianca |
+| Rental | `8` | `68–77`: X, Makina, Fidel, Theodora, Allan, Jocelyn, Dmitri, Levina, Rylan, and Destiny |
+| Rental | `0` | `78–127`: Ted, Seamus, Kendal, Uno, Nanaka, Enid, Masashi, Dorian, Yareli, Makayla, Tristan, Yosef, Karlie, Naomi, Hernando, Indy, Hannah, Clarissa, Lester, Minoru, Willa, Hailey, Kaden, Roddy, Chloe, Tessa, Berke, Sunan, Sudapon, Anupa, Jax, Franco, Hayden, Maxie, Bobhiko, Bobmasa, Nokko, Liz, Yen, Cents, Wanda, Euro, Celsius, Ren, Kelly, Alison, Butch, Carver, Gavin, and Larry |
+| Rental Master | `20` | `0–13, 20–52`: Cheren, Roxie, Burgh, Elesa, Clay, Skyla, Drayden, Marlon, Bianca, Chili, Cress, Cilan, Lenora, Brycen, Brock, Misty, Lt. Surge, Erika, Sabrina, Blaine, Giovanni, Falkner, Bugsy, Whitney, Morty, Chuck, Jasmine, Pryce, Clair, Janine, Roxanne, Brawly, Wattson, Flannery, Norman, Winona, Tate, Liza, Juan, Roark, Gardenia, Fantina, Maylene, Crasher Wake, Byron, Candice, and Volkner |
+
+The player's initial six rental Pokémon are separate: the player setup path
+always passes `20`, regardless of which source records are selected. The
+record-level Pokémon table therefore describes opponent IVs as Trainer-fixed
+and links back to this mapping; `0`, `8`, and `20` are not three outcomes of a
+per-Pokémon random roll.
+
 ## What the record-packing path proves
 
 Rental selection admits records through the pool predicates without replacing

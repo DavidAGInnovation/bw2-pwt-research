@@ -163,8 +163,8 @@ def gender_rule(personal: bytes) -> str:
 
 def opponent_ivs(tournament: str) -> str:
     if tournament == "Rental Master":
-        return "20 in every stat"
-    return "Trainer PowerRnd: 0, 8, or 20 in every stat"
+        return "20 in every stat (all eligible Trainers)"
+    return "Fixed by opponent Trainer: all 0, all 8, or all 20"
 
 
 def rows(
@@ -245,7 +245,7 @@ def main() -> int:
 
         destination = sys.stdout
     try:
-        writer = csv.DictWriter(destination, fieldnames=fieldnames)
+        writer = csv.DictWriter(destination, fieldnames=fieldnames, lineterminator="\n")
         writer.writeheader()
         writer.writerows(decoded_rows)
     finally:
