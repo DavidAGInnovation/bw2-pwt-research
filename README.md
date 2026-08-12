@@ -46,7 +46,7 @@ See [`data/bracket-settings.md`](data/bracket-settings.md) for the bracket-setti
 See [`data/in-game-tournaments.md`](data/in-game-tournaments.md) for the ten unlockable built-in tournament families, source-table family counts, and the additional base/event cup-ID mappings established for the examined development build.
 See [`data/in-game-constructor-categories.md`](data/in-game-constructor-categories.md) for the constructor dispatch, internal category pools, and confirmed slot-request patterns.
 See [`data/wbt-party-selection.md`](data/wbt-party-selection.md) for the Rental party builder, verified 3/4/6/4 active-party mapping, complete ace/no-ace trainer coverage, fixed-ace lead path, and random-without-replacement selector audit.
-See [`data/rental-pokemon-pools.md`](data/rental-pokemon-pools.md) for the dedicated Rental archive's weak/strong index ranges, configured-record counts, and complete unique-species membership.
+See [`data/rental-pokemon-pools.md`](data/rental-pokemon-pools.md) for the dedicated Rental archive's weak/strong index ranges, configured-record counts, complete unique-species membership, and the record-level build table covering moves, items, natures, EVs, IV rules, abilities, forms, gender, and friendship.
 See [`data/generic-and-rental-records.md`](data/generic-and-rental-records.md) for the complete source-record masks, generic record groups, retail PWT names, model IDs, battle-trainer-type fields, derived priority/category/trainer-type fields, and the proved Rental/Mix candidate pools.
 See [`data/yy-counts.md`](data/yy-counts.md) only for the separate downloadable `.pwt` appendix; it is not a count for the built-in tournaments.
 
