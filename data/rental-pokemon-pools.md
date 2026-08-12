@@ -86,8 +86,15 @@ IVs are not stored in these records. `FBI_TOOL_MakePokemonParam` receives one
 | Rental Pokémon owner | IV rule |
 |---|---|
 | Player | Always `20` in every stat (`MY_RENTAL_POWER_RND`). |
-| Built-in Rental opponent | Its selected Trainer's `PowerRnd`: `8` or `20` in every stat. Priority-1 bracket fillers store `0` but cannot become the player's opponent. |
+| Built-in Rental opponent | Its selected Trainer's `PowerRnd`: `8` or `20` in every stat. |
+| Priority-1 Rental bracket filler (IDs `78–127`) | Stores `PowerRnd = 0`, corresponding to `0` IVs in every stat. These Trainers cannot become the player's opponent, so the normal game flow does not construct that party. |
 | Built-in Rental Master opponent | `20` in every stat; every eligible built-in Trainer has `PowerRnd = 20`. |
+
+The priority-1 value is fixed metadata, not a random IV outcome: all 50
+records at IDs `78–127` store `0`. It describes the party they would receive if
+their Rental party builder were invoked, while the built-in bracket keeps them
+in NPC-only simulated positions. Actual ordinary Rental opponents therefore
+use only the `8`-IV and `20`-IV tiers.
 
 The complete Trainer-to-IV mapping, including every English Trainer name, is
 in [Rental opponent IV assignments](generic-and-rental-records.md#rental-opponent-iv-assignments).
