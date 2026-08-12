@@ -80,29 +80,29 @@ names come from the actual PWT menu/description branch in script member 1277
 record byte at **zero-based offset 6**.  It is not the downloadable `.pwt` `YY`
 byte.
 
-| Named cup | Cup ID | Constructor | Raw family byte (offset 6) | Source-table records in this build | Evidence status |
-|---|---:|---|---:|---|---|
-| Champions | 1 | `0x02241A88` | `0x01` | indices `14–19, 53` (7 records) | Confirmed: menu branch + fixed Champion roster |
-| Type Expert | 2 | `0x02241C0C` | dynamic | Type-specific priority-3/2/1 pools | Confirmed: menu branch + dynamic constructor |
-| Download | 3 | `0x02241998` | download/special | Generic/download-style shuffle path | Confirmed: menu branch + constructor; payload is mode-specific |
-| Driftveil | 4 | `0x02241B20` | mixed | Four priority 1, one priority 2, two priority 3 | Confirmed: menu branch + constructor |
-| Unova/Teselia Leaders | 5 | `0x02241B08` | `0x05` | indices `0–7, 9–13` (13 standard Leaders) | Confirmed: family roster/order + cup progression |
-| Kanto Leaders | 6 | `0x02241B08` | `0x06` | indices `20–26, 35` (8 records) | Confirmed: family roster/order |
-| Johto Leaders | 7 | `0x02241B08` | `0x07` | indices `27–34` (8 records) | Confirmed: family roster/order |
-| Hoenn Leaders | 8 | `0x02241B08` | `0x08` | indices `36–44` (9 records) | Confirmed: family roster/order |
-| Sinnoh Leaders | 9 | `0x02241B08` | `0x09` | indices `45–52` (8 records) | Confirmed: family roster/order |
-| World Leaders | 10 | `0x02241AF0` | mixed leader families | Seven priority-3 selections | Confirmed: menu branch + constructor |
-| Rental | 12 | `0x02241B84` | special | Three priority 1, two priority 2, two priority 3 | Confirmed: menu branch + constructor |
-| Rental Master | 13 | `0x02241BDC` | special | Seven priority-3 selections | Confirmed: menu branch + constructor |
-| Mix | 14 | `0x02241BB0` | special | Three priority 1, two priority 2, two priority 3 | Confirmed: menu branch + constructor |
-| Mix Master | 15 | `0x02241BF4` | special | Seven priority-3 selections | Confirmed: menu branch + constructor |
-| Driftveil event | 11 | `0x02241B4C` | `WBTCUP_HODOMOE_EVENT` | Four priority 1, one each priority 3/4/5 | Confirmed: source enum + menu branch + enable predicate |
+| Named cup | Cup ID | Constructor | Raw family byte (offset 6) | Source-table records in this build |
+|---|---:|---|---:|---|
+| Champions | 1 | `0x02241A88` | `0x01` | indices `14–19, 53` (7 records) |
+| Type Expert | 2 | `0x02241C0C` | dynamic | Type-specific priority-3/2/1 pools |
+| Download | 3 | `0x02241998` | download/special | Generic/download-style shuffle path |
+| Driftveil | 4 | `0x02241B20` | mixed | Four priority 1, one priority 2, two priority 3 |
+| Unova/Teselia Leaders | 5 | `0x02241B08` | `0x05` | indices `0–7, 9–13` (13 standard Leaders) |
+| Kanto Leaders | 6 | `0x02241B08` | `0x06` | indices `20–26, 35` (8 records) |
+| Johto Leaders | 7 | `0x02241B08` | `0x07` | indices `27–34` (8 records) |
+| Hoenn Leaders | 8 | `0x02241B08` | `0x08` | indices `36–44` (9 records) |
+| Sinnoh Leaders | 9 | `0x02241B08` | `0x09` | indices `45–52` (8 records) |
+| World Leaders | 10 | `0x02241AF0` | mixed leader families | Seven priority-3 selections |
+| Rental | 12 | `0x02241B84` | special | Three priority 1, two priority 2, two priority 3 |
+| Rental Master | 13 | `0x02241BDC` | special | Seven priority-3 selections |
+| Mix | 14 | `0x02241BB0` | special | Three priority 1, two priority 2, two priority 3 |
+| Mix Master | 15 | `0x02241BF4` | special | Seven priority-3 selections |
+| Driftveil event | 11 | `0x02241B4C` | `WBTCUP_HODOMOE_EVENT` | Four priority 1, one each priority 3/4/5 |
 
-“Confirmed” means the mapping is deterministic and supported by the source,
-script menu/description branch, and constructor evidence for the examined build;
-the matching USA/Europe retail data/code path was cross-checked where noted.
-It does not mean that every regional or revision ROM must use the same addresses
-or data.
+These mappings are deterministic and supported by the source,
+script menu/description branch, and constructor evidence for the examined
+build; the matching USA/Europe retail data/code path was cross-checked where
+noted. This does not mean that every regional or revision ROM must use the same
+addresses or data.
 
 The regional names and rosters agree with the public PWT listings for the
 [regional Leaders cups](https://www.serebii.net/black2white2/worldtournament.shtml),
