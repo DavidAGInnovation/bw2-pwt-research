@@ -152,6 +152,12 @@ Champions, all priorities are equal, so the randomized ordering determines
 which name receives each structured slot; that slot assignment does not change
 the source's 50/50 result.
 
+This participant-level result is separate from the six-Pokémon party builder.
+See [`data/wbt-party-selection.md`](data/wbt-party-selection.md) for the
+Overlay 55/source evidence on roster construction, the verified 3/4/6/4
+active-party mapping, complete ace/no-ace trainer coverage, the fixed-ace lead
+path, and Wallace's Milotic record.
+
 ### Champion versus standard Gym Leader
 
 Champions decode to priority 4; standard Gym Leaders decode to priority 3. Since the priorities differ, the routine selects the Champion immediately and skips the equal-priority upside check. Thus, a standard Champion-vs-Leader simulation is Champion 100% in this routine.
