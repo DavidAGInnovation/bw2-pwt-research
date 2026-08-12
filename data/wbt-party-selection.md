@@ -55,6 +55,11 @@ when more are needed, `count - 3` from the weak range. This split is unrelated
 to Triple battles. The range-bound table is referenced through the literal
 pointers at `0x02239850` and `0x0223985c`.
 
+The exact ranges, record counts, and weak/strong species membership are listed
+in [`rental-pokemon-pools.md`](rental-pokemon-pools.md). In particular, Rental
+Master uses the same species set in both tiers but different configured
+records, so its weak/strong distinction cannot be inferred from species alone.
+
 ## Disassembly evidence
 
 | Evidence | Address | Interpretation |
