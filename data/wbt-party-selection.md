@@ -118,10 +118,7 @@ names use the English/common names for recognizable characters. For the
 generic rows, the Japanese source name is included in parentheses so the label
 cannot be confused with a language-specific localization.
 
-Keep both code columns: `Display code` is the exact `表示コード名` source key,
-while `Source trainer type` is the exact `トレーナータイプ` classification.
-They often match, but they are not interchangeable: Cynthia is
-`SHIRONA`/`DPCHAMPION`, and Bianca is `SWBELL`/`SUPPORT`. `Code meaning`
+`Display code` is the exact `表示コード名` source key. `Code meaning`
 translates the source `ポジション` field, so the display code's runtime role
 is visible rather than just its symbolic name.
 
@@ -160,82 +157,82 @@ The source tournament table maps cup IDs to the archive used at runtime:
 For Wallace (ID 017), the only built-in eligibility is the Champions cup.
 That cup uses WBT3, so his fixed first Pokémon is **Milotic**.
 
-| ID | Trainer | Display code | Source trainer type | Code meaning | Actual tournament ace(s) |
-|---:|---|---|---|---|---|
-| 000 | Cheren | `SWLEADER1` | `SWLEADER1` | BW2 Gym Leader | Driftveil, Rental, Mix, Unova/Teselia Leaders, World Leaders, Super Rental / Rental Master, Super Mix / Mix Master, Type Expert — Stoutland |
-| 001 | Roxie | `SWLEADER2` | `SWLEADER2` | BW2 Gym Leader | Driftveil, Rental, Mix, Unova/Teselia Leaders, World Leaders, Super Rental / Rental Master, Super Mix / Mix Master, Type Expert — Scolipede |
-| 002 | Burgh | `SWLEADER3` | `SWLEADER3` | BW2 Gym Leader | Driftveil, Rental, Mix, Unova/Teselia Leaders, World Leaders, Super Rental / Rental Master, Super Mix / Mix Master, Type Expert — Leavanny |
-| 003 | Elesa | `SWLEADER4` | `SWLEADER4` | BW2 Gym Leader | Driftveil, Rental, Mix, Unova/Teselia Leaders, World Leaders, Super Rental / Rental Master, Super Mix / Mix Master, Type Expert — Zebstrika |
-| 004 | Clay | `SWLEADER5` | `SWLEADER5` | BW2 Gym Leader | Driftveil, Rental, Mix, Unova/Teselia Leaders, World Leaders, Super Rental / Rental Master, Super Mix / Mix Master, Type Expert — Excadrill |
-| 005 | Skyla | `SWLEADER6` | `SWLEADER6` | BW2 Gym Leader | Unova/Teselia Leaders, World Leaders, Super Rental / Rental Master, Super Mix / Mix Master, Type Expert — Swanna |
-| 006 | Drayden | `SWLEADER7` | `SWLEADER7` | BW2 Gym Leader | Unova/Teselia Leaders, World Leaders, Super Rental / Rental Master, Super Mix / Mix Master, Type Expert — Haxorus |
-| 007 | Marlon | `SWLEADER8` | `SWLEADER8` | BW2 Gym Leader | Unova/Teselia Leaders, World Leaders, Super Rental / Rental Master, Super Mix / Mix Master, Type Expert — Jellicent |
-| 008 | Bianca | `SWBELL` | `SUPPORT` | BW character / support | Rental, Mix, Super Rental / Rental Master — Musharna |
-| 009 | Chili | `LEADER1A` | `LEADER1A` | BW Gym Leader | Unova/Teselia Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Simisear |
-| 010 | Cress | `LEADER1B` | `LEADER1B` | BW Gym Leader | Unova/Teselia Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Simipour |
-| 011 | Cilan | `LEADER1C` | `LEADER1C` | BW Gym Leader | Unova/Teselia Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Simisage |
-| 012 | Lenora | `LEADER2` | `LEADER2` | BW Gym Leader | Unova/Teselia Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Rotom-Mow |
-| 013 | Brycen | `LEADER7` | `LEADER7` | BW Gym Leader | Unova/Teselia Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Cryogonal |
-| 015 | Lance | `GSCHAMPION` | `GSCHAMPION` | Gold/Silver Champion | Champions — Dragonite |
-| 016 | Steven | `RSCHAMPION` | `RSCHAMPION` | Ruby/Sapphire Champion | Champions — Metagross |
-| 017 | Wallace | `ECHAMPION` | `ECHAMPION` | Emerald Champion | Champions — Milotic |
-| 018 | Cynthia | `SHIRONA` | `DPCHAMPION` | Diamond/Pearl Champion | Champions — Garchomp |
-| 019 | Alder | `CHAMPION` | `CHAMPION` | Black/White Champion | Champions — Volcarona |
-| 020 | Brock | `RGLEADER1` | `RGLEADER1` | Red/Green Gym Leader | Kanto Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Onix |
-| 021 | Misty | `RGLEADER2` | `RGLEADER2` | Red/Green Gym Leader | Kanto Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Starmie |
-| 022 | Lt. Surge | `RGLEADER3` | `RGLEADER3` | Red/Green Gym Leader | Kanto Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Raichu |
-| 023 | Erika | `RGLEADER4` | `RGLEADER4` | Red/Green Gym Leader | Kanto Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Vileplume |
-| 024 | Sabrina | `RGLEADER5` | `RGLEADER5` | Red/Green Gym Leader | Kanto Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Alakazam |
-| 025 | Blaine | `RGLEADER6` | `RGLEADER6` | Red/Green Gym Leader | Kanto Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Arcanine |
-| 026 | Giovanni | `RGLEADER7` | `RGLEADER7` | Red/Green Gym Leader / enemy character | Kanto Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Rhyperior |
-| 027 | Falkner | `GSLEADER1` | `GSLEADER1` | Gold/Silver Gym Leader | Johto Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Pidgeot |
-| 028 | Bugsy | `GSLEADER2` | `GSLEADER2` | Gold/Silver Gym Leader | Johto Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Scizor |
-| 029 | Whitney | `GSLEADER3` | `GSLEADER3` | Gold/Silver Gym Leader | Johto Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Miltank |
-| 030 | Morty | `GSLEADER4` | `GSLEADER4` | Gold/Silver Gym Leader | Johto Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Gengar |
-| 031 | Chuck | `GSLEADER5` | `GSLEADER5` | Gold/Silver Gym Leader | Johto Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Poliwrath |
-| 032 | Jasmine | `GSLEADER6` | `GSLEADER6` | Gold/Silver Gym Leader | Johto Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Steelix |
-| 033 | Pryce | `GSLEADER7` | `GSLEADER7` | Gold/Silver Gym Leader | Johto Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Mamoswine |
-| 034 | Clair | `GSLEADER8` | `GSLEADER8` | Gold/Silver Gym Leader | Johto Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Kingdra |
-| 035 | Janine | `GSLEADER9` | `GSLEADER9` | Gold/Silver Gym Leader / Kanto Gym Leader | Kanto Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Venomoth |
-| 036 | Roxanne | `RSLEADER1` | `RSLEADER1` | Ruby/Sapphire Gym Leader | Hoenn Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Probopass |
-| 037 | Brawly | `RSLEADER2` | `RSLEADER2` | Ruby/Sapphire Gym Leader | Hoenn Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Hariyama |
-| 038 | Wattson | `RSLEADER3` | `RSLEADER3` | Ruby/Sapphire Gym Leader | Hoenn Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Manectric |
-| 039 | Flannery | `RSLEADER4` | `RSLEADER4` | Ruby/Sapphire Gym Leader | Hoenn Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Torkoal |
-| 040 | Norman | `RSLEADER5` | `RSLEADER5` | Ruby/Sapphire Gym Leader | Hoenn Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Slaking |
-| 041 | Winona | `RSLEADER6` | `RSLEADER6` | Ruby/Sapphire Gym Leader | Hoenn Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Altaria |
-| 042 | Tate | `RSLEADER7` | `RSLEADER7` | Ruby/Sapphire Gym Leader | Hoenn Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Solrock |
-| 043 | Liza | `RSLEADER8` | `RSLEADER8` | Ruby/Sapphire Gym Leader | Hoenn Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Lunatone |
-| 044 | Juan | `ELEADER1` | `ELEADER1` | Emerald Gym Leader | Hoenn Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Kingdra |
-| 045 | Roark | `DPLEADER1` | `DPLEADER1` | Diamond/Pearl Gym Leader | Sinnoh Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Rampardos |
-| 046 | Gardenia | `DPLEADER2` | `DPLEADER2` | Diamond/Pearl Gym Leader | Sinnoh Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Roserade |
-| 047 | Fantina | `DPLEADER3` | `DPLEADER3` | Diamond/Pearl Gym Leader | Sinnoh Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Mismagius |
-| 048 | Maylene | `DPLEADER4` | `DPLEADER4` | Diamond/Pearl Gym Leader | Sinnoh Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Lucario |
-| 049 | Crasher Wake | `DPLEADER5` | `DPLEADER5` | Diamond/Pearl Gym Leader | Sinnoh Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Floatzel |
-| 050 | Byron | `DPLEADER6` | `DPLEADER6` | Diamond/Pearl Gym Leader | Sinnoh Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Bastiodon |
-| 051 | Candice | `DPLEADER7` | `DPLEADER7` | Diamond/Pearl Gym Leader | Sinnoh Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Froslass |
-| 052 | Volkner | `DPLEADER8` | `DPLEADER8` | Diamond/Pearl Gym Leader | Sinnoh Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Electivire |
-| 056 | Cheren (event) | `SWLEADER1` | `SWLEADER1` | Event Gym Leader 1 | Driftveil event — Stoutland |
-| 057 | Colress | `SWBOSS` | `SWBOSS` | Event Boss | Driftveil event — Magneton |
-| 058 | Botsuri (ボツリ) | `ASSISTANTM` | `SCIENTISTM_1` | Scientist (male), battleable generic | Type Expert — Muk |
-| 059 | Ieji (イエジ) | `MOUNTMAN` | `MOUNT_1` | Hiker, battleable generic | Type Expert — Krookodile |
-| 060 | Karuto (カルト) | `ESPW` | `ESPW_1` | Psychic (female), battleable generic | Type Expert — Starmie |
-| 061 | Walter (ウォルター) | `VETERANM` | `VETERANM_2` | Veteran Trainer (male), battleable generic | Type Expert — Heracross |
-| 062 | Rensuke (レンスケ) | `ESPM` | `ESPM_1` | Psychic (male), battleable generic | Type Expert — Cofagrigus |
-| 063 | Ryuichi (リュウイチ) | `TRAINERM` | `ELITEM_1` | Elite Trainer (male), battleable generic | Type Expert — Salamence |
-| 064 | Thatcher (サッチャー) | `VETERANW` | `VETERANW_2` | Veteran Trainer (female), battleable generic | Type Expert — Aggron |
-| 065 | Vito (ヴィトー) | `VETERANM` | `VETERANM_2` | Veteran Trainer (male), battleable generic | Type Expert — Shiftry |
-| 066 | Ilsane (イルサーネ) | `VETERANW` | `VETERANW_2` | Veteran Trainer (female), battleable generic | Type Expert — Umbreon |
-| 067 | Bonnie (ボニー) | `TRAINERW` | `ELITEW_1` | Elite Trainer (female), battleable generic | Type Expert — Drapion |
-| 068 | Ex (エクス) | `TRAINERM` | `ELITEM_1` | Elite Trainer (male), clear-before generic | Driftveil, Rental, Mix — Archeops |
-| 069 | Makina (マキナ) | `TRAINERW` | `ELITEW_1` | Elite Trainer (female), clear-before generic | Driftveil, Rental, Mix — Tirtouga |
-| 070 | Castro (カストロ) | `VETERANM` | `VETERANM_2` | Veteran Trainer (male), clear-before generic | Driftveil, Rental, Mix — Whimsicott |
-| 071 | Tsugumi (ツグミ) | `VETERANW` | `VETERANW_2` | Veteran Trainer (female), clear-before generic | Driftveil, Rental, Mix — Lilligant |
-| 072 | Arashiyama (アラシヤマ) | `FIGHTERM` | `KARATE_1` | Black Belt, clear-before generic | Driftveil, Rental, Mix — Throh |
-| 073 | Jane (ジェーン) | `FIGHTERW` | `BATTLEG_1` | Battle Girl, clear-before generic | Driftveil, Rental, Mix — Sawk |
-| 074 | Shuichi (シュウイチ) | `ASSISTANTM` | `SCIENTISTM_1` | Scientist (male), clear-before generic | Driftveil, Rental, Mix — Golduck |
-| 075 | Eclaire (エクレア) | `ASSISTANTW` | `SCIENTISTW_1` | Scientist (female), clear-before generic | Driftveil, Rental, Mix — Lopunny |
-| 076 | Rurio (ルリオ) | `ESPM` | `ESPM_1` | Psychic (male), clear-before generic | Driftveil, Rental, Mix — Cofagrigus |
-| 077 | Soprano (ソプラノ) | `ESPW` | `ESPW_1` | Psychic (female), clear-before generic | Driftveil, Rental, Mix — Mr-Mime |
+| ID | Trainer | Display code | Code meaning | Actual tournament ace(s) |
+|---:|---|---|---|---|
+| 000 | Cheren | `SWLEADER1` | BW2 Gym Leader | Driftveil, Rental, Mix, Unova/Teselia Leaders, World Leaders, Super Rental / Rental Master, Super Mix / Mix Master, Type Expert — Stoutland |
+| 001 | Roxie | `SWLEADER2` | BW2 Gym Leader | Driftveil, Rental, Mix, Unova/Teselia Leaders, World Leaders, Super Rental / Rental Master, Super Mix / Mix Master, Type Expert — Scolipede |
+| 002 | Burgh | `SWLEADER3` | BW2 Gym Leader | Driftveil, Rental, Mix, Unova/Teselia Leaders, World Leaders, Super Rental / Rental Master, Super Mix / Mix Master, Type Expert — Leavanny |
+| 003 | Elesa | `SWLEADER4` | BW2 Gym Leader | Driftveil, Rental, Mix, Unova/Teselia Leaders, World Leaders, Super Rental / Rental Master, Super Mix / Mix Master, Type Expert — Zebstrika |
+| 004 | Clay | `SWLEADER5` | BW2 Gym Leader | Driftveil, Rental, Mix, Unova/Teselia Leaders, World Leaders, Super Rental / Rental Master, Super Mix / Mix Master, Type Expert — Excadrill |
+| 005 | Skyla | `SWLEADER6` | BW2 Gym Leader | Unova/Teselia Leaders, World Leaders, Super Rental / Rental Master, Super Mix / Mix Master, Type Expert — Swanna |
+| 006 | Drayden | `SWLEADER7` | BW2 Gym Leader | Unova/Teselia Leaders, World Leaders, Super Rental / Rental Master, Super Mix / Mix Master, Type Expert — Haxorus |
+| 007 | Marlon | `SWLEADER8` | BW2 Gym Leader | Unova/Teselia Leaders, World Leaders, Super Rental / Rental Master, Super Mix / Mix Master, Type Expert — Jellicent |
+| 008 | Bianca | `SWBELL` | BW character / support | Rental, Mix, Super Rental / Rental Master — Musharna |
+| 009 | Chili | `LEADER1A` | BW Gym Leader | Unova/Teselia Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Simisear |
+| 010 | Cress | `LEADER1B` | BW Gym Leader | Unova/Teselia Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Simipour |
+| 011 | Cilan | `LEADER1C` | BW Gym Leader | Unova/Teselia Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Simisage |
+| 012 | Lenora | `LEADER2` | BW Gym Leader | Unova/Teselia Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Rotom-Mow |
+| 013 | Brycen | `LEADER7` | BW Gym Leader | Unova/Teselia Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Cryogonal |
+| 015 | Lance | `GSCHAMPION` | Gold/Silver Champion | Champions — Dragonite |
+| 016 | Steven | `RSCHAMPION` | Ruby/Sapphire Champion | Champions — Metagross |
+| 017 | Wallace | `ECHAMPION` | Emerald Champion | Champions — Milotic |
+| 018 | Cynthia | `SHIRONA` | Diamond/Pearl Champion | Champions — Garchomp |
+| 019 | Alder | `CHAMPION` | Black/White Champion | Champions — Volcarona |
+| 020 | Brock | `RGLEADER1` | Red/Green Gym Leader | Kanto Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Onix |
+| 021 | Misty | `RGLEADER2` | Red/Green Gym Leader | Kanto Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Starmie |
+| 022 | Lt. Surge | `RGLEADER3` | Red/Green Gym Leader | Kanto Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Raichu |
+| 023 | Erika | `RGLEADER4` | Red/Green Gym Leader | Kanto Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Vileplume |
+| 024 | Sabrina | `RGLEADER5` | Red/Green Gym Leader | Kanto Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Alakazam |
+| 025 | Blaine | `RGLEADER6` | Red/Green Gym Leader | Kanto Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Arcanine |
+| 026 | Giovanni | `RGLEADER7` | Red/Green Gym Leader / enemy character | Kanto Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Rhyperior |
+| 027 | Falkner | `GSLEADER1` | Gold/Silver Gym Leader | Johto Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Pidgeot |
+| 028 | Bugsy | `GSLEADER2` | Gold/Silver Gym Leader | Johto Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Scizor |
+| 029 | Whitney | `GSLEADER3` | Gold/Silver Gym Leader | Johto Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Miltank |
+| 030 | Morty | `GSLEADER4` | Gold/Silver Gym Leader | Johto Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Gengar |
+| 031 | Chuck | `GSLEADER5` | Gold/Silver Gym Leader | Johto Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Poliwrath |
+| 032 | Jasmine | `GSLEADER6` | Gold/Silver Gym Leader | Johto Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Steelix |
+| 033 | Pryce | `GSLEADER7` | Gold/Silver Gym Leader | Johto Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Mamoswine |
+| 034 | Clair | `GSLEADER8` | Gold/Silver Gym Leader | Johto Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Kingdra |
+| 035 | Janine | `GSLEADER9` | Gold/Silver Gym Leader / Kanto Gym Leader | Kanto Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Venomoth |
+| 036 | Roxanne | `RSLEADER1` | Ruby/Sapphire Gym Leader | Hoenn Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Probopass |
+| 037 | Brawly | `RSLEADER2` | Ruby/Sapphire Gym Leader | Hoenn Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Hariyama |
+| 038 | Wattson | `RSLEADER3` | Ruby/Sapphire Gym Leader | Hoenn Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Manectric |
+| 039 | Flannery | `RSLEADER4` | Ruby/Sapphire Gym Leader | Hoenn Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Torkoal |
+| 040 | Norman | `RSLEADER5` | Ruby/Sapphire Gym Leader | Hoenn Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Slaking |
+| 041 | Winona | `RSLEADER6` | Ruby/Sapphire Gym Leader | Hoenn Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Altaria |
+| 042 | Tate | `RSLEADER7` | Ruby/Sapphire Gym Leader | Hoenn Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Solrock |
+| 043 | Liza | `RSLEADER8` | Ruby/Sapphire Gym Leader | Hoenn Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Lunatone |
+| 044 | Juan | `ELEADER1` | Emerald Gym Leader | Hoenn Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Kingdra |
+| 045 | Roark | `DPLEADER1` | Diamond/Pearl Gym Leader | Sinnoh Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Rampardos |
+| 046 | Gardenia | `DPLEADER2` | Diamond/Pearl Gym Leader | Sinnoh Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Roserade |
+| 047 | Fantina | `DPLEADER3` | Diamond/Pearl Gym Leader | Sinnoh Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Mismagius |
+| 048 | Maylene | `DPLEADER4` | Diamond/Pearl Gym Leader | Sinnoh Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Lucario |
+| 049 | Crasher Wake | `DPLEADER5` | Diamond/Pearl Gym Leader | Sinnoh Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Floatzel |
+| 050 | Byron | `DPLEADER6` | Diamond/Pearl Gym Leader | Sinnoh Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Bastiodon |
+| 051 | Candice | `DPLEADER7` | Diamond/Pearl Gym Leader | Sinnoh Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Froslass |
+| 052 | Volkner | `DPLEADER8` | Diamond/Pearl Gym Leader | Sinnoh Leaders, World Leaders, Super Rental / Rental Master, Type Expert — Electivire |
+| 056 | Cheren (event) | `SWLEADER1` | Event Gym Leader 1 | Driftveil event — Stoutland |
+| 057 | Colress | `SWBOSS` | Event Boss | Driftveil event — Magneton |
+| 058 | Botsuri (ボツリ) | `ASSISTANTM` | Scientist (male), battleable generic | Type Expert — Muk |
+| 059 | Ieji (イエジ) | `MOUNTMAN` | Hiker, battleable generic | Type Expert — Krookodile |
+| 060 | Karuto (カルト) | `ESPW` | Psychic (female), battleable generic | Type Expert — Starmie |
+| 061 | Walter (ウォルター) | `VETERANM` | Veteran Trainer (male), battleable generic | Type Expert — Heracross |
+| 062 | Rensuke (レンスケ) | `ESPM` | Psychic (male), battleable generic | Type Expert — Cofagrigus |
+| 063 | Ryuichi (リュウイチ) | `TRAINERM` | Elite Trainer (male), battleable generic | Type Expert — Salamence |
+| 064 | Thatcher (サッチャー) | `VETERANW` | Veteran Trainer (female), battleable generic | Type Expert — Aggron |
+| 065 | Vito (ヴィトー) | `VETERANM` | Veteran Trainer (male), battleable generic | Type Expert — Shiftry |
+| 066 | Ilsane (イルサーネ) | `VETERANW` | Veteran Trainer (female), battleable generic | Type Expert — Umbreon |
+| 067 | Bonnie (ボニー) | `TRAINERW` | Elite Trainer (female), battleable generic | Type Expert — Drapion |
+| 068 | Ex (エクス) | `TRAINERM` | Elite Trainer (male), clear-before generic | Driftveil, Rental, Mix — Archeops |
+| 069 | Makina (マキナ) | `TRAINERW` | Elite Trainer (female), clear-before generic | Driftveil, Rental, Mix — Tirtouga |
+| 070 | Castro (カストロ) | `VETERANM` | Veteran Trainer (male), clear-before generic | Driftveil, Rental, Mix — Whimsicott |
+| 071 | Tsugumi (ツグミ) | `VETERANW` | Veteran Trainer (female), clear-before generic | Driftveil, Rental, Mix — Lilligant |
+| 072 | Arashiyama (アラシヤマ) | `FIGHTERM` | Black Belt, clear-before generic | Driftveil, Rental, Mix — Throh |
+| 073 | Jane (ジェーン) | `FIGHTERW` | Battle Girl, clear-before generic | Driftveil, Rental, Mix — Sawk |
+| 074 | Shuichi (シュウイチ) | `ASSISTANTM` | Scientist (male), clear-before generic | Driftveil, Rental, Mix — Golduck |
+| 075 | Eclaire (エクレア) | `ASSISTANTW` | Scientist (female), clear-before generic | Driftveil, Rental, Mix — Lopunny |
+| 076 | Rurio (ルリオ) | `ESPM` | Psychic (male), clear-before generic | Driftveil, Rental, Mix — Cofagrigus |
+| 077 | Soprano (ソプラノ) | `ESPW` | Psychic (female), clear-before generic | Driftveil, Rental, Mix — Mr-Mime |
 
 The unmarked rows do not enter the ace branch at all: their complete party is
 selected from the normal candidate list by the no-replacement chooser. In the
