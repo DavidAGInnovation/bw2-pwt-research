@@ -113,29 +113,3 @@ selected from the normal candidate list by the no-replacement chooser. In the
 Champion data set, the visible unmarked examples are Green (ID 14), Red (ID
 53), Touko (ID 54), and the Rival (ID 55). They do not have a fixed first
 Pokémon in this code path.
-
-## Wallace verification
-
-The Champion cup's `WBTTournamentData` selects `WBTBTDATA_3`, so its ROM data
-base is the third WBT data set (`wbt3a`/`wbt3n`). Wallace is trainer row 17 in
-`wbt_trainer_list.txt`; the row's ace marker compiles to a nonzero
-`ace_poke_id` (`01 00` in the 16-byte trainer record), so the fixed-ace path
-applies.
-
-The corresponding source tables provide the species-level check:
-
-- `wbt3a_tr.tdm`, row 17, stores ace index `361`.
-- `wbt3n_tr.tdm`, row 17, stores the six-entry normal list
-  `361, 362, 363, 364, 365, 366`.
-- `wbt3n_pd.narc`, record/index `361`, stores species `350`; the source
-  `resource/personal/monsno_def.h` defines `MONSNO_MIROKAROSU` as `350`
-  (Milotic). The archive is a 1,000-record, 16-byte
-  Pokémon table (CRC-32 `c387c82a` in the examined source/retail artifact).
-
-The `WBTBTD_ARCOFS_*` order used by `makeRomTrainerData` places the Champion
-Pokémon archive at the `+2` offset from `ARCID_WBT_TD3A`; in the extracted
-retail filesystem that archive is `/a/2/7/0`, whose CRC is the same
-`c387c82a`. Thus Wallace's ace index resolves to Milotic, and the normal list
-confirms that the six-entry roster begins with the same index. Wallace starts
-with Milotic in singles, doubles, triples, and rotation battles; only the
-number of additional active entries changes.

@@ -156,7 +156,7 @@ This participant-level result is separate from the six-Pokémon party builder.
 See [`data/wbt-party-selection.md`](data/wbt-party-selection.md) for the
 Overlay 55/source evidence on roster construction, the verified 3/4/6/4
 active-party mapping, complete ace/no-ace trainer coverage, the fixed-ace lead
-path, and Wallace's Milotic record.
+path.
 
 ### Champion versus standard Gym Leader
 
