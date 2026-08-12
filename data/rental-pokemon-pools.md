@@ -189,8 +189,10 @@ Bouffalant.
 ## Rental Master species
 
 The weak range (`209–558`) and strong range (`559–908`) use the same species
-set below. Each range independently contains two distinct configured records
-per species.
+set below. Every listed species has four configured builds: two distinct
+records in the weak range and two distinct records in the strong range. Its
+weak and strong builds can differ in moves, held item, nature, and EV
+distribution.
 
 Venusaur, Charizard, Blastoise, Meganium, Typhlosion, Feraligatr, Sceptile,
 Blaziken, Swampert, Torterra, Infernape, Empoleon, Serperior, Emboar, Samurott,
