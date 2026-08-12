@@ -232,6 +232,7 @@ The source tournament table maps cup IDs to the archive used at runtime:
 
 The unmarked rows do not enter the ace branch at all: their complete party is
 selected from the normal candidate list by the no-replacement chooser. In the
-Champion data set, the visible unmarked examples are Green (ID 14), Red (ID
-53), Touko (ID 54), and the Rival (ID 55). They do not have a fixed first
+Champion data set, the unmarked entries are Blue (ID 14) and Red (ID 53).
+Hilda (ID 54) is unused data, while the Rival (ID 55) belongs to the
+Driftveil event rather than the Champions roster. Neither has a fixed first
 Pokémon in this code path.
