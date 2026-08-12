@@ -101,8 +101,9 @@ in [Rental opponent IV assignments](generic-and-rental-records.md#rental-opponen
 
 The personal RNG value is generated at runtime. The builder permits either
 normal ability and then selects ability 1 or ability 2 from the generated
-personality value; Hidden Abilities are not selected by this path. Gender is
-also personality-derived under the species' normal gender ratio. The form is
+personality value. The Rental builder cannot produce Hidden Abilities because
+it does not enable the separate third-ability flag. Gender is also
+personality-derived under the species' normal gender ratio. The form is
 record-controlled, not random. Friendship defaults to `255`, except that a
 record containing Frustration receives friendship `0`.
 
