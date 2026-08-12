@@ -18,15 +18,42 @@ uses only indices `1–908`:
 | Rental Master | Weak | `209–558` | 350 | 175 | 2 |
 | Rental Master | Strong | `559–908` | 350 | 175 | 2 |
 
+## Records excluded from every PWT Rental range
+
+The remaining archive members are not an additional selectable tier:
+
+| Indices | Records | Contents | PWT use |
+|---|---:|---|---|
+| `0` | 1 | Zero-filled dummy record | Never selected |
+| `909–988` | 80 | Complete legendary Pokémon builds | Outside every hardcoded Rental range |
+| `989–999` | 11 | Zero-filled dummy records | Never selected |
+
+Records `909–988` are valid rather than blank or corrupt. They contain four
+configured builds for each of 20 species: Articuno, Zapdos, Moltres, Raikou,
+Entei, Suicune, Regirock, Regice, Registeel, Cobalion, Terrakion, Virizion,
+Tornadus, Thundurus, Latias, Latios, Heatran, Cresselia, Landorus, and
+Regigigas. The Rental source conversion table references these records, which
+explains why the converter emitted them into the 1,000-member archive.
+
+The runtime `getRentalRange` table nevertheless ends at index `908` for all
+Weak, Strong, and All branches in both Rental tournaments. These legendary
+builds are therefore retained source data but cannot be drawn by the built-in
+PWT Rental builder. This is distinct from records `0` and `989–999`, which are
+actually zero-filled placeholders.
+
 “Weak” and “strong” classify complete configured records, not merely species.
 A record includes the species together with its held item, moves, and other
 battle parameters. The two records for a species within one tier are distinct.
 
 The complete record-level decode is available as
 [`rental-pokemon-builds.csv`](rental-pokemon-builds.csv). It lists all 908
-selectable records with their species, form, held item, four moves, nature,
-EV allocation, player and opponent IV rules, possible normal abilities,
-gender rule, and friendship.
+selectable records plus the 80 valid but excluded records at `909–988`, with
+their species, form, held item, four moves, nature, EV allocation, player and
+opponent IV rules, possible normal abilities, gender rule, and friendship.
+The excluded rows use `Excluded from PWT` in the `tournament` column and
+`Not selectable` in the `tier` column; both IV columns are marked not
+applicable because the PWT builder never instantiates those records. The 12
+zero-filled placeholders are omitted because they are not Pokémon builds.
 
 For ordinary Rental, the weak and strong tiers contain different species
 sets. For Rental Master, both tiers contain the same 175 species, but the 350
@@ -59,7 +86,7 @@ IVs are not stored in these records. `FBI_TOOL_MakePokemonParam` receives one
 | Rental Pokémon owner | IV rule |
 |---|---|
 | Player | Always `20` in every stat (`MY_RENTAL_POWER_RND`). |
-| Built-in Rental opponent | Its selected Trainer's `PowerRnd`: `0`, `8`, or `20` in every stat. |
+| Built-in Rental opponent | Its selected Trainer's `PowerRnd`: `8` or `20` in every stat. Priority-1 bracket fillers store `0` but cannot become the player's opponent. |
 | Built-in Rental Master opponent | `20` in every stat; every eligible built-in Trainer has `PowerRnd = 20`. |
 
 The complete Trainer-to-IV mapping, including every English Trainer name, is

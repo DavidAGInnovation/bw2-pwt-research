@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Decode every selectable BW2 PWT Rental Pokémon build to CSV.
+"""Decode the configured BW2 PWT Rental Pokémon builds to CSV.
 
 Inputs are extracted USA/Europe retail NARCs:
 
@@ -7,8 +7,11 @@ Inputs are extracted USA/Europe retail NARCs:
 * ``/a/0/0/2``: the general text archive;
 * ``/a/0/1/6``: the personal-data archive.
 
-The equivalent development Rental archive is ``/a/2/7/1``. Its selectable
-records are byte-identical to retail in the examined builds.
+The equivalent development Rental archive is ``/a/2/7/1``. Its records are
+byte-identical to retail in the examined builds. The output includes the 908
+selectable records and the 80 valid legendary builds at indices 909–988 that
+the PWT runtime excludes from every Rental range; zero-filled placeholders are
+omitted.
 """
 
 from __future__ import annotations
@@ -29,6 +32,7 @@ RANGES = (
     ("Rental", "Strong", 133, 208),
     ("Rental Master", "Weak", 209, 558),
     ("Rental Master", "Strong", 559, 908),
+    ("Excluded from PWT", "Not selectable", 909, 988),
 )
 
 TEXT_MEMBERS = {
@@ -162,9 +166,17 @@ def gender_rule(personal: bytes) -> str:
 
 
 def opponent_ivs(tournament: str) -> str:
+    if tournament == "Excluded from PWT":
+        return "Not applicable (excluded from PWT)"
     if tournament == "Rental Master":
         return "20 in every stat (all eligible Trainers)"
-    return "Fixed by opponent Trainer: all 0, all 8, or all 20"
+    return "Fixed by actual opponent Trainer: all 8 or all 20"
+
+
+def player_ivs(tournament: str) -> str:
+    if tournament == "Excluded from PWT":
+        return "Not applicable (excluded from PWT)"
+    return "20 in every stat"
 
 
 def rows(
@@ -210,7 +222,7 @@ def rows(
                 "ev_speed": evs[3],
                 "ev_sp_attack": evs[4],
                 "ev_sp_defense": evs[5],
-                "player_ivs": "20 in every stat",
+                "player_ivs": player_ivs(tournament),
                 "opponent_ivs": opponent_ivs(tournament),
                 "ability_rule": possible_abilities(personal, names["abilities"]),
                 "gender_rule": gender_rule(personal),
