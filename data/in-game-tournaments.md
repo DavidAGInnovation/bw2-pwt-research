@@ -97,12 +97,7 @@ The Driftveil event is `WBTCUP_HODOMOE_EVENT`; it is enabled while the
 ordinary Driftveil win count is zero.
 
 The named mappings are based on the exact cup-ID dispatch and matching
-family slices. The Champions slice agrees with the
-[Serebii Champions roster](https://www.serebii.net/black2white2/pwt/champion.shtml).
-Serebii's regional pages provide useful public names and team listings, but the
-Unova page also lists Bianca; that conflicts with the source-backed cup-5
-predicate and the examined retail/development table. The source predicate is
-authoritative for the build analyzed here.
+family slices.
 
 ## Champion placement
 
