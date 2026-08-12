@@ -18,6 +18,9 @@ them.
   type-affinity, RNG, and player-override branches. This source file is from
   local-only SWAN mirror revision `59995`.
 - Overlay 55 disassembly: result routine at `0x02238314`; type-chart helper at `0x02238554`; chart data at `0x022399EC`.
+- Local-only SWAN source paths `branches/upper_version/prog/src/field/wbt_party.c`, `branches/upper_version/prog/src/field/wbt_battle.c`, `branches/upper_version/prog/src/field/wbt_system_lobby.c`, and `branches/upper_version/prog/src/field/wbt_tool.c` are the source-level provenance for party construction, the fixed-ace path, trainer metadata, and the `3,4,6,4` rule-size table. This repository documents their behavior from the corresponding Overlay 55 disassembly at `0x02238FE8–0x022397F2` and does not copy the source files.
+- Complete party-data audit: the 128-row `wbt_trainer_list.txt` has 74 ace-marked and 54 unmarked trainers. All 74 ace rows resolve to nonzero species through the `wbt1` and `wbt2` ace/normal tables; the 64 ace-marked rows represented in `wbt3` also resolve. The remaining unmarked rows use the normal selector; trainer-list IDs 119–127 have no corresponding `wbt1/2/3` party-table rows in this source set.
+- `scripts/audit_wbt_party.py` checks the disassembly signatures used for the six-entry builder, battle-rule branches, random-without-replacement selector, party-size getter, and all four party-size table bytes.
 - Overlay 55 ROM control-flow cross-check: priority branch `0x0223834E`
   targets `0x022383E2`; equal-affinity branch `0x02238356` targets
   `0x02238358` and rejoins at `0x022383EA`; unequal-affinity branch targets

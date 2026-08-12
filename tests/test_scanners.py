@@ -15,6 +15,7 @@ sys.path.insert(0, str(SCRIPTS))
 import find_pwt_menu_builder as menu_builder  # noqa: E402
 import find_pwt_state_script as state_script  # noqa: E402
 import inspect_wbt_table as wbt_table  # noqa: E402
+import audit_wbt_party as wbt_party  # noqa: E402
 
 
 def make_narc(members: list[bytes]) -> bytes:
@@ -51,6 +52,16 @@ def make_menu_member() -> bytes:
 
 
 class ScannerTests(unittest.TestCase):
+    def test_wbt_party_audit_signatures(self) -> None:
+        # Keep this unit test independent of the large ROM/disassembly
+        # artifacts. The real audit is run separately against ov55.dis.
+        lines = {
+            address: pattern.replace("\\[", "[").replace("\\]", "]")
+            for _, address, pattern in wbt_party.EVIDENCE
+        }
+        synthetic = "\n".join(f"└─> {address}      {pattern}" for address, pattern in lines.items())
+        self.assertEqual(wbt_party.audit_text(synthetic), [])
+
     def test_wbt_constructor_pool_decoder(self) -> None:
         table = bytearray(wbt_table.TABLE_SIZE)
         # Synthetic rows exercising the Rental and Rental Master masks and
