@@ -69,10 +69,11 @@ class ScannerTests(unittest.TestCase):
         self.assertEqual(rental_pokemon.ev_summary(evs), "255 HP / 255 Defense")
         self.assertEqual(
             rental_pokemon.opponent_ivs("Rental"),
-            "Trainer PowerRnd: 0, 8, or 20 in every stat",
+            "Fixed by opponent Trainer: all 0, all 8, or all 20",
         )
         self.assertEqual(
-            rental_pokemon.opponent_ivs("Rental Master"), "20 in every stat"
+            rental_pokemon.opponent_ivs("Rental Master"),
+            "20 in every stat (all eligible Trainers)",
         )
 
     def test_wbt_party_audit_signatures(self) -> None:

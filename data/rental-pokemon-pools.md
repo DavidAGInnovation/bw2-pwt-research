@@ -62,6 +62,9 @@ IVs are not stored in these records. `FBI_TOOL_MakePokemonParam` receives one
 | Built-in Rental opponent | Its selected Trainer's `PowerRnd`: `0`, `8`, or `20` in every stat. |
 | Built-in Rental Master opponent | `20` in every stat; every eligible built-in Trainer has `PowerRnd = 20`. |
 
+The complete Trainer-to-IV mapping, including every English Trainer name, is
+in [Rental opponent IV assignments](generic-and-rental-records.md#rental-opponent-iv-assignments).
+
 The personal RNG value is generated at runtime. The builder permits either
 normal ability and then selects ability 1 or ability 2 from the generated
 personality value; Hidden Abilities are not selected by this path. Gender is
