@@ -75,23 +75,26 @@ record layouts are not byte-for-byte equivalent. See
 
 ## Per-family mapping
 
-| Built-in family | Cup ID | Constructor | Source family/count | Status |
-|---|---:|---|---|---|
-| Unova/Teselia Leaders | 5 | `0x02241B08` | indices `0–7, 9–13`: 13 records with offset-6 `0x05` | Mapped in this build |
-| Kanto Leaders | 6 | `0x02241B08` | offset-6 `0x06`: 8 records | Mapped in this build |
-| Johto Leaders | 7 | `0x02241B08` | offset-6 `0x07`: 8 records | Mapped in this build |
-| Hoenn Leaders | 8 | `0x02241B08` | offset-6 `0x08`: 9 records | Mapped in this build |
-| Sinnoh Leaders | 9 | `0x02241B08` | offset-6 `0x09`: 8 records | Mapped in this build |
-| World Leaders | 10 | `0x02241AF0` | mixed leader families; seven priority-3 selections | Mapped in this build |
-| Champions | 1 | `0x02241A88` | offset-6 `0x01`: 7 records | Mapped in this build |
-| Type Expert | 2 | `0x02241C0C` | dynamic leader/mob/weak-mob pools | Mapped in this build |
-| Rental | 12 | `0x02241B84` | 3 priority 1 + 2 priority 2 + 2 priority 3 | Mapped in this build |
-| Mix | 14 | `0x02241BB0` | 3 priority 1 + 2 priority 2 + 2 priority 3 | Mapped in this build |
-| Super Rental / Rental Master | 13 | `0x02241BDC` | seven priority-3 selections | Mapped in this build |
-| Super Mix / Mix Master | 15 | `0x02241BF4` | seven priority-3 selections | Mapped in this build |
-| Driftveil | 4 | `0x02241B20` | 4 priority 1 + 1 priority 2 + 2 priority 3 | Mapped in this build |
-| Download | 3 | `0x02241998` | generic/download-style shuffle | Mapped in this build |
-| Driftveil event | 11 | `0x02241B4C` | 4 priority 1 + 1 each priority 3/4/5 | `WBTCUP_HODOMOE_EVENT`; enabled while ordinary Driftveil wins are zero |
+| Built-in family | Cup ID | Constructor | Source family/count |
+|---|---:|---|---|
+| Unova/Teselia Leaders | 5 | `0x02241B08` | indices `0–7, 9–13`: 13 records with offset-6 `0x05` |
+| Kanto Leaders | 6 | `0x02241B08` | offset-6 `0x06`: 8 records |
+| Johto Leaders | 7 | `0x02241B08` | offset-6 `0x07`: 8 records |
+| Hoenn Leaders | 8 | `0x02241B08` | offset-6 `0x08`: 9 records |
+| Sinnoh Leaders | 9 | `0x02241B08` | offset-6 `0x09`: 8 records |
+| World Leaders | 10 | `0x02241AF0` | mixed leader families; seven priority-3 selections |
+| Champions | 1 | `0x02241A88` | offset-6 `0x01`: 7 records |
+| Type Expert | 2 | `0x02241C0C` | dynamic leader/mob/weak-mob pools |
+| Rental | 12 | `0x02241B84` | 3 priority 1 + 2 priority 2 + 2 priority 3 |
+| Mix | 14 | `0x02241BB0` | 3 priority 1 + 2 priority 2 + 2 priority 3 |
+| Super Rental / Rental Master | 13 | `0x02241BDC` | seven priority-3 selections |
+| Super Mix / Mix Master | 15 | `0x02241BF4` | seven priority-3 selections |
+| Driftveil | 4 | `0x02241B20` | 4 priority 1 + 1 priority 2 + 2 priority 3 |
+| Download | 3 | `0x02241998` | generic/download-style shuffle |
+| Driftveil event | 11 | `0x02241B4C` | 4 priority 1 + 1 each priority 3/4/5 |
+
+The Driftveil event is `WBTCUP_HODOMOE_EVENT`; it is enabled while the
+ordinary Driftveil win count is zero.
 
 The named mappings are based on the exact cup-ID dispatch and matching
 family slices. The Champions slice agrees with the
