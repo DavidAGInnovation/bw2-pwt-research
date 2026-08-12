@@ -108,6 +108,92 @@ contain a nonzero Pokémon record at the ace index supplied by the matching
 algorithm is verified across every ace-marked trainer that has a party-table
 record in the examined build.
 
+### Complete ace-marked trainer list
+
+The following is the complete set of 74 rows whose `エースポケモン` field is
+marked `○` in `wbt_trainer_list.txt`. These are the trainers that enter the
+fixed-first (ace) path above. IDs and display codes are the source keys; the
+names use the English/common names for recognizable characters. For the
+generic rows, the Japanese source name is included in parentheses so the
+label cannot be confused with a language-specific localization.
+
+| ID | Trainer | Display code |
+|---:|---|---|
+| 000 | Cheren | `SWLEADER1` |
+| 001 | Roxie | `SWLEADER2` |
+| 002 | Burgh | `SWLEADER3` |
+| 003 | Elesa | `SWLEADER4` |
+| 004 | Clay | `SWLEADER5` |
+| 005 | Skyla | `SWLEADER6` |
+| 006 | Drayden | `SWLEADER7` |
+| 007 | Marlon | `SWLEADER8` |
+| 008 | Bianca | `SWBELL` |
+| 009 | Chili | `LEADER1A` |
+| 010 | Cress | `LEADER1B` |
+| 011 | Cilan | `LEADER1C` |
+| 012 | Lenora | `LEADER2` |
+| 013 | Brycen | `LEADER7` |
+| 015 | Lance | `GSCHAMPION` |
+| 016 | Steven | `RSCHAMPION` |
+| 017 | Wallace | `ECHAMPION` |
+| 018 | Cynthia | `SHIRONA` |
+| 019 | Alder | `CHAMPION` |
+| 020 | Brock | `RGLEADER1` |
+| 021 | Misty | `RGLEADER2` |
+| 022 | Lt. Surge | `RGLEADER3` |
+| 023 | Erika | `RGLEADER4` |
+| 024 | Sabrina | `RGLEADER5` |
+| 025 | Blaine | `RGLEADER6` |
+| 026 | Giovanni | `RGLEADER7` |
+| 027 | Falkner | `GSLEADER1` |
+| 028 | Bugsy | `GSLEADER2` |
+| 029 | Whitney | `GSLEADER3` |
+| 030 | Morty | `GSLEADER4` |
+| 031 | Chuck | `GSLEADER5` |
+| 032 | Jasmine | `GSLEADER6` |
+| 033 | Pryce | `GSLEADER7` |
+| 034 | Clair | `GSLEADER8` |
+| 035 | Janine | `GSLEADER9` |
+| 036 | Roxanne | `RSLEADER1` |
+| 037 | Brawly | `RSLEADER2` |
+| 038 | Wattson | `RSLEADER3` |
+| 039 | Flannery | `RSLEADER4` |
+| 040 | Norman | `RSLEADER5` |
+| 041 | Winona | `RSLEADER6` |
+| 042 | Tate | `RSLEADER7` |
+| 043 | Liza | `RSLEADER8` |
+| 044 | Juan | `ELEADER1` |
+| 045 | Roark | `DPLEADER1` |
+| 046 | Gardenia | `DPLEADER2` |
+| 047 | Fantina | `DPLEADER3` |
+| 048 | Maylene | `DPLEADER4` |
+| 049 | Crasher Wake | `DPLEADER5` |
+| 050 | Byron | `DPLEADER6` |
+| 051 | Candice | `DPLEADER7` |
+| 052 | Volkner | `DPLEADER8` |
+| 056 | Cheren (event) | `SWLEADER1` |
+| 057 | Colress | `SWBOSS` |
+| 058 | Botsuri (ボツリ) | `ASSISTANTM` |
+| 059 | Ieji (イエジ) | `MOUNTMAN` |
+| 060 | Karuto (カルト) | `ESPW` |
+| 061 | Walter (ウォルター) | `VETERANM` |
+| 062 | Rensuke (レンスケ) | `ESPM` |
+| 063 | Ryuichi (リュウイチ) | `TRAINERM` |
+| 064 | Thatcher (サッチャー) | `VETERANW` |
+| 065 | Vito (ヴィトー) | `VETERANM` |
+| 066 | Ilsane (イルサーネ) | `VETERANW` |
+| 067 | Bonnie (ボニー) | `TRAINERW` |
+| 068 | Ex (エクス) | `TRAINERM` |
+| 069 | Makina (マキナ) | `TRAINERW` |
+| 070 | Castro (カストロ) | `VETERANM` |
+| 071 | Tsugumi (ツグミ) | `VETERANW` |
+| 072 | Arashiyama (アラシヤマ) | `FIGHTERM` |
+| 073 | Jane (ジェーン) | `FIGHTERW` |
+| 074 | Shuichi (シュウイチ) | `ASSISTANTM` |
+| 075 | Eclaire (エクレア) | `ASSISTANTW` |
+| 076 | Rurio (ルリオ) | `ESPM` |
+| 077 | Soprano (ソプラノ) | `ESPW` |
+
 The unmarked rows do not enter the ace branch at all: their complete party is
 selected from the normal candidate list by the no-replacement chooser. In the
 Champion data set, the visible unmarked examples are Green (ID 14), Red (ID
