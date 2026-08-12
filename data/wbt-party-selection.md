@@ -172,7 +172,7 @@ The source tournament table maps cup IDs to the archive used at runtime:
 | 015 | Lance | `GSCHAMPION` | Gold/Silver Champion | Dragonite | Champions |
 | 016 | Steven | `RSCHAMPION` | Ruby/Sapphire Champion | Metagross | Champions |
 | 017 | Wallace | `ECHAMPION` | Emerald Champion | Milotic | Champions |
-| 018 | Cynthia | `SHIRONA` | Diamond/Pearl Champion | Garchomp | Champions |
+| 018 | Cynthia | `SHIRONA` | Diamond/Pearl Champion (Japanese name: Shirona) | Garchomp | Champions |
 | 019 | Alder | `CHAMPION` | Black/White Champion | Volcarona | Champions |
 | 020 | Brock | `RGLEADER1` | Red/Green Gym Leader | Onix | Kanto Leaders, World Leaders, Super Rental / Rental Master, Type Expert |
 | 021 | Misty | `RGLEADER2` | Red/Green Gym Leader | Starmie | Kanto Leaders, World Leaders, Super Rental / Rental Master, Type Expert |

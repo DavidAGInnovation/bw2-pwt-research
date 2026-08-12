@@ -17,7 +17,7 @@ English translation of the source `ポジション` field.
 | Lance | `GSCHAMPION` | Gold/Silver Champion | 15 | 4 | 17 |
 | Steven | `RSCHAMPION` | Ruby/Sapphire Champion | 16 | 4 | 17 |
 | Wallace | `ECHAMPION` | Emerald Champion | 17 | 4 | 17 |
-| Cynthia | `SHIRONA` | Diamond/Pearl Champion | 18 | 4 | 17 |
+| Cynthia | `SHIRONA` | Diamond/Pearl Champion (Japanese name: Shirona) | 18 | 4 | 17 |
 | Alder | `CHAMPION` | Black/White Champion | 19 | 4 | 17 |
 | Red | `RED` | Red/Green protagonist | 53 | 4 | 17 |
 
