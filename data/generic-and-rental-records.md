@@ -317,7 +317,9 @@ assign a permanent personal win/loss record to a trainer.
 The dedicated Rental party builder does not roll each opponent Pokémon's IVs
 independently. It reads the selected opponent Trainer's fixed `PowerRnd` and
 copies that one value to all six IVs of every rental Pokémon created for that
-Trainer. Consequently, Trainer selection determines the opponent's IV tier:
+Trainer. Actual Rental opponents therefore have IV `8` or `20`. The
+priority-1 bracket fillers store `PowerRnd = 0`, but never reach the player
+and do not have an opponent party constructed in normal play.
 
 The `20` shown for the named Rental and Rental Master opponents is not a
 special value assigned only by those tournaments. Every one of the 46 standard
@@ -327,12 +329,12 @@ Bianca's separate named record also stores `20`. The complete Leader mapping
 and the normal-party scope are documented in
 [`champions-and-leaders.md`](champions-and-leaders.md#standard-gym-leader-records).
 
-| Tournament | IVs in every stat | Eligible Trainer records and English names |
-|---|---:|---|
-| Rental | `20` | `0–4, 8`: Cheren, Roxie, Burgh, Elesa, Clay, and Bianca |
-| Rental | `8` | `68–77`: X, Makina, Fidel, Theodora, Allan, Jocelyn, Dmitri, Levina, Rylan, and Destiny |
-| Rental | `0` | `78–127`: Ted, Seamus, Kendal, Uno, Nanaka, Enid, Masashi, Dorian, Yareli, Makayla, Tristan, Yosef, Karlie, Naomi, Hernando, Indy, Hannah, Clarissa, Lester, Minoru, Willa, Hailey, Kaden, Roddy, Chloe, Tessa, Berke, Sunan, Sudapon, Anupa, Jax, Franco, Hayden, Maxie, Bobhiko, Bobmasa, Nokko, Liz, Yen, Cents, Wanda, Euro, Celsius, Ren, Kelly, Alison, Butch, Carver, Gavin, and Larry |
-| Rental Master | `20` | `0–13, 20–52`: Cheren, Roxie, Burgh, Elesa, Clay, Skyla, Drayden, Marlon, Bianca, Chili, Cress, Cilan, Lenora, Brycen, Brock, Misty, Lt. Surge, Erika, Sabrina, Blaine, Giovanni, Falkner, Bugsy, Whitney, Morty, Chuck, Jasmine, Pryce, Clair, Janine, Roxanne, Brawly, Wattson, Flannery, Norman, Winona, Tate, Liza, Juan, Roark, Gardenia, Fantina, Maylene, Crasher Wake, Byron, Candice, and Volkner |
+| Tournament | Stored IV value | Trainer records and English names | Runtime role |
+|---|---:|---|---|
+| Rental | `20` | `0–4, 8`: Cheren, Roxie, Burgh, Elesa, Clay, and Bianca | Possible player opponents |
+| Rental | `8` | `68–77`: X, Makina, Fidel, Theodora, Allan, Jocelyn, Dmitri, Levina, Rylan, and Destiny | Possible player opponents |
+| Rental | `0` | `78–127`: Ted, Seamus, Kendal, Uno, Nanaka, Enid, Masashi, Dorian, Yareli, Makayla, Tristan, Yosef, Karlie, Naomi, Hernando, Indy, Hannah, Clarissa, Lester, Minoru, Willa, Hailey, Kaden, Roddy, Chloe, Tessa, Berke, Sunan, Sudapon, Anupa, Jax, Franco, Hayden, Maxie, Bobhiko, Bobmasa, Nokko, Liz, Yen, Cents, Wanda, Euro, Celsius, Ren, Kelly, Alison, Butch, Carver, Gavin, and Larry | NPC-only bracket fillers; no player battle |
+| Rental Master | `20` | `0–13, 20–52`: Cheren, Roxie, Burgh, Elesa, Clay, Skyla, Drayden, Marlon, Bianca, Chili, Cress, Cilan, Lenora, Brycen, Brock, Misty, Lt. Surge, Erika, Sabrina, Blaine, Giovanni, Falkner, Bugsy, Whitney, Morty, Chuck, Jasmine, Pryce, Clair, Janine, Roxanne, Brawly, Wattson, Flannery, Norman, Winona, Tate, Liza, Juan, Roark, Gardenia, Fantina, Maylene, Crasher Wake, Byron, Candice, and Volkner | Possible player opponents |
 
 The ten priority-2 Rental/Mix generic records have the following roles. These
 are source roles and displayed names; they do not restrict the randomly
@@ -352,15 +354,26 @@ assigned Rental Pokémon to a matching elemental type.
 | 77 | Destiny | Psychic (female) | 2 | 8 |
 
 The 50 records at IDs `78–127` are the priority-1 Rental/Mix generic group;
-each has `PowerRnd = 0`, so every Pokémon assigned to one of those opponents
-has IV `0` in all six stats. Their individual English names and roles are in
+each stores `PowerRnd = 0`. If their party builder were invoked, that value
+would produce IV `0` in all six stats, but the normal bracket path never does
+so. Their individual English names and roles are in
 the complete [Retail PWT names and result fields](#retail-pwt-names-and-result-fields)
 table above.
 
+The source also identifies IDs `78–127` as non-battling mob Trainers. They are
+real named bracket participants, not unused Trainer records, but occupy the
+NPC-only filler path and are eliminated through simulated bracket results
+before becoming the player's opponent. The final nine, IDs `119–127` (Euro,
+Celsius, Ren, Kelly, Alison, Butch, Carver, Gavin, and Larry), consequently
+have no normal `wbt1`, `wbt2`, or `wbt3` party-table rows. Their missing party
+data is intentional because the normal game flow never constructs a battle
+party for them.
+
 Thus, within these two ordinary Rental generic groups, priority 2 coincides
-with IV 8 and priority 1 coincides with IV 0. The fields remain independent:
-the game does not calculate IVs from priority; both values are stored in the
-same Trainer source record and used by different runtime routines.
+with stored IV 8 and priority 1 coincides with stored IV 0. The fields remain
+independent: the game does not calculate IVs from priority; both values are
+stored in the same Trainer source record and used by different runtime
+routines.
 
 These Trainer groups do not have group-specific EV values. EV allocation comes
 from the randomly selected Rental Pokémon record's EV mask, so the same source

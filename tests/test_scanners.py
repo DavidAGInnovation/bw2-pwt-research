@@ -69,11 +69,19 @@ class ScannerTests(unittest.TestCase):
         self.assertEqual(rental_pokemon.ev_summary(evs), "255 HP / 255 Defense")
         self.assertEqual(
             rental_pokemon.opponent_ivs("Rental"),
-            "Fixed by opponent Trainer: all 0, all 8, or all 20",
+            "Fixed by actual opponent Trainer: all 8 or all 20",
         )
         self.assertEqual(
             rental_pokemon.opponent_ivs("Rental Master"),
             "20 in every stat (all eligible Trainers)",
+        )
+        self.assertEqual(
+            rental_pokemon.opponent_ivs("Excluded from PWT"),
+            "Not applicable (excluded from PWT)",
+        )
+        self.assertEqual(
+            rental_pokemon.player_ivs("Excluded from PWT"),
+            "Not applicable (excluded from PWT)",
         )
 
     def test_wbt_party_audit_signatures(self) -> None:

@@ -35,6 +35,21 @@ The IV values are fixed rather than rolled per Pokémon. In source-record byte
 member, applying the value to all six IVs. EVs remain properties of the
 selected Pokémon records and are independent of this Trainer-level IV input.
 
+### Battle AI is shared by every built-in opponent
+
+The Trainer-record structure contains an `ai_type` byte, but it does not give
+Red, the other Champions, Leaders, or generic Trainers different battle AI.
+All 128 built-in rows store `ai_type = 0`, and the built-in-Trainer setup path
+does not read that byte when assigning the opponent's AI flags. Instead,
+`WBTTRAINER_SetRomTrainer` supplies `WBT_AI_BIT_ALL` directly.
+
+That mask enables the Basic, Strong, Expert, and Double-battle AI flag sets.
+`setBSPTrainerData` then copies the mask into the battle setup. Consequently,
+all built-in PWT opponents use the same complete AI configuration; Red's
+higher `PowerRnd` is a strength distinction, but smarter AI is not. A pure
+downloaded Trainer can carry its own downloaded `ai_bit`, which is a separate
+path from the built-in roster.
+
 ### Meaning of Champion category `17`
 
 Category `17` (`0x11`) is the neutral/sentinel value recognized by the

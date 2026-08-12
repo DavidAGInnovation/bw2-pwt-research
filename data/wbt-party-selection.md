@@ -161,7 +161,15 @@ turns a nonzero value into `has_ace`. The complete coverage audit is:
 | Trainer list | 128 | 74 | 54 | Metadata for the full list. |
 | `wbt1` / `wbt2` party tables (IDs 0–118) | 119 | 74 | 45 | Every ace row resolves to a valid, nonzero species record; unmarked rows use the normal selector. |
 | `wbt3` party tables (IDs 0–67) | 68 | 64 | 4 | Every present ace row resolves to a valid, nonzero species record; the four unmarked rows use the normal selector. |
-| Trainer-list IDs 119–127 | 9 | 0 | 9 | No corresponding `wbt1/2/3` party-table rows, so no party-order claim is made from these resources. |
+| Trainer-list IDs 119–127 | 9 | 0 | 9 | Deliberate non-battling bracket fillers; no corresponding `wbt1/2/3` party-table rows are needed. |
+
+The source classifies the larger ID `78–127` range as non-battling mob
+Trainers. These records can fill NPC-only bracket positions, but bracket
+placement and the priority-based simulated results eliminate them before they
+could become the player's opponent. IDs `119–127` are Euro, Celsius, Ren,
+Kelly, Alison, Butch, Carver, Gavin, and Larry. Their missing normal party rows
+are therefore intentional, rather than nine unfinished battle opponents. No
+ace or party-order claim should be inferred for them.
 
 The ace trainer table (`wbt1a_tr.tdm` / `wbt2a_tr.tdm`) supplies an index into
 the matching ace Pokémon archive (`wbt1a_pd.narc` / `wbt2a_pd.narc`);
