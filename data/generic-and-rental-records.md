@@ -329,12 +329,12 @@ Bianca's separate named record also stores `20`. The complete Leader mapping
 and the normal-party scope are documented in
 [`champions-and-leaders.md`](champions-and-leaders.md#standard-gym-leader-records).
 
-| Tournament | Stored IV value | Trainer records and English names | Runtime role |
-|---|---:|---|---|
-| Rental | `20` | `0–4, 8`: Cheren, Roxie, Burgh, Elesa, Clay, and Bianca | Possible player opponents |
-| Rental | `8` | `68–77`: X, Makina, Fidel, Theodora, Allan, Jocelyn, Dmitri, Levina, Rylan, and Destiny | Possible player opponents |
-| Rental | `0` | `78–127`: Ted, Seamus, Kendal, Uno, Nanaka, Enid, Masashi, Dorian, Yareli, Makayla, Tristan, Yosef, Karlie, Naomi, Hernando, Indy, Hannah, Clarissa, Lester, Minoru, Willa, Hailey, Kaden, Roddy, Chloe, Tessa, Berke, Sunan, Sudapon, Anupa, Jax, Franco, Hayden, Maxie, Bobhiko, Bobmasa, Nokko, Liz, Yen, Cents, Wanda, Euro, Celsius, Ren, Kelly, Alison, Butch, Carver, Gavin, and Larry | NPC-only bracket fillers; no player battle |
-| Rental Master | `20` | `0–13, 20–52`: Cheren, Roxie, Burgh, Elesa, Clay, Skyla, Drayden, Marlon, Bianca, Chili, Cress, Cilan, Lenora, Brycen, Brock, Misty, Lt. Surge, Erika, Sabrina, Blaine, Giovanni, Falkner, Bugsy, Whitney, Morty, Chuck, Jasmine, Pryce, Clair, Janine, Roxanne, Brawly, Wattson, Flannery, Norman, Winona, Tate, Liza, Juan, Roark, Gardenia, Fantina, Maylene, Crasher Wake, Byron, Candice, and Volkner | Possible player opponents |
+| Tournament | Stored IV value | Trainer records and English names |
+|---|---:|---|
+| Rental | `20` | `0–4, 8`: Cheren, Roxie, Burgh, Elesa, Clay, and Bianca |
+| Rental | `8` | `68–77`: X, Makina, Fidel, Theodora, Allan, Jocelyn, Dmitri, Levina, Rylan, and Destiny |
+| Rental | `0` | `78–127`: Ted, Seamus, Kendal, Uno, Nanaka, Enid, Masashi, Dorian, Yareli, Makayla, Tristan, Yosef, Karlie, Naomi, Hernando, Indy, Hannah, Clarissa, Lester, Minoru, Willa, Hailey, Kaden, Roddy, Chloe, Tessa, Berke, Sunan, Sudapon, Anupa, Jax, Franco, Hayden, Maxie, Bobhiko, Bobmasa, Nokko, Liz, Yen, Cents, Wanda, Euro, Celsius, Ren, Kelly, Alison, Butch, Carver, Gavin, and Larry |
+| Rental Master | `20` | `0–13, 20–52`: Cheren, Roxie, Burgh, Elesa, Clay, Skyla, Drayden, Marlon, Bianca, Chili, Cress, Cilan, Lenora, Brycen, Brock, Misty, Lt. Surge, Erika, Sabrina, Blaine, Giovanni, Falkner, Bugsy, Whitney, Morty, Chuck, Jasmine, Pryce, Clair, Janine, Roxanne, Brawly, Wattson, Flannery, Norman, Winona, Tate, Liza, Juan, Roark, Gardenia, Fantina, Maylene, Crasher Wake, Byron, Candice, and Volkner |
 
 The ten priority-2 Rental/Mix generic records have the following roles. These
 are source roles and displayed names; they do not restrict the randomly
