@@ -1,9 +1,9 @@
 # WBT records used by the result routine
 
 The table below lists the standard Champion records recovered from the examined
-WBT table. “Relevant packed fields” are the fields consumed by
-`wbt_calc_result`; other raw words identify the trainer/team but are not read by
-that routine. The USA/Europe retail WBT NARC is `/a/2/4/7`; it is byte-for-byte
+WBT table. It shows the source display metadata and the priority/category fields
+consumed by `wbt_calc_result`; raw team/record words are omitted because that
+routine does not read them. The USA/Europe retail WBT NARC is `/a/2/4/7`; it is byte-for-byte
 identical to the development `/a/2/6/1` table (SHA-256
 `0a32d2956f75a6e6365f292eb20e129c5247fe9ec093ca881dd469ea698d00ca`), so the
 indices and names below are verified for both builds.
@@ -11,17 +11,18 @@ indices and names below are verified for both builds.
 `Display code` is the exact `表示コード名` source key. `Code meaning` is an
 English translation of the source `ポジション` field.
 
-| Trainer | Display code | Code meaning | WBT index | Raw word 0 | Raw word 1 | Priority | Trainer type | Category |
-|---|---|---|---:|---:|---:|---:|---:|---:|
-| Blue | `RGCHAMPION` | Red/Green Rival / Champion | 14 | `0x0011` | `0x011D` | 4 | 0 | 17 |
-| Lance | `GSCHAMPION` | Gold/Silver Champion | 15 | `0x0011` | `0x011E` | 4 | 0 | 17 |
-| Steven | `RSCHAMPION` | Ruby/Sapphire Champion | 16 | `0x0011` | `0x011F` | 4 | 0 | 17 |
-| Wallace | `ECHAMPION` | Emerald Champion | 17 | `0x0011` | `0x0120` | 4 | 0 | 17 |
-| Cynthia | `SHIRONA` | Diamond/Pearl Champion | 18 | `0x0111` | `0x00D7` | 4 | 0 | 17 |
-| Alder | `CHAMPION` | Black/White Champion | 19 | `0x0011` | `0x0061` | 4 | 0 | 17 |
-| Red | `RED` | Red/Green protagonist | 53 | `0x0011` | `0x0177` | 4 | 0 | 17 |
+| Trainer | Display code | Code meaning | WBT index | Priority | Category |
+|---|---|---|---:|---:|---:|
+| Blue | `RGCHAMPION` | Red/Green Rival / Champion | 14 | 4 | 17 |
+| Lance | `GSCHAMPION` | Gold/Silver Champion | 15 | 4 | 17 |
+| Steven | `RSCHAMPION` | Ruby/Sapphire Champion | 16 | 4 | 17 |
+| Wallace | `ECHAMPION` | Emerald Champion | 17 | 4 | 17 |
+| Cynthia | `SHIRONA` | Diamond/Pearl Champion | 18 | 4 | 17 |
+| Alder | `CHAMPION` | Black/White Champion | 19 | 4 | 17 |
+| Red | `RED` | Red/Green protagonist | 53 | 4 | 17 |
 
-The different raw values encode team/record metadata. After the standard conversion, the result routine sees the same priority/category/trainer-type combination for all seven.
+The records carry different team/record metadata, but after standard conversion
+the result routine sees the same priority/category combination for all seven.
 
 ### Meaning of Champion category `17`
 
@@ -35,7 +36,7 @@ additional winner adjustment. This value is not a bracket `YY` setting.
 
 ## Standard Gym Leader records
 
-The standard Gym Leader records are priority 3 and use trainer type 0. The
+The standard Gym Leader records are priority 3. The
 `Category` column is the decoded type-chart category passed to the result
 routine; the label in parentheses is the corresponding Generation V type. It
 is a precomputed matchup field, not a simulation of the trainer's individual
@@ -43,54 +44,54 @@ Pokémon teams. The WBT index is the record index in the examined development
 build's `/a/2/6/1` table, not the order in which a tournament displays the
 trainers.
 
-| Region | Trainer | Display code | Code meaning | WBT index | Priority | Trainer type | Category (type) |
-|---|---|---|---:|---:|---:|---:|---:|
-| Unova | Cheren | `SWLEADER1` | BW2 Gym Leader | 0 | 3 | 0 | 0 (Normal) |
-| Unova | Roxie | `SWLEADER2` | BW2 Gym Leader | 1 | 3 | 0 | 3 (Poison) |
-| Unova | Burgh | `SWLEADER3` | BW2 Gym Leader | 2 | 3 | 0 | 6 (Bug) |
-| Unova | Elesa | `SWLEADER4` | BW2 Gym Leader | 3 | 3 | 0 | 12 (Electric) |
-| Unova | Clay | `SWLEADER5` | BW2 Gym Leader | 4 | 3 | 0 | 4 (Ground) |
-| Unova | Skyla | `SWLEADER6` | BW2 Gym Leader | 5 | 3 | 0 | 2 (Flying) |
-| Unova | Drayden | `SWLEADER7` | BW2 Gym Leader | 6 | 3 | 0 | 15 (Dragon) |
-| Unova | Marlon | `SWLEADER8` | BW2 Gym Leader | 7 | 3 | 0 | 10 (Water) |
-| Unova | Chili | `LEADER1A` | BW Gym Leader | 9 | 3 | 0 | 9 (Fire) |
-| Unova | Cress | `LEADER1B` | BW Gym Leader | 10 | 3 | 0 | 10 (Water) |
-| Unova | Cilan | `LEADER1C` | BW Gym Leader | 11 | 3 | 0 | 11 (Grass) |
-| Unova | Lenora | `LEADER2` | BW Gym Leader | 12 | 3 | 0 | 0 (Normal) |
-| Unova | Brycen | `LEADER7` | BW Gym Leader | 13 | 3 | 0 | 14 (Ice) |
-| Kanto | Brock | `RGLEADER1` | Red/Green Gym Leader | 20 | 3 | 0 | 5 (Rock) |
-| Kanto | Misty | `RGLEADER2` | Red/Green Gym Leader | 21 | 3 | 0 | 10 (Water) |
-| Kanto | Lt. Surge | `RGLEADER3` | Red/Green Gym Leader | 22 | 3 | 0 | 12 (Electric) |
-| Kanto | Erika | `RGLEADER4` | Red/Green Gym Leader | 23 | 3 | 0 | 11 (Grass) |
-| Kanto | Sabrina | `RGLEADER5` | Red/Green Gym Leader | 24 | 3 | 0 | 13 (Psychic) |
-| Kanto | Blaine | `RGLEADER6` | Red/Green Gym Leader | 25 | 3 | 0 | 9 (Fire) |
-| Kanto | Giovanni | `RGLEADER7` | Red/Green Gym Leader / enemy character | 26 | 3 | 0 | 4 (Ground) |
-| Kanto | Janine | `GSLEADER9` | Gold/Silver Gym Leader / Kanto Gym Leader | 35 | 3 | 0 | 3 (Poison) |
-| Johto | Falkner | `GSLEADER1` | Gold/Silver Gym Leader | 27 | 3 | 0 | 2 (Flying) |
-| Johto | Bugsy | `GSLEADER2` | Gold/Silver Gym Leader | 28 | 3 | 0 | 6 (Bug) |
-| Johto | Whitney | `GSLEADER3` | Gold/Silver Gym Leader | 29 | 3 | 0 | 0 (Normal) |
-| Johto | Morty | `GSLEADER4` | Gold/Silver Gym Leader | 30 | 3 | 0 | 7 (Ghost) |
-| Johto | Chuck | `GSLEADER5` | Gold/Silver Gym Leader | 31 | 3 | 0 | 1 (Fighting) |
-| Johto | Jasmine | `GSLEADER6` | Gold/Silver Gym Leader | 32 | 3 | 0 | 8 (Steel) |
-| Johto | Pryce | `GSLEADER7` | Gold/Silver Gym Leader | 33 | 3 | 0 | 14 (Ice) |
-| Johto | Clair | `GSLEADER8` | Gold/Silver Gym Leader | 34 | 3 | 0 | 15 (Dragon) |
-| Hoenn | Roxanne | `RSLEADER1` | Ruby/Sapphire Gym Leader | 36 | 3 | 0 | 5 (Rock) |
-| Hoenn | Brawly | `RSLEADER2` | Ruby/Sapphire Gym Leader | 37 | 3 | 0 | 1 (Fighting) |
-| Hoenn | Wattson | `RSLEADER3` | Ruby/Sapphire Gym Leader | 38 | 3 | 0 | 12 (Electric) |
-| Hoenn | Flannery | `RSLEADER4` | Ruby/Sapphire Gym Leader | 39 | 3 | 0 | 9 (Fire) |
-| Hoenn | Norman | `RSLEADER5` | Ruby/Sapphire Gym Leader | 40 | 3 | 0 | 0 (Normal) |
-| Hoenn | Winona | `RSLEADER6` | Ruby/Sapphire Gym Leader | 41 | 3 | 0 | 2 (Flying) |
-| Hoenn | Tate | `RSLEADER7` | Ruby/Sapphire Gym Leader | 42 | 3 | 0 | 13 (Psychic) |
-| Hoenn | Liza | `RSLEADER8` | Ruby/Sapphire Gym Leader | 43 | 3 | 0 | 13 (Psychic) |
-| Hoenn | Juan | `ELEADER1` | Emerald Gym Leader | 44 | 3 | 0 | 10 (Water) |
-| Sinnoh | Roark | `DPLEADER1` | Diamond/Pearl Gym Leader | 45 | 3 | 0 | 5 (Rock) |
-| Sinnoh | Gardenia | `DPLEADER2` | Diamond/Pearl Gym Leader | 46 | 3 | 0 | 11 (Grass) |
-| Sinnoh | Fantina | `DPLEADER3` | Diamond/Pearl Gym Leader | 47 | 3 | 0 | 7 (Ghost) |
-| Sinnoh | Maylene | `DPLEADER4` | Diamond/Pearl Gym Leader | 48 | 3 | 0 | 1 (Fighting) |
-| Sinnoh | Crasher Wake | `DPLEADER5` | Diamond/Pearl Gym Leader | 49 | 3 | 0 | 10 (Water) |
-| Sinnoh | Byron | `DPLEADER6` | Diamond/Pearl Gym Leader | 50 | 3 | 0 | 8 (Steel) |
-| Sinnoh | Candice | `DPLEADER7` | Diamond/Pearl Gym Leader | 51 | 3 | 0 | 14 (Ice) |
-| Sinnoh | Volkner | `DPLEADER8` | Diamond/Pearl Gym Leader | 52 | 3 | 0 | 12 (Electric) |
+| Region | Trainer | Display code | Code meaning | WBT index | Priority | Category (type) |
+|---|---|---|---|---:|---:|---:|
+| Unova | Cheren | `SWLEADER1` | BW2 Gym Leader | 0 | 3 | 0 (Normal) |
+| Unova | Roxie | `SWLEADER2` | BW2 Gym Leader | 1 | 3 | 3 (Poison) |
+| Unova | Burgh | `SWLEADER3` | BW2 Gym Leader | 2 | 3 | 6 (Bug) |
+| Unova | Elesa | `SWLEADER4` | BW2 Gym Leader | 3 | 3 | 12 (Electric) |
+| Unova | Clay | `SWLEADER5` | BW2 Gym Leader | 4 | 3 | 4 (Ground) |
+| Unova | Skyla | `SWLEADER6` | BW2 Gym Leader | 5 | 3 | 2 (Flying) |
+| Unova | Drayden | `SWLEADER7` | BW2 Gym Leader | 6 | 3 | 15 (Dragon) |
+| Unova | Marlon | `SWLEADER8` | BW2 Gym Leader | 7 | 3 | 10 (Water) |
+| Unova | Chili | `LEADER1A` | BW Gym Leader | 9 | 3 | 9 (Fire) |
+| Unova | Cress | `LEADER1B` | BW Gym Leader | 10 | 3 | 10 (Water) |
+| Unova | Cilan | `LEADER1C` | BW Gym Leader | 11 | 3 | 11 (Grass) |
+| Unova | Lenora | `LEADER2` | BW Gym Leader | 12 | 3 | 0 (Normal) |
+| Unova | Brycen | `LEADER7` | BW Gym Leader | 13 | 3 | 14 (Ice) |
+| Kanto | Brock | `RGLEADER1` | Red/Green Gym Leader | 20 | 3 | 5 (Rock) |
+| Kanto | Misty | `RGLEADER2` | Red/Green Gym Leader | 21 | 3 | 10 (Water) |
+| Kanto | Lt. Surge | `RGLEADER3` | Red/Green Gym Leader | 22 | 3 | 12 (Electric) |
+| Kanto | Erika | `RGLEADER4` | Red/Green Gym Leader | 23 | 3 | 11 (Grass) |
+| Kanto | Sabrina | `RGLEADER5` | Red/Green Gym Leader | 24 | 3 | 13 (Psychic) |
+| Kanto | Blaine | `RGLEADER6` | Red/Green Gym Leader | 25 | 3 | 9 (Fire) |
+| Kanto | Giovanni | `RGLEADER7` | Red/Green Gym Leader / enemy character | 26 | 3 | 4 (Ground) |
+| Kanto | Janine | `GSLEADER9` | Gold/Silver Gym Leader / Kanto Gym Leader | 35 | 3 | 3 (Poison) |
+| Johto | Falkner | `GSLEADER1` | Gold/Silver Gym Leader | 27 | 3 | 2 (Flying) |
+| Johto | Bugsy | `GSLEADER2` | Gold/Silver Gym Leader | 28 | 3 | 6 (Bug) |
+| Johto | Whitney | `GSLEADER3` | Gold/Silver Gym Leader | 29 | 3 | 0 (Normal) |
+| Johto | Morty | `GSLEADER4` | Gold/Silver Gym Leader | 30 | 3 | 7 (Ghost) |
+| Johto | Chuck | `GSLEADER5` | Gold/Silver Gym Leader | 31 | 3 | 1 (Fighting) |
+| Johto | Jasmine | `GSLEADER6` | Gold/Silver Gym Leader | 32 | 3 | 8 (Steel) |
+| Johto | Pryce | `GSLEADER7` | Gold/Silver Gym Leader | 33 | 3 | 14 (Ice) |
+| Johto | Clair | `GSLEADER8` | Gold/Silver Gym Leader | 34 | 3 | 15 (Dragon) |
+| Hoenn | Roxanne | `RSLEADER1` | Ruby/Sapphire Gym Leader | 36 | 3 | 5 (Rock) |
+| Hoenn | Brawly | `RSLEADER2` | Ruby/Sapphire Gym Leader | 37 | 3 | 1 (Fighting) |
+| Hoenn | Wattson | `RSLEADER3` | Ruby/Sapphire Gym Leader | 38 | 3 | 12 (Electric) |
+| Hoenn | Flannery | `RSLEADER4` | Ruby/Sapphire Gym Leader | 39 | 3 | 9 (Fire) |
+| Hoenn | Norman | `RSLEADER5` | Ruby/Sapphire Gym Leader | 40 | 3 | 0 (Normal) |
+| Hoenn | Winona | `RSLEADER6` | Ruby/Sapphire Gym Leader | 41 | 3 | 2 (Flying) |
+| Hoenn | Tate | `RSLEADER7` | Ruby/Sapphire Gym Leader | 42 | 3 | 13 (Psychic) |
+| Hoenn | Liza | `RSLEADER8` | Ruby/Sapphire Gym Leader | 43 | 3 | 13 (Psychic) |
+| Hoenn | Juan | `ELEADER1` | Emerald Gym Leader | 44 | 3 | 10 (Water) |
+| Sinnoh | Roark | `DPLEADER1` | Diamond/Pearl Gym Leader | 45 | 3 | 5 (Rock) |
+| Sinnoh | Gardenia | `DPLEADER2` | Diamond/Pearl Gym Leader | 46 | 3 | 11 (Grass) |
+| Sinnoh | Fantina | `DPLEADER3` | Diamond/Pearl Gym Leader | 47 | 3 | 7 (Ghost) |
+| Sinnoh | Maylene | `DPLEADER4` | Diamond/Pearl Gym Leader | 48 | 3 | 1 (Fighting) |
+| Sinnoh | Crasher Wake | `DPLEADER5` | Diamond/Pearl Gym Leader | 49 | 3 | 10 (Water) |
+| Sinnoh | Byron | `DPLEADER6` | Diamond/Pearl Gym Leader | 50 | 3 | 8 (Steel) |
+| Sinnoh | Candice | `DPLEADER7` | Diamond/Pearl Gym Leader | 51 | 3 | 14 (Ice) |
+| Sinnoh | Volkner | `DPLEADER8` | Diamond/Pearl Gym Leader | 52 | 3 | 12 (Electric) |
 
 The standard Leader rows above correspond to the in-game regional Leader
 tournaments:
