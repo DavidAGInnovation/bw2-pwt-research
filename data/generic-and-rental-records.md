@@ -326,6 +326,40 @@ Trainer. Consequently, Trainer selection determines the opponent's IV tier:
 | Rental | `0` | `78–127`: Ted, Seamus, Kendal, Uno, Nanaka, Enid, Masashi, Dorian, Yareli, Makayla, Tristan, Yosef, Karlie, Naomi, Hernando, Indy, Hannah, Clarissa, Lester, Minoru, Willa, Hailey, Kaden, Roddy, Chloe, Tessa, Berke, Sunan, Sudapon, Anupa, Jax, Franco, Hayden, Maxie, Bobhiko, Bobmasa, Nokko, Liz, Yen, Cents, Wanda, Euro, Celsius, Ren, Kelly, Alison, Butch, Carver, Gavin, and Larry |
 | Rental Master | `20` | `0–13, 20–52`: Cheren, Roxie, Burgh, Elesa, Clay, Skyla, Drayden, Marlon, Bianca, Chili, Cress, Cilan, Lenora, Brycen, Brock, Misty, Lt. Surge, Erika, Sabrina, Blaine, Giovanni, Falkner, Bugsy, Whitney, Morty, Chuck, Jasmine, Pryce, Clair, Janine, Roxanne, Brawly, Wattson, Flannery, Norman, Winona, Tate, Liza, Juan, Roark, Gardenia, Fantina, Maylene, Crasher Wake, Byron, Candice, and Volkner |
 
+The ten priority-2 Rental/Mix generic records have the following roles. These
+are source roles and displayed names; they do not restrict the randomly
+assigned Rental Pokémon to a matching elemental type.
+
+| ID | Trainer | Source role | Rental priority | IVs in every stat |
+|---:|---|---|---:|---:|
+| 68 | X | Elite Trainer (male) | 2 | 8 |
+| 69 | Makina | Elite Trainer (female) | 2 | 8 |
+| 70 | Fidel | Veteran Trainer (male) | 2 | 8 |
+| 71 | Theodora | Veteran Trainer (female) | 2 | 8 |
+| 72 | Allan | Black Belt | 2 | 8 |
+| 73 | Jocelyn | Battle Girl | 2 | 8 |
+| 74 | Dmitri | Scientist (male) | 2 | 8 |
+| 75 | Levina | Scientist (female) | 2 | 8 |
+| 76 | Rylan | Psychic (male) | 2 | 8 |
+| 77 | Destiny | Psychic (female) | 2 | 8 |
+
+The 50 records at IDs `78–127` are the priority-1 Rental/Mix generic group;
+each has `PowerRnd = 0`, so every Pokémon assigned to one of those opponents
+has IV `0` in all six stats. Their individual English names and roles are in
+the complete [Retail PWT names and result fields](#retail-pwt-names-and-result-fields)
+table above.
+
+Thus, within these two ordinary Rental generic groups, priority 2 coincides
+with IV 8 and priority 1 coincides with IV 0. The fields remain independent:
+the game does not calculate IVs from priority; both values are stored in the
+same Trainer source record and used by different runtime routines.
+
+These Trainer groups do not have group-specific EV values. EV allocation comes
+from the randomly selected Rental Pokémon record's EV mask, so the same source
+Pokémon build receives the same EV distribution whether its opponent is a
+priority-1 generic Trainer, a priority-2 generic Trainer, or a named Leader.
+Only the Trainer-supplied IV value changes between those cases.
+
 The player's initial six rental Pokémon are separate: the player setup path
 always passes `20`, regardless of which source records are selected. The
 record-level Pokémon table therefore describes opponent IVs as Trainer-fixed

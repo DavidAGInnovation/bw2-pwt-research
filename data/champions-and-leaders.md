@@ -1,9 +1,10 @@
 # WBT records used by the result routine
 
 The table below lists the standard Champion records recovered from the examined
-WBT table. It shows the source display metadata and the priority/category fields
-consumed by `wbt_calc_result`; raw team/record words are omitted because that
-routine does not read them. The USA/Europe retail WBT NARC is `/a/2/4/7`; it is byte-for-byte
+WBT table. It shows the source display metadata, the priority/category fields
+consumed by `wbt_calc_result`, and the fixed IV input used when constructing
+each Champion's Pokémon; raw team/record words are omitted. The USA/Europe
+retail WBT NARC is `/a/2/4/7`; it is byte-for-byte
 identical to the development `/a/2/6/1` table (SHA-256
 `0a32d2956f75a6e6365f292eb20e129c5247fe9ec093ca881dd469ea698d00ca`), so the
 indices and names below are verified for both builds.
@@ -13,18 +14,26 @@ not a strength or party-selection rule. `Code meaning` is an English
 translation or reader-facing interpretation of the separate source
 `ポジション` field.
 
-| Trainer | Display code | Code meaning | WBT index | Priority | Category |
-|---|---|---|---:|---:|---:|
-| Blue | `RGCHAMPION` | Red/Green Champion | 14 | 4 | 17 |
-| Lance | `GSCHAMPION` | Gold/Silver Champion | 15 | 4 | 17 |
-| Steven | `RSCHAMPION` | Ruby/Sapphire Champion | 16 | 4 | 17 |
-| Wallace | `ECHAMPION` | Emerald Champion | 17 | 4 | 17 |
-| Cynthia | `SHIRONA` | Diamond/Pearl Champion (Japanese name: Shirona) | 18 | 4 | 17 |
-| Alder | `CHAMPION` | Black/White Champion | 19 | 4 | 17 |
-| Red | `RED` | Red/Green protagonist | 53 | 4 | 17 |
+| Trainer | Display code | Code meaning | WBT index | Priority | Category | IVs in every stat |
+|---|---|---|---:|---:|---:|---:|
+| Blue | `RGCHAMPION` | Red/Green Champion | 14 | 4 | 17 | 25 |
+| Lance | `GSCHAMPION` | Gold/Silver Champion | 15 | 4 | 17 | 25 |
+| Steven | `RSCHAMPION` | Ruby/Sapphire Champion | 16 | 4 | 17 | 25 |
+| Wallace | `ECHAMPION` | Emerald Champion | 17 | 4 | 17 | 25 |
+| Cynthia | `SHIRONA` | Diamond/Pearl Champion (Japanese name: Shirona) | 18 | 4 | 17 | 25 |
+| Alder | `CHAMPION` | Black/White Champion | 19 | 4 | 17 | 25 |
+| Red | `RED` | Red/Green protagonist | 53 | 4 | 17 | 30 |
 
 The records carry different team/record metadata, but after standard conversion
 the result routine sees the same priority/category combination for all seven.
+
+The IV values are fixed rather than rolled per Pokémon. In source-record byte
+`8`, the low three bits encode priority and the high five bits encode
+`PowerRnd`: the six regional Champion rows contain `25`, while Red contains
+`30`. The normal WBT party builder reads that Trainer value and passes it to
+`FBI_TOOL_MakePokemonParam` for both the ace and every normally selected party
+member, applying the value to all six IVs. EVs remain properties of the
+selected Pokémon records and are independent of this Trainer-level IV input.
 
 ### Meaning of Champion category `17`
 
