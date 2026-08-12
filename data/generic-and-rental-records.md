@@ -117,9 +117,10 @@ source row and prepares the common packer at `0x0224208C` as follows:
 The converter passes the source row's byte 1 as the sex selector, the row's
 bytes 2–3 as `mmdl_id`, and byte 4 as `btl_tr_type`; it also passes the source
 row index as the runtime `tr_id`. These are identity/setup fields, not inputs
-to the NPC winner calculation. The combined table below is therefore a complete
-mapping of the generic rows' relevant result fields, not a claim that each row
-is selected in every cup.
+to the NPC winner calculation. The summary table below focuses on the
+reader-facing identity and result fields; the low-level identity values remain
+reproducible with the decoder and are described above. It is not a claim that
+each row is selected in every cup.
 
 This explains why records `58–67` have ordinary type categories when they are
 selected by the Type Expert constructor, while Rental/Mix generic records are
@@ -127,8 +128,7 @@ neutral in the NPC result routine even though their byte-7 constructor values
 are `0x12` or the `0x11` Type Expert wildcard. It also explains why a generic
 record does not acquire a category from the six Pokémon later associated with
 it: the packed category is copied from the source row before the winner
-routine runs. The full per-record identity and result-field table appears
-below.
+routine runs. The full per-record result-field table appears below.
 
 The complete raw rows and these derived fields are reproducible with
 `--dump-records`:
@@ -143,7 +143,7 @@ and the mapping above cover every source-table row's priority, category, and
 built-in NPC trainer-type fields: 46 standard Leaders, Bianca, 7 standard
 Champions, and 74 non-regional/generic rows (`0–127` in total).
 
-## Retail PWT names and identity fields
+## Retail PWT names and result fields
 
 The generic rows are not nameless at runtime. In the USA/Europe retail build,
 the ordinary text NARC `/a/0/0/2` has a 128-entry PWT-name table (entry 409) and
@@ -155,7 +155,7 @@ Blue through Alder, and 53 is Red.
 
 The retail PWT class table contains the same generic `Trainer` label for all
 128 entries. It therefore does not identify rows as Youngster, Ace Trainer,
-and so on. The numeric `btl_tr_type` below is a separate battle-engine field;
+and so on. The numeric `btl_tr_type` in the raw data is a separate battle-engine field;
 it is not the packed NPC-result `npc_trainer_type` flag (which is 0 for the
 built-in path). Cross-referencing the normal BW2 trainer-class table shows
 that the generic rows use the generic `Trainer` class-domain values
@@ -170,106 +170,104 @@ resource table, which is not part of the 16-byte WBT table. `sex` is the row's
 male/female selector (`0` male, `1` female).
 
 The following table maps every non-regional/generic row. Names and class text
-are the USA/Europe retail labels; the WBT bytes and identity fields are the
-byte-identical table shared with the examined development build.
+are the USA/Europe retail labels; the underlying WBT bytes and identity fields
+are the byte-identical table shared with the examined development build. The
+three low-level columns (`mmdl_id`, `btl_tr_type`, and the packed NPC
+trainer-type flag) are intentionally omitted here because they do not affect
+candidate selection or the displayed NPC result.
 
 `Display code` is the exact `表示コード名` source key. `Code meaning` is an
-English translation of the source `ポジション` field.
+English reader-facing description of that code, normally based on the source
+`ポジション` field. Hilda's `HEROINE` code is therefore described as “Female
+protagonist / heroine”; the underlying source row is separately marked as
+unused and is not selected by the built-in cup predicates.
 
 The `Cheren` row at index `56` is a separate special/event record from the
 standard Unova Leader Cheren at index `0`. Their priorities and categories are
 therefore different; the side-by-side explanation is in
 [`champions-and-leaders.md`](champions-and-leaders.md#two-distinct-wbt-records-named-cheren).
 
-| Index | Retail PWT name | Display code | Code meaning | Sex | `mmdl_id` | `btl_tr_type` | Packed priority | Result category | Category meaning | NPC trainer type |
-|---:|---|---|---|---:|---|---:|---:|---:|---|---:|
-| 54 | Hilda | `HEROINE` | Unused data | 1 | `0x0004` | 183 | 4 | 17 (`0x11`) | neutral sentinel | 0 |
-| 55 | Rival | `SWRIVAL` | Event Rival | 0 | `0x0123` | 145 | 3 | 17 (`0x11`) | neutral sentinel | 0 |
-| 56 | Cheren | `SWLEADER1` | Event Gym Leader 1 | 0 | `0x00DF` | 115 | 4 | 17 (`0x11`) | neutral sentinel | 0 |
-| 57 | Colress | `SWBOSS` | Event Boss | 0 | `0x00FA` | 186 | 5 | 17 (`0x11`) | neutral sentinel | 0 |
-| 58 | Castor | `ASSISTANTM` | Scientist (male) | 0 | `0x0049` | 104 | 2 | 3 | Poison | 0 |
-| 59 | Homer | `MOUNTMAN` | Hiker | 0 | `0x0040` | 105 | 2 | 4 | Ground | 0 |
-| 60 | Delphine | `ESPW` | Psychic (female) | 1 | `0x00B8` | 107 | 2 | 13 | Psychic | 0 |
-| 61 | Walter | `VETERANM` | Veteran Trainer (male) | 0 | `0x0020` | 108 | 2 | 6 | Bug | 0 |
-| 62 | Ferly | `ESPM` | Psychic (male) | 0 | `0x00B7` | 106 | 2 | 7 | Ghost | 0 |
-| 63 | Drakon | `TRAINERM` | Elite Trainer (male) | 0 | `0x001E` | 110 | 2 | 15 | Dragon | 0 |
-| 64 | Margaret | `VETERANW` | Veteran Trainer (female) | 1 | `0x0021` | 109 | 2 | 8 | Steel | 0 |
-| 65 | Vito | `VETERANM` | Veteran Trainer (male) | 0 | `0x0020` | 108 | 2 | 16 | Dark | 0 |
-| 66 | Impera | `VETERANW` | Veteran Trainer (female) | 1 | `0x0021` | 109 | 2 | 16 | Dark | 0 |
-| 67 | Bonnie | `TRAINERW` | Elite Trainer (female) | 1 | `0x001F` | 111 | 2 | 16 | Dark | 0 |
-| 68 | X | `TRAINERM` | Elite Trainer (male) | 0 | `0x001E` | 110 | 2 | 17 (`0x11`) | neutral sentinel | 0 |
-| 69 | Makina | `TRAINERW` | Elite Trainer (female) | 1 | `0x001F` | 111 | 2 | 17 (`0x11`) | neutral sentinel | 0 |
-| 70 | Fidel | `VETERANM` | Veteran Trainer (male) | 0 | `0x0020` | 108 | 2 | 17 (`0x11`) | neutral sentinel | 0 |
-| 71 | Theodora | `VETERANW` | Veteran Trainer (female) | 1 | `0x0021` | 109 | 2 | 17 (`0x11`) | neutral sentinel | 0 |
-| 72 | Allan | `FIGHTERM` | Black Belt | 0 | `0x002E` | 228 | 2 | 17 (`0x11`) | neutral sentinel | 0 |
-| 73 | Jocelyn | `FIGHTERW` | Battle Girl | 1 | `0x002F` | 229 | 2 | 17 (`0x11`) | neutral sentinel | 0 |
-| 74 | Dmitri | `ASSISTANTM` | Scientist (male) | 0 | `0x0049` | 104 | 2 | 17 (`0x11`) | neutral sentinel | 0 |
-| 75 | Levina | `ASSISTANTW` | Scientist (female) | 1 | `0x004A` | 230 | 2 | 17 (`0x11`) | neutral sentinel | 0 |
-| 76 | Rylan | `ESPM` | Psychic (male) | 0 | `0x00B7` | 106 | 2 | 17 (`0x11`) | neutral sentinel | 0 |
-| 77 | Destiny | `ESPW` | Psychic (female) | 1 | `0x00B8` | 107 | 2 | 17 (`0x11`) | neutral sentinel | 0 |
-| 78 | Ted | `BOY2` | Youngster | 0 | `0x000B` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
-| 79 | Seamus | `BOY2` | Youngster | 0 | `0x000B` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
-| 80 | Kendal | `GIRL2` | Lass | 1 | `0x000F` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
-| 81 | Uno | `GIRL2` | Lass | 1 | `0x000F` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
-| 82 | Nanaka | `WOMAN3` | Nursery Aide | 1 | `0x0017` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
-| 83 | Enid | `WOMAN3` | Nursery Aide | 1 | `0x0017` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
-| 84 | Masashi | `MIDDLEMAN1` | Pokémon Fan (male) | 0 | `0x0018` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
-| 85 | Dorian | `MIDDLEMAN1` | Pokémon Fan (male) | 0 | `0x0018` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
-| 86 | Yareli | `MIDDLEWOMAN1` | Pokémon Fan (female) | 1 | `0x001A` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
-| 87 | Makayla | `MIDDLEWOMAN2` | Pokémon Fan (female) | 1 | `0x001B` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
-| 88 | Tristan | `BREEDERM` | Pokémon Breeder (male) | 0 | `0x0022` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
-| 89 | Yosef | `BREEDERM` | Pokémon Breeder (male) | 0 | `0x0022` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
-| 90 | Karlie | `BREEDERW` | Pokémon Breeder (female) | 1 | `0x0023` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
-| 91 | Naomi | `BREEDERW` | Pokémon Breeder (female) | 1 | `0x0023` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
-| 92 | Hernando | `RANGERM` | Pokémon Ranger (male) | 0 | `0x0024` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
-| 93 | Indy | `RANGERM` | Pokémon Ranger (male) | 0 | `0x0024` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
-| 94 | Hannah | `RANGERW` | Pokémon Ranger (female) | 1 | `0x0025` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
-| 95 | Clarissa | `RANGERW` | Pokémon Ranger (female) | 1 | `0x0025` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
-| 96 | Lester | `WAITER` | Waiter | 0 | `0x002A` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
-| 97 | Minoru | `WAITER` | Waiter | 0 | `0x002A` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
-| 98 | Willa | `WAITRESS` | Waitress | 1 | `0x002B` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
-| 99 | Hailey | `WAITRESS` | Waitress | 1 | `0x002B` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
-| 100 | Kaden | `FIGHTERM` | Black Belt | 0 | `0x002E` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
-| 101 | Roddy | `FIGHTERM` | Black Belt | 0 | `0x002E` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
-| 102 | Chloe | `FIGHTERW` | Battle Girl | 1 | `0x002F` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
-| 103 | Tessa | `FIGHTERW` | Battle Girl | 1 | `0x002F` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
-| 104 | Berke | `BACKPACKERM` | Backpacker (male) | 0 | `0x0030` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
-| 105 | Sunan | `BACKPACKERM` | Backpacker (male) | 0 | `0x0030` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
-| 106 | Sudapon | `BACKPACKERW` | Backpacker (female) | 1 | `0x0031` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
-| 107 | Anupa | `BACKPACKERW` | Backpacker (female) | 1 | `0x0031` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
-| 108 | Jax | `BUSINESSMAN` | Businessman | 0 | `0x0034` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
-| 109 | Franco | `BUSINESSMAN` | Businessman | 0 | `0x0034` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
-| 110 | Hayden | `OL` | Office Lady | 1 | `0x0035` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
-| 111 | Maxie | `OL` | Office Lady | 1 | `0x0035` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
-| 112 | Bobhiko | `POLICEMAN` | Police Officer | 0 | `0x0048` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
-| 113 | Bobmasa | `POLICEMAN` | Police Officer | 0 | `0x0048` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
-| 114 | Nokko | `MUSICIANW` | Guitarist (female) | 1 | `0x0128` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
-| 115 | Liz | `MUSICIANW` | Guitarist (female) | 1 | `0x0128` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
-| 116 | Yen | `GENTLEMAN` | Gentleman | 0 | `0x002C` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
-| 117 | Cents | `GENTLEMAN` | Gentleman | 0 | `0x002C` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
-| 118 | Wanda | `LADY` | Lady | 1 | `0x002D` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
-| 119 | Euro | `LADY` | Lady | 1 | `0x002D` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
-| 120 | Celsius | `DOCTOR` | Doctor | 0 | `0x0032` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
-| 121 | Ren | `DOCTOR` | Doctor | 0 | `0x0032` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
-| 122 | Kelly | `NURSE` | Nurse | 1 | `0x0033` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
-| 123 | Alison | `NURSE` | Nurse | 1 | `0x0033` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
-| 124 | Butch | `BADMAN` | Skinhead | 0 | `0x003D` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
-| 125 | Carver | `BADMAN` | Skinhead | 0 | `0x003D` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
-| 126 | Gavin | `BADRIDER` | Biker | 0 | `0x003E` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
-| 127 | Larry | `BADRIDER` | Biker | 0 | `0x003E` | 0 | 1 | 17 (`0x11`) | neutral sentinel | 0 |
+| Index | Retail PWT name | Display code | Code meaning | Sex | Packed priority | Result category | Category meaning |
+|---:|---|---|---|---:|---:|---:|---|
+| 54 | Hilda | `HEROINE` | Female protagonist / heroine | 1 | 4 | 17 (`0x11`) | neutral sentinel |
+| 55 | Rival | `SWRIVAL` | Event Rival | 0 | 3 | 17 (`0x11`) | neutral sentinel |
+| 56 | Cheren | `SWLEADER1` | Event Gym Leader 1 | 0 | 4 | 17 (`0x11`) | neutral sentinel |
+| 57 | Colress | `SWBOSS` | Event Boss | 0 | 5 | 17 (`0x11`) | neutral sentinel |
+| 58 | Castor | `ASSISTANTM` | Scientist (male) | 0 | 2 | 3 | Poison |
+| 59 | Homer | `MOUNTMAN` | Hiker | 0 | 2 | 4 | Ground |
+| 60 | Delphine | `ESPW` | Psychic (female) | 1 | 2 | 13 | Psychic |
+| 61 | Walter | `VETERANM` | Veteran Trainer (male) | 0 | 2 | 6 | Bug |
+| 62 | Ferly | `ESPM` | Psychic (male) | 0 | 2 | 7 | Ghost |
+| 63 | Drakon | `TRAINERM` | Elite Trainer (male) | 0 | 2 | 15 | Dragon |
+| 64 | Margaret | `VETERANW` | Veteran Trainer (female) | 1 | 2 | 8 | Steel |
+| 65 | Vito | `VETERANM` | Veteran Trainer (male) | 0 | 2 | 16 | Dark |
+| 66 | Impera | `VETERANW` | Veteran Trainer (female) | 1 | 2 | 16 | Dark |
+| 67 | Bonnie | `TRAINERW` | Elite Trainer (female) | 1 | 2 | 16 | Dark |
+| 68 | X | `TRAINERM` | Elite Trainer (male) | 0 | 2 | 17 (`0x11`) | neutral sentinel |
+| 69 | Makina | `TRAINERW` | Elite Trainer (female) | 1 | 2 | 17 (`0x11`) | neutral sentinel |
+| 70 | Fidel | `VETERANM` | Veteran Trainer (male) | 0 | 2 | 17 (`0x11`) | neutral sentinel |
+| 71 | Theodora | `VETERANW` | Veteran Trainer (female) | 1 | 2 | 17 (`0x11`) | neutral sentinel |
+| 72 | Allan | `FIGHTERM` | Black Belt | 0 | 2 | 17 (`0x11`) | neutral sentinel |
+| 73 | Jocelyn | `FIGHTERW` | Battle Girl | 1 | 2 | 17 (`0x11`) | neutral sentinel |
+| 74 | Dmitri | `ASSISTANTM` | Scientist (male) | 0 | 2 | 17 (`0x11`) | neutral sentinel |
+| 75 | Levina | `ASSISTANTW` | Scientist (female) | 1 | 2 | 17 (`0x11`) | neutral sentinel |
+| 76 | Rylan | `ESPM` | Psychic (male) | 0 | 2 | 17 (`0x11`) | neutral sentinel |
+| 77 | Destiny | `ESPW` | Psychic (female) | 1 | 2 | 17 (`0x11`) | neutral sentinel |
+| 78 | Ted | `BOY2` | Youngster | 0 | 1 | 17 (`0x11`) | neutral sentinel |
+| 79 | Seamus | `BOY2` | Youngster | 0 | 1 | 17 (`0x11`) | neutral sentinel |
+| 80 | Kendal | `GIRL2` | Lass | 1 | 1 | 17 (`0x11`) | neutral sentinel |
+| 81 | Uno | `GIRL2` | Lass | 1 | 1 | 17 (`0x11`) | neutral sentinel |
+| 82 | Nanaka | `WOMAN3` | Nursery Aide | 1 | 1 | 17 (`0x11`) | neutral sentinel |
+| 83 | Enid | `WOMAN3` | Nursery Aide | 1 | 1 | 17 (`0x11`) | neutral sentinel |
+| 84 | Masashi | `MIDDLEMAN1` | Pokémon Fan (male) | 0 | 1 | 17 (`0x11`) | neutral sentinel |
+| 85 | Dorian | `MIDDLEMAN1` | Pokémon Fan (male) | 0 | 1 | 17 (`0x11`) | neutral sentinel |
+| 86 | Yareli | `MIDDLEWOMAN1` | Pokémon Fan (female) | 1 | 1 | 17 (`0x11`) | neutral sentinel |
+| 87 | Makayla | `MIDDLEWOMAN2` | Pokémon Fan (female) | 1 | 1 | 17 (`0x11`) | neutral sentinel |
+| 88 | Tristan | `BREEDERM` | Pokémon Breeder (male) | 0 | 1 | 17 (`0x11`) | neutral sentinel |
+| 89 | Yosef | `BREEDERM` | Pokémon Breeder (male) | 0 | 1 | 17 (`0x11`) | neutral sentinel |
+| 90 | Karlie | `BREEDERW` | Pokémon Breeder (female) | 1 | 1 | 17 (`0x11`) | neutral sentinel |
+| 91 | Naomi | `BREEDERW` | Pokémon Breeder (female) | 1 | 1 | 17 (`0x11`) | neutral sentinel |
+| 92 | Hernando | `RANGERM` | Pokémon Ranger (male) | 0 | 1 | 17 (`0x11`) | neutral sentinel |
+| 93 | Indy | `RANGERM` | Pokémon Ranger (male) | 0 | 1 | 17 (`0x11`) | neutral sentinel |
+| 94 | Hannah | `RANGERW` | Pokémon Ranger (female) | 1 | 1 | 17 (`0x11`) | neutral sentinel |
+| 95 | Clarissa | `RANGERW` | Pokémon Ranger (female) | 1 | 1 | 17 (`0x11`) | neutral sentinel |
+| 96 | Lester | `WAITER` | Waiter | 0 | 1 | 17 (`0x11`) | neutral sentinel |
+| 97 | Minoru | `WAITER` | Waiter | 0 | 1 | 17 (`0x11`) | neutral sentinel |
+| 98 | Willa | `WAITRESS` | Waitress | 1 | 1 | 17 (`0x11`) | neutral sentinel |
+| 99 | Hailey | `WAITRESS` | Waitress | 1 | 1 | 17 (`0x11`) | neutral sentinel |
+| 100 | Kaden | `FIGHTERM` | Black Belt | 0 | 1 | 17 (`0x11`) | neutral sentinel |
+| 101 | Roddy | `FIGHTERM` | Black Belt | 0 | 1 | 17 (`0x11`) | neutral sentinel |
+| 102 | Chloe | `FIGHTERW` | Battle Girl | 1 | 1 | 17 (`0x11`) | neutral sentinel |
+| 103 | Tessa | `FIGHTERW` | Battle Girl | 1 | 1 | 17 (`0x11`) | neutral sentinel |
+| 104 | Berke | `BACKPACKERM` | Backpacker (male) | 0 | 1 | 17 (`0x11`) | neutral sentinel |
+| 105 | Sunan | `BACKPACKERM` | Backpacker (male) | 0 | 1 | 17 (`0x11`) | neutral sentinel |
+| 106 | Sudapon | `BACKPACKERW` | Backpacker (female) | 1 | 1 | 17 (`0x11`) | neutral sentinel |
+| 107 | Anupa | `BACKPACKERW` | Backpacker (female) | 1 | 1 | 17 (`0x11`) | neutral sentinel |
+| 108 | Jax | `BUSINESSMAN` | Businessman | 0 | 1 | 17 (`0x11`) | neutral sentinel |
+| 109 | Franco | `BUSINESSMAN` | Businessman | 0 | 1 | 17 (`0x11`) | neutral sentinel |
+| 110 | Hayden | `OL` | Office Lady | 1 | 1 | 17 (`0x11`) | neutral sentinel |
+| 111 | Maxie | `OL` | Office Lady | 1 | 1 | 17 (`0x11`) | neutral sentinel |
+| 112 | Bobhiko | `POLICEMAN` | Police Officer | 0 | 1 | 17 (`0x11`) | neutral sentinel |
+| 113 | Bobmasa | `POLICEMAN` | Police Officer | 0 | 1 | 17 (`0x11`) | neutral sentinel |
+| 114 | Nokko | `MUSICIANW` | Guitarist (female) | 1 | 1 | 17 (`0x11`) | neutral sentinel |
+| 115 | Liz | `MUSICIANW` | Guitarist (female) | 1 | 1 | 17 (`0x11`) | neutral sentinel |
+| 116 | Yen | `GENTLEMAN` | Gentleman | 0 | 1 | 17 (`0x11`) | neutral sentinel |
+| 117 | Cents | `GENTLEMAN` | Gentleman | 0 | 1 | 17 (`0x11`) | neutral sentinel |
+| 118 | Wanda | `LADY` | Lady | 1 | 1 | 17 (`0x11`) | neutral sentinel |
+| 119 | Euro | `LADY` | Lady | 1 | 1 | 17 (`0x11`) | neutral sentinel |
+| 120 | Celsius | `DOCTOR` | Doctor | 0 | 1 | 17 (`0x11`) | neutral sentinel |
+| 121 | Ren | `DOCTOR` | Doctor | 0 | 1 | 17 (`0x11`) | neutral sentinel |
+| 122 | Kelly | `NURSE` | Nurse | 1 | 1 | 17 (`0x11`) | neutral sentinel |
+| 123 | Alison | `NURSE` | Nurse | 1 | 1 | 17 (`0x11`) | neutral sentinel |
+| 124 | Butch | `BADMAN` | Skinhead | 0 | 1 | 17 (`0x11`) | neutral sentinel |
+| 125 | Carver | `BADMAN` | Skinhead | 0 | 1 | 17 (`0x11`) | neutral sentinel |
+| 126 | Gavin | `BADRIDER` | Biker | 0 | 1 | 17 (`0x11`) | neutral sentinel |
+| 127 | Larry | `BADRIDER` | Biker | 0 | 1 | 17 (`0x11`) | neutral sentinel |
 
-The result category is raw source byte 0; it is not `mmdl_id`, `btl_tr_type`,
-or the Type Expert raw byte-7 field. Thus the Rental/Mix generic pools
-(68–127) are neutral in the displayed NPC result routine, while the ordinary
-type categories occur in the Type Expert-oriented rows 58–67. The `0x11`
-value in rows 54–57 and 68–127 is the NPC routine's neutral sentinel; it must
-not be confused with the Type Expert wildcard in raw byte 7.
-
-This answers the identity question at the level supported by the recovered
-data: we can name every row and identify its model resource and internal
-battle-trainer-type value. We cannot yet attach a canonical portrait or a
-human-readable trainer-class label to each `mmdl_id`/`btl_tr_type` without
-decoding the separate model and battle-type definition resources.
+Result category is raw source byte 0. Rental/Mix generic rows (68–127) use the
+neutral category, while Type Expert rows (58–67) have type-specific categories.
+The value `0x11` is the NPC result routine's neutral sentinel; it is separate
+from the Type Expert wildcard in raw byte 7.
 
 ## Rental and Mix pools
 
