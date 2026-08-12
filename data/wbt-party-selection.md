@@ -55,6 +55,21 @@ when more are needed, `count - 3` from the weak range. This split is unrelated
 to Triple battles. The range-bound table is referenced through the literal
 pointers at `0x02239850` and `0x0223985c`.
 
+The lobby script shows how that internal field is chosen. It displays three
+tickets labelled right, middle, and left; these are associated in order with
+script values `0`, `1`, and `2`, which `script_def.h` and `wbt_system.h` map to
+Weak, Strong, and All. `EvCmdWBTSetupRentalParty` stores the selected value and
+uses it to build the player's six-Pokémon offer. The opponent builder later
+reads the same stored field, so the selected ticket controls both sides.
+
+This owner distinction matters for the All branch. The player's request count
+is always six, yielding a three-strong/three-weak offer before the player
+selects an active team. An opponent is built directly with the rule-specific
+count: three strong in Single; three strong plus one weak in Double and
+Rotation; and three strong plus three weak in Triple. The complete ticket and
+format table is in
+[`rental-pokemon-pools.md`](rental-pokemon-pools.md#hidden-lottery-mapping-and-party-composition).
+
 The exact ranges, record counts, and weak/strong species membership are listed
 in [`rental-pokemon-pools.md`](rental-pokemon-pools.md). In particular, Rental
 Master uses the same species set in both tiers but different configured

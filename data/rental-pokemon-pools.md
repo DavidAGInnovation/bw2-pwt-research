@@ -88,24 +88,54 @@ These IV values are fixed here because the example is specifically Rental
 Master. The same archive record would still receive the runtime owner's IV
 value if invoked through a different code path.
 
-## How the `all` tier is assembled
+## Hidden lottery mapping and party composition
 
-The runtime field called `rental_type` selects the weak, strong, or all branch.
-Weak and strong requests draw all entries from their corresponding range. An
-all-tier request draws three records from the strong range and any remaining
-records from the weak range:
+The lobby does not present choices explicitly named Weak, Strong, and All.
+Instead, its three visible choices are the right, middle, and left tickets.
+Their order in `wbt_lobby.ev` is passed directly through the script constants
+and `EvCmdWBTSetupRentalParty` to the runtime `rental_type` field:
 
-| Requested count | Strong records | Weak records |
-|---:|---:|---:|
-| 3 | 3 | 0 |
-| 4 | 3 | 1 |
-| 6 | 3 | 3 |
+| Visible ticket | Script value | Internal branch | Range behavior |
+|---|---:|---|---|
+| Right | `0` | Weak | Select only from the relevant weak range. |
+| Middle | `1` | Strong | Select only from the relevant strong range. |
+| Left | `2` | All | Select three strong records, then fill the remainder from the weak range. |
 
-The number three is the strong portion of the all-tier mix; it does not denote
-a Triple Battle. Selection is random within the chosen range. The party
-builder always excludes a selected source record and duplicate nonzero held
-items; its duplicate-species check follows the regulation-specific rule
-described in [`wbt-party-selection.md`](wbt-party-selection.md).
+The selected ticket applies to both the player's offered Rental Pokémon and
+the opponents' parties. The player is always offered six Pokémon before
+choosing the active team, so the offer itself is:
+
+| Ticket | Six Pokémon offered to the player |
+|---|---|
+| Right / Weak | 6 weak |
+| Middle / Strong | 6 strong |
+| Left / All | 3 strong + 3 weak |
+
+The opponent does not receive six and then discard extras. Its party builder
+requests the format's active count directly, producing:
+
+| Ticket | Single (3) | Double (4) | Triple (6) | Rotation (4) |
+|---|---|---|---|---|
+| Right / Weak | 3 weak | 4 weak | 6 weak | 4 weak |
+| Middle / Strong | 3 strong | 4 strong | 6 strong | 4 strong |
+| Left / All | 3 strong | 3 strong + 1 weak | 3 strong + 3 weak | 3 strong + 1 weak |
+
+Thus, under the Left/All ticket, a Single opponent receives three strong
+records, but the player receives a six-Pokémon offer containing three strong
+and three weak records and chooses the three used in battle. The fixed number
+three is the strong portion of the All mix; it does not denote a Triple
+Battle.
+
+Selection is random within each chosen range. The party builder always
+excludes a selected source record and duplicate nonzero held items; its
+duplicate-species check follows the regulation-specific rule described in
+[`wbt-party-selection.md`](wbt-party-selection.md).
+
+The exact right/middle/left behavior was also recorded independently by the
+[Japanese Pokémon BW2 strategy wiki](https://w.atwiki.jp/pkmnbw2/pages/33.html).
+A contemporary [GameFAQs discussion](https://gamefaqs.gamespot.com/boards/661226-pokemon-black-version-2/64815086)
+mentions the same three tickets and the observation that the middle ticket was
+the strongest, but does not decode the underlying ranges.
 
 ## Standard Rental species
 

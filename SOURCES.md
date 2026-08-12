@@ -23,6 +23,15 @@ them.
 - Ace-party species mapping: `branches/upper_version/resource/wbt/wbt_btd/wbt1a_tr.tdm`, `wbt2a_tr.tdm`, and `wbt3a_tr.tdm` supply ace indices; matching `wbt1a_pd.narc`, `wbt2a_pd.narc`, and `wbt3a_pd.narc` records supply species IDs. The examined ROM resources are `/a/2/6/2`→`/a/2/6/4`, `/a/2/6/5`→`/a/2/6/7`, and `/a/2/6/8`→`/a/2/7/0`. In the normal-ROM-party path, `wbt_battle.c` reads that first ace index before random selection. `WBTTournamentData` configures WBT1 for Driftveil/event/Download/Rental/Mix, WBT2 for the five regional Leader cups, and WBT3 for Champions/World/Type Expert/Rental Master/Mix Master. The actual Rental and Rental Master opponent setup bypasses those normal ROM-party families and uses the dedicated Rental Pokémon archive, so the named participant's ace is not forced; trainer-list flags still determine which Trainers can appear in those cups.
 - `scripts/audit_wbt_party.py` checks the disassembly signatures used for the player's six-entry Rental builder, Rental-type branches, random-without-replacement selector, party-size getter, and all four battle-rule party-size table bytes.
 - Dedicated Rental Pokémon archive: development `/a/2/7/1` and USA/Europe retail `/a/2/5/7` are byte-identical 1,000-member NARCs (SHA-256 `2644c167f8a5775b5161c8e9b878255d2ae7cf5c0ec7431ae1dad257051d1110`). Source `wbt_party.c` maps Rental weak/strong to indices `1–132`/`133–208` and Rental Master weak/strong to `209–558`/`559–908`. `BSUBWAY_POKEMON_ROM_DATA` in `bsubway_battle_data.h` establishes the 16-byte species/moves/EV-mask/nature/item/form layout. `FBI_TOOL_MakePokemonParam` in `fld_btl_inst_tool.c` proves the EV-mask expansion, uniform runtime `pow_rnd` IV assignment, personality-derived normal ability and gender, form copy, and friendship behavior. `wbt_party.c` supplies player IV value 20 and passes the opponent Trainer's `PowerRnd`; the trainer source table proves values 0/8/20 for ordinary Rental eligibility and 20 for every Rental Master-eligible built-in Trainer. `scripts/decode_rental_pokemon.py` combines those fields with USA/Europe retail text `/a/0/0/2` and personal data `/a/0/1/6` to generate `data/rental-pokemon-builds.csv`.
+- Rental-ticket mapping: local-only source
+  `branches/upper_version/resource/fldmapdata/script/wbt_lobby.ev` adds the
+  right, middle, and left ticket labels with values
+  `SCR_WBT_RENTAL_TYPE_1`, `_2`, and `_3`. `script_def.h` defines those as
+  `0`, `1`, and `2`; `wbt_system.h` defines the corresponding runtime enum as
+  Weak, Strong, and All. `scrcmd_wbt_lobby.c` passes the chosen value to
+  `WBTSYS_SetRentalType` and the player's six-entry Rental builder. The enemy
+  builder later reads that same stored field. The Japanese labels and prompt
+  are preserved in `resource/message/msproj/src/script_message/wbt_lobby.mstxt`.
 - Overlay 55 ROM control-flow cross-check: priority branch `0x0223834E`
   targets `0x022383E2`; equal-affinity branch `0x02238356` targets
   `0x02238358` and rejoins at `0x022383EA`; unequal-affinity branch targets
@@ -152,6 +161,8 @@ them.
 - [Project Pokémon RawDB: Black 2 NARC list](https://projectpokemon.org/rawdb/black2/narc.php) (retail file-system inventory; lists `/a/0/5/6` as the large script archive)
 - [Project Pokémon: PWT download tournaments and reverse engineering](https://projectpokemon.org/home/forums/topic/23084-pwt-download-tournaments/page/2/)
 - [PWT RNG analysis](https://namofure.hatenablog.com/entry/2025/05/29/214716)
+- [Pokémon BW2 strategy wiki: Pokémon World Tournament](https://w.atwiki.jp/pkmnbw2/pages/33.html) (independent right/middle/left Rental-ticket mapping and opponent behavior)
+- [GameFAQs: Pick your ticket!](https://gamefaqs.gamespot.com/boards/661226-pokemon-black-version-2/64815086) (contemporary discussion of the three tickets and the middle-ticket strength observation)
 
 The Project Pokémon PWT notes identify byte 1 of a downloadable bracket record
 as `Trainer Rank` and provide the observed placement labels for values 01–05.
