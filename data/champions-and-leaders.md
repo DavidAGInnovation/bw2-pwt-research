@@ -13,7 +13,7 @@ English translation of the source `ポジション` field.
 
 | Trainer | Display code | Code meaning | WBT index | Raw word 0 | Raw word 1 | Priority | Trainer type | Category |
 |---|---|---|---:|---:|---:|---:|---:|---:|
-| Blue | `RGCHAMPION` | Red/Green Rival / Champion | 14 | `0x0011` | `0x011D` | 4 | 0 | 17 |
+| Blue | `RGCHAMPION` | Red/Green Champion | 14 | `0x0011` | `0x011D` | 4 | 0 | 17 |
 | Lance | `GSCHAMPION` | Gold/Silver Champion | 15 | `0x0011` | `0x011E` | 4 | 0 | 17 |
 | Steven | `RSCHAMPION` | Ruby/Sapphire Champion | 16 | `0x0011` | `0x011F` | 4 | 0 | 17 |
 | Wallace | `ECHAMPION` | Emerald Champion | 17 | `0x0011` | `0x0120` | 4 | 0 | 17 |
