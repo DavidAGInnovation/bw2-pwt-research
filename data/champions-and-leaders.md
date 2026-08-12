@@ -13,7 +13,7 @@ English translation of the source `ポジション` field.
 
 | Trainer | Display code | Code meaning | WBT index | Priority | Category |
 |---|---|---|---:|---:|---:|
-| Blue | `RGCHAMPION` | Red/Green Rival / Champion | 14 | 4 | 17 |
+| Blue | `RGCHAMPION` | Red/Green Champion | 14 | 4 | 17 |
 | Lance | `GSCHAMPION` | Gold/Silver Champion | 15 | 4 | 17 |
 | Steven | `RSCHAMPION` | Ruby/Sapphire Champion | 16 | 4 | 17 |
 | Wallace | `ECHAMPION` | Emerald Champion | 17 | 4 | 17 |
