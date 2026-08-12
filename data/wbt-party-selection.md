@@ -114,9 +114,9 @@ ace-marked trainer that has a party-table record in the examined build.
 The following is the complete set of 74 rows whose `エースポケモン` field is
 marked `○` in `wbt_trainer_list.txt`. These are the trainers that enter the
 fixed-first (ace) path above. IDs and display codes are the source keys; the
-names use the English/common names for recognizable characters. For the
-generic rows, the Japanese source name is included in parentheses so the label
-cannot be confused with a language-specific localization.
+Trainer column uses the English/USA-Europe retail PWT names. `Display code`
+and ID remain the source keys, while `Code meaning` gives the source trainer
+role in English.
 
 `Display code` is the exact `表示コード名` source key. `Code meaning`
 translates the source `ポジション` field, so the display code's runtime role
@@ -209,26 +209,26 @@ The source tournament table maps cup IDs to the archive used at runtime:
 | 052 | Volkner | `DPLEADER8` | Diamond/Pearl Gym Leader | Electivire | Sinnoh Leaders, World Leaders, Super Rental / Rental Master, Type Expert |
 | 056 | Cheren (event) | `SWLEADER1` | Event Gym Leader 1 | Stoutland | Driftveil event |
 | 057 | Colress | `SWBOSS` | Event Boss | Magneton | Driftveil event |
-| 058 | Botsuri (ボツリ) | `ASSISTANTM` | Scientist (male), battleable generic | Muk | Type Expert |
-| 059 | Ieji (イエジ) | `MOUNTMAN` | Hiker, battleable generic | Krookodile | Type Expert |
-| 060 | Karuto (カルト) | `ESPW` | Psychic (female), battleable generic | Starmie | Type Expert |
-| 061 | Walter (ウォルター) | `VETERANM` | Veteran Trainer (male), battleable generic | Heracross | Type Expert |
-| 062 | Rensuke (レンスケ) | `ESPM` | Psychic (male), battleable generic | Cofagrigus | Type Expert |
-| 063 | Ryuichi (リュウイチ) | `TRAINERM` | Elite Trainer (male), battleable generic | Salamence | Type Expert |
-| 064 | Thatcher (サッチャー) | `VETERANW` | Veteran Trainer (female), battleable generic | Aggron | Type Expert |
-| 065 | Vito (ヴィトー) | `VETERANM` | Veteran Trainer (male), battleable generic | Shiftry | Type Expert |
-| 066 | Ilsane (イルサーネ) | `VETERANW` | Veteran Trainer (female), battleable generic | Umbreon | Type Expert |
-| 067 | Bonnie (ボニー) | `TRAINERW` | Elite Trainer (female), battleable generic | Drapion | Type Expert |
-| 068 | Ex (エクス) | `TRAINERM` | Elite Trainer (male), clear-before generic | Archeops | Driftveil, Rental, Mix |
-| 069 | Makina (マキナ) | `TRAINERW` | Elite Trainer (female), clear-before generic | Tirtouga | Driftveil, Rental, Mix |
-| 070 | Castro (カストロ) | `VETERANM` | Veteran Trainer (male), clear-before generic | Whimsicott | Driftveil, Rental, Mix |
-| 071 | Tsugumi (ツグミ) | `VETERANW` | Veteran Trainer (female), clear-before generic | Lilligant | Driftveil, Rental, Mix |
-| 072 | Arashiyama (アラシヤマ) | `FIGHTERM` | Black Belt, clear-before generic | Throh | Driftveil, Rental, Mix |
-| 073 | Jane (ジェーン) | `FIGHTERW` | Battle Girl, clear-before generic | Sawk | Driftveil, Rental, Mix |
-| 074 | Shuichi (シュウイチ) | `ASSISTANTM` | Scientist (male), clear-before generic | Golduck | Driftveil, Rental, Mix |
-| 075 | Eclaire (エクレア) | `ASSISTANTW` | Scientist (female), clear-before generic | Lopunny | Driftveil, Rental, Mix |
-| 076 | Rurio (ルリオ) | `ESPM` | Psychic (male), clear-before generic | Cofagrigus | Driftveil, Rental, Mix |
-| 077 | Soprano (ソプラノ) | `ESPW` | Psychic (female), clear-before generic | Mr-Mime | Driftveil, Rental, Mix |
+| 058 | Castor | `ASSISTANTM` | Scientist (male) | Muk | Type Expert |
+| 059 | Homer | `MOUNTMAN` | Hiker | Krookodile | Type Expert |
+| 060 | Delphine | `ESPW` | Psychic (female) | Starmie | Type Expert |
+| 061 | Walter | `VETERANM` | Veteran Trainer (male) | Heracross | Type Expert |
+| 062 | Ferly | `ESPM` | Psychic (male) | Cofagrigus | Type Expert |
+| 063 | Drakon | `TRAINERM` | Elite Trainer (male) | Salamence | Type Expert |
+| 064 | Margaret | `VETERANW` | Veteran Trainer (female) | Aggron | Type Expert |
+| 065 | Vito | `VETERANM` | Veteran Trainer (male) | Shiftry | Type Expert |
+| 066 | Impera | `VETERANW` | Veteran Trainer (female) | Umbreon | Type Expert |
+| 067 | Bonnie | `TRAINERW` | Elite Trainer (female) | Drapion | Type Expert |
+| 068 | X | `TRAINERM` | Elite Trainer (male) | Archeops | Driftveil, Rental, Mix |
+| 069 | Makina | `TRAINERW` | Elite Trainer (female) | Tirtouga | Driftveil, Rental, Mix |
+| 070 | Fidel | `VETERANM` | Veteran Trainer (male) | Whimsicott | Driftveil, Rental, Mix |
+| 071 | Theodora | `VETERANW` | Veteran Trainer (female) | Lilligant | Driftveil, Rental, Mix |
+| 072 | Allan | `FIGHTERM` | Black Belt | Throh | Driftveil, Rental, Mix |
+| 073 | Jocelyn | `FIGHTERW` | Battle Girl | Sawk | Driftveil, Rental, Mix |
+| 074 | Dmitri | `ASSISTANTM` | Scientist (male) | Golduck | Driftveil, Rental, Mix |
+| 075 | Levina | `ASSISTANTW` | Scientist (female) | Lopunny | Driftveil, Rental, Mix |
+| 076 | Rylan | `ESPM` | Psychic (male) | Cofagrigus | Driftveil, Rental, Mix |
+| 077 | Destiny | `ESPW` | Psychic (female) | Mr-Mime | Driftveil, Rental, Mix |
 
 The unmarked rows do not enter the ace branch at all: their complete party is
 selected from the normal candidate list by the no-replacement chooser. In the
