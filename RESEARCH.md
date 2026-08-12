@@ -288,19 +288,32 @@ This is the result routine's affinity comparison, not a simulation of a full
 Pokémon battle. If priorities differ, the higher-priority record wins before
 this matrix is reached.
 
-## Bracket settings are a separate selection process
+## Downloadable and built-in priority convergence
 
 The public downloadable PWT format notes describe `YY=04` as a semifinalist
 tier and `YY=05` as a finalist tier. The development-build selector in overlay
-135 (`wbt_makematch.c`) makes internal category/count selection calls including
-one record from category 5, one from category 4, one from category 3, and four
-from category 1 in the built-in Driftveil event constructor
+135 (`wbt_makematch.c`) makes built-in priority/count selection calls including
+one record with priority 5, one with priority 4, one with priority 3, and four
+with priority 1 in the built-in Driftveil event constructor
 (`entryHodomoeEventTournament`, beginning around `0x02241B4C`; candidate
-selection is around `0x02241704`). These internal priorities are reused by the
-common bracket sorter, but this is not a downloadable constructor and is not
-proof that built-in cups store literal downloadable-style `YY` bytes. See
-`data/in-game-tournaments.md` for the built-in scope and `data/yy-counts.md` for
-the separate downloadable appendix.
+selection is around `0x02241704`).
+
+The recovered source proves the exact relationship. `WBTDL_MATCH.pri` is the
+standalone `YY` byte in a downloadable record. Built-in `WBT_TRDATA.priority`
+is instead a three-bit field in the low bits of WBT table byte 8, sharing that
+byte with the five-bit `PowerRnd`. `WBTTRAINER_SetRomTrainer` copies the
+built-in field into `WBTTRAINER.pri`; Download setup overwrites the same field
+with `WBTDL_MATCH.pri`. Both values are interpreted in the `WBT_TRPRI` numeric
+domain and consumed by the same `WBTSYS_SortTrainer` and `calcWBTResult`
+functions.
+
+Thus the raw formats are not byte-for-byte equivalent, but their priority
+values are numerically and behaviorally equivalent after setup. Built-in
+priority 4 has the same sorting and NPC-result effect as downloadable
+`YY=04`. This does not make the built-in family byte, eligibility masks, Type
+Expert field, or `PowerRnd` downloadable `YY` data. See
+`data/bracket-settings.md` for the full assignment trace and
+`data/yy-counts.md` for the separate downloadable-file histograms.
 
 This establishes the important distinction:
 
@@ -314,7 +327,10 @@ Download `YY=01`: filler opponent
 For downloadable files, if several entries share a tier, the selector uses RNG
 to choose among them.
 
-This bracket selection affects who the player meets and in which round they meet. It does not give a trainer an intrinsic win advantage in an all-NPC match. When two NPC records are actually passed to `wbt_calc_result`, the source priority/type-affinity/RNG rules documented above apply independently.
+This priority sorting affects who the player meets and in which round they
+meet. The same priority also gives the higher-valued Trainer a deterministic
+win in an all-NPC match before affinity is considered. If priorities tie, the
+type-affinity/RNG rules documented above apply.
 
 ## Built-in cup constructor mapping
 

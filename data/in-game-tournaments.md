@@ -65,6 +65,14 @@ source records; other modes can reuse records from this special/other group
 through their own entry flags. Each normal run still selects seven NPCs for the
 player's eight-trainer field.
 
+The built-in priority is a different field: the low three bits of record byte
+8. The recovered source proves that this field and downloadable `YY` are
+interpreted in the same `WBT_TRPRI` numeric domain and both become
+`WBTTRAINER.pri`. Thus built-in priority 3 and downloadable `YY=03` behave
+identically after setup, even though family byte 6 is not `YY` and the two raw
+record layouts are not byte-for-byte equivalent. See
+[`bracket-settings.md`](bracket-settings.md#proved-mapping-to-built-in-priorities).
+
 ## Per-family mapping
 
 | Built-in family | Cup ID | Constructor | Source family/count | Status |
@@ -74,16 +82,16 @@ player's eight-trainer field.
 | Johto Leaders | 7 | `0x02241B08` | offset-6 `0x07`: 8 records | Mapped in this build |
 | Hoenn Leaders | 8 | `0x02241B08` | offset-6 `0x08`: 9 records | Mapped in this build |
 | Sinnoh Leaders | 9 | `0x02241B08` | offset-6 `0x09`: 8 records | Mapped in this build |
-| World Leaders | 10 | `0x02241AF0` | mixed leader families; seven cat.-3 selections | Mapped in this build |
+| World Leaders | 10 | `0x02241AF0` | mixed leader families; seven priority-3 selections | Mapped in this build |
 | Champions | 1 | `0x02241A88` | offset-6 `0x01`: 7 records | Mapped in this build |
 | Type Expert | 2 | `0x02241C0C` | dynamic leader/mob/weak-mob pools | Mapped in this build |
-| Rental | 12 | `0x02241B84` | 3 cat. 1 + 2 cat. 2 + 2 cat. 3 | Mapped in this build |
-| Mix | 14 | `0x02241BB0` | 3 cat. 1 + 2 cat. 2 + 2 cat. 3 | Mapped in this build |
-| Super Rental / Rental Master | 13 | `0x02241BDC` | seven cat.-3 selections | Mapped in this build |
-| Super Mix / Mix Master | 15 | `0x02241BF4` | seven cat.-3 selections | Mapped in this build |
-| Driftveil | 4 | `0x02241B20` | 4 cat. 1 + 1 cat. 2 + 2 cat. 3 | Mapped in this build |
+| Rental | 12 | `0x02241B84` | 3 priority 1 + 2 priority 2 + 2 priority 3 | Mapped in this build |
+| Mix | 14 | `0x02241BB0` | 3 priority 1 + 2 priority 2 + 2 priority 3 | Mapped in this build |
+| Super Rental / Rental Master | 13 | `0x02241BDC` | seven priority-3 selections | Mapped in this build |
+| Super Mix / Mix Master | 15 | `0x02241BF4` | seven priority-3 selections | Mapped in this build |
+| Driftveil | 4 | `0x02241B20` | 4 priority 1 + 1 priority 2 + 2 priority 3 | Mapped in this build |
 | Download | 3 | `0x02241998` | generic/download-style shuffle | Mapped in this build |
-| Driftveil event | 11 | `0x02241B4C` | 4 cat. 1 + 1 each cat. 3/4/5 | `WBTCUP_HODOMOE_EVENT`; enabled while ordinary Driftveil wins are zero |
+| Driftveil event | 11 | `0x02241B4C` | 4 priority 1 + 1 each priority 3/4/5 | `WBTCUP_HODOMOE_EVENT`; enabled while ordinary Driftveil wins are zero |
 
 The named mappings are based on the exact cup-ID dispatch and matching
 family slices. The Champions slice agrees with the
@@ -119,7 +127,7 @@ contains the same relevant control-flow roles:
 | cup-ID dispatch and 16-entry switch | `0x02241CF8` / `0x02241D20` | `0x021EF298` / `0x021EF2C0` |
 | common eight-position shuffle | `0x02241DB8` | `0x021EF344` |
 
-The retail selector still filters records by the packed category bits, and the
+The retail selector still filters records by the packed priority bits, and the
 Type Expert predicate still accepts `POKETYPE_NULL` (`0x11`) as a wildcard.
 That predicate is separate from the Overlay-55 matchup-affinity helper, which
 handles category-17 neutrality during NPC result calculation. The dispatch
@@ -144,13 +152,13 @@ The internal request pattern should not be confused with source-record counts:
 
 | Cup IDs | Constructor | Requests |
 |---|---|---|
-| `5–9` | `0x02241B08` | seven category-3 selections |
+| `5–9` | `0x02241B08` | seven priority-3 selections |
 | `1` | `0x02241A88` | all records whose offset-6 selector byte equals `0x01`, then up to seven are used |
 | `2` | `0x02241C0C` | dynamic leader/mob/weak-mob selection, totaling seven NPCs (Type Expert) |
-| `4` (and default/0 after its error log) | `0x02241B20` | 4 cat. 1 + 1 cat. 2 + 2 cat. 3 |
-| `11` | `0x02241B4C` | 4 cat. 1 + 1 cat. 3 + 1 cat. 4 + 1 cat. 5 |
-| `12`, `14` | `0x02241B84`, `0x02241BB0` | 3 cat. 1 + 2 cat. 2 + 2 cat. 3 |
-| `10`, `13`, `15` | `0x02241AF0`, `0x02241BDC`, `0x02241BF4` | seven category-3 selections |
+| `4` (and default/0 after its error log) | `0x02241B20` | 4 priority 1 + 1 priority 2 + 2 priority 3 |
+| `11` | `0x02241B4C` | 4 priority 1 + 1 priority 3 + 1 priority 4 + 1 priority 5 |
+| `12`, `14` | `0x02241B84`, `0x02241BB0` | 3 priority 1 + 2 priority 2 + 2 priority 3 |
+| `10`, `13`, `15` | `0x02241AF0`, `0x02241BDC`, `0x02241BF4` | seven priority-3 selections |
 | `3` | `0x02241998` | generic/download-style path |
 
 The ID-to-constructor rows above are decoded from the signed halfword switch
@@ -181,7 +189,7 @@ then shuffled.
 The public [TournamentSearcher reverse-engineering project](https://github.com/namofure/TournamentSearcher)
 also treats this dynamic path as a structured participant/shuffle problem, not
 as a simple downloadable `YY` histogram. World Leaders is ID 10 and uses its
-separate seven-category-3 constructor path.
+separate seven-priority-3 constructor path.
 
 ## Static menu-to-ID evidence
 

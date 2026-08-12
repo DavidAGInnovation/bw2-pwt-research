@@ -56,8 +56,8 @@ records exist” on every tournament entry. RNG can still order multiple records
 sharing a priority, but the generic sorter assigns the highest three sorted
 records to the final, semifinal, and first-round player paths. It does not
 independently reserve one record for each named tier. In the observed
-seven-opponent construction path, the request was one category-5 slot, one
-category-4 slot, one category-3 slot, and four category-1 slots. That request
+seven-opponent construction path, the request was one priority-5 slot, one
+priority-4 slot, one priority-3 slot, and four priority-1 slots. That request
 is separate from the raw counts above, and it should not be generalized to
 every tournament mode without its constructor data.
 

@@ -159,9 +159,9 @@ describing priorities, categories, or tournament eligibility:
 Index `0` is the Cheren listed in the standard Leader table above. Index `56`
 is the Cheren row listed in
 [`generic-and-rental-records.md`](generic-and-rental-records.md); its family
-byte is `0x00`, its static eligibility mask is `0x01`, and its constructor pool
-is `4`. The Driftveil-event constructor selects that row for its one
-priority-4 / constructor-pool-4 slot. A downloadable tournament can also reference
+byte is `0x00`, its static eligibility mask is `0x01`, and its constructor
+priority is `4`. The Driftveil-event constructor selects that row for its one
+priority-4 slot. A downloadable tournament can also reference
 either source index explicitly, depending on the `.pwt` match records.
 
 Therefore, statements that “Cheren has priority 3” refer to the standard Leader

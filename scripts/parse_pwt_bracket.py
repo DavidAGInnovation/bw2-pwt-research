@@ -8,6 +8,18 @@ from collections import Counter
 from pathlib import Path
 
 
+def bracket_records(data: bytes, offset: int) -> list[tuple[int, int, int, int]]:
+    """Return the seven ``XX YY ZZZZ`` records at *offset*."""
+
+    end = offset + 7 * 4
+    if offset < 0 or end > len(data):
+        raise ValueError("offset does not leave room for seven four-byte records")
+    return [
+        tuple(data[offset + 4 * i : offset + 4 * (i + 1)])
+        for i in range(7)
+    ]
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("file", type=Path)
@@ -20,14 +32,10 @@ def main() -> None:
     args = parser.parse_args()
 
     data = args.file.read_bytes()
-    end = args.offset + 7 * 4
-    if args.offset < 0 or end > len(data):
-        raise SystemExit("offset does not leave room for seven four-byte records")
-
-    records = [
-        tuple(data[args.offset + 4 * i : args.offset + 4 * (i + 1)])
-        for i in range(7)
-    ]
+    try:
+        records = bracket_records(data, args.offset)
+    except ValueError as exc:
+        raise SystemExit(str(exc)) from exc
     counts = Counter(record[1] for record in records)
 
     for index, record in enumerate(records, start=1):

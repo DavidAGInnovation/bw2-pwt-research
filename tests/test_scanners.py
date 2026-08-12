@@ -15,6 +15,7 @@ sys.path.insert(0, str(SCRIPTS))
 import find_pwt_menu_builder as menu_builder  # noqa: E402
 import find_pwt_state_script as state_script  # noqa: E402
 import inspect_wbt_table as wbt_table  # noqa: E402
+import parse_pwt_bracket as pwt_bracket  # noqa: E402
 import audit_wbt_party as wbt_party  # noqa: E402
 import decode_rental_pokemon as rental_pokemon  # noqa: E402
 
@@ -94,30 +95,30 @@ class ScannerTests(unittest.TestCase):
         synthetic = "\n".join(f"└─> {address}      {pattern}" for address, pattern in lines.items())
         self.assertEqual(wbt_party.audit_text(synthetic), [])
 
-    def test_wbt_constructor_pool_decoder(self) -> None:
+    def test_wbt_constructor_priority_decoder(self) -> None:
         table = bytearray(wbt_table.TABLE_SIZE)
         # Synthetic rows exercising the Rental and Rental Master masks and
-        # the packed PowerRnd/high-five-bit and constructor-pool/low-three-bit
+        # the packed PowerRnd/high-five-bit and priority/low-three-bit
         # fields.
         table[0 * 16 + wbt_table.MASK_OFFSET] = 0x08
         table[0 * 16 + wbt_table.FAMILY_OFFSET] = 0x05
-        table[0 * 16 + wbt_table.POOL_OFFSET] = (20 << 3) | 0x03
+        table[0 * 16 + wbt_table.PRIORITY_OFFSET] = (20 << 3) | 0x03
         table[0 * 16 + wbt_table.SEX_OFFSET] = 1
         table[0 * 16 + wbt_table.MMDL_OFFSET] = 0x34
         table[0 * 16 + wbt_table.MMDL_OFFSET + 1] = 0x12
         table[0 * 16 + wbt_table.BTL_TRAINER_TYPE_OFFSET] = 104
         table[1 * 16 + wbt_table.MASK_OFFSET] = 0x20
         table[1 * 16 + wbt_table.FAMILY_OFFSET] = 0x05
-        table[1 * 16 + wbt_table.POOL_OFFSET] = 0x03
+        table[1 * 16 + wbt_table.PRIORITY_OFFSET] = 0x03
         table[2 * 16 + wbt_table.MASK_OFFSET] = 0x08
-        table[2 * 16 + wbt_table.POOL_OFFSET] = 0x02
+        table[2 * 16 + wbt_table.PRIORITY_OFFSET] = 0x02
         table[3 * 16 + wbt_table.MASK_OFFSET] = 0x08
-        table[3 * 16 + wbt_table.POOL_OFFSET] = 0x01
+        table[3 * 16 + wbt_table.PRIORITY_OFFSET] = 0x01
 
         self.assertEqual(wbt_table.candidate_indices(bytes(table), 12), [0, 2, 3])
         self.assertEqual(wbt_table.candidate_indices(bytes(table), 13), [1])
         self.assertEqual(wbt_table.candidate_indices(bytes(table), 5), [0, 1])
-        self.assertEqual(wbt_table.pool_indices(bytes(table), 12, 3), [0])
+        self.assertEqual(wbt_table.priority_indices(bytes(table), 12, 3), [0])
         self.assertEqual(wbt_table.compact_indices([0, 1, 2, 5, 7, 8]), "0–2, 5, 7–8")
         row = bytes(table[:16])
         self.assertEqual(wbt_table.npc_result_fields(row), (3, 0, 0))
@@ -125,6 +126,7 @@ class ScannerTests(unittest.TestCase):
         self.assertIn("record 000:", formatted)
         self.assertIn("mask=0x08", formatted)
         self.assertIn("result_priority=3", formatted)
+        self.assertIn("priority=3", formatted)
         self.assertIn("result_category=0", formatted)
         self.assertIn("power_rnd=20", formatted)
         self.assertIn("npc_trainer_type=0", formatted)
@@ -153,6 +155,27 @@ class ScannerTests(unittest.TestCase):
             self.assertEqual(result.returncode, 0, msg=result.stderr)
             self.assertIn("cup 1 Champions", result.stdout)
             self.assertIn("cup 5 Unova Leaders", result.stdout)
+
+    def test_download_and_builtin_priority_storage_decode_to_same_value(self) -> None:
+        download = bytes.fromhex(
+            "00 04 34 12 "
+            "01 01 35 12 "
+            "02 01 36 12 "
+            "03 01 37 12 "
+            "04 01 38 12 "
+            "05 01 39 12 "
+            "06 01 3a 12"
+        )
+        yy = pwt_bracket.bracket_records(download, 0)[0][1]
+
+        row = bytearray(wbt_table.RECORD_SIZE)
+        row[wbt_table.PRIORITY_OFFSET] = (25 << 3) | 4
+        built_in_priority = wbt_table.npc_result_fields(bytes(row))[0]
+
+        self.assertEqual(yy, 4)
+        self.assertEqual(built_in_priority, 4)
+        self.assertEqual(yy, built_in_priority)
+        self.assertEqual(wbt_table.trainer_power_rnd(bytes(row)), 25)
 
     def test_narc_and_menu_builder(self) -> None:
         members = menu_builder.narc_members(make_narc([make_menu_member()]))

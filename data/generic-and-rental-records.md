@@ -15,11 +15,13 @@ fields directly from each record:
 | Constructor eligibility mask | `5` | Cup IDs 4, 10, 11, 12, 13, 14, and 15 test one bit here. |
 | Family selector | `6` | Cup IDs 1 and 5–9 accept records whose value equals the cup ID. |
 | Type Expert type ID | `7` | Cup ID 2 accepts the requested type or `0x11` (`POKETYPE_NULL`) as a wildcard. |
-| Constructor pool | `8 & 7` | The selector at `0x02241630` compares these low three bits with pool requests 1–5. |
+| Constructor priority | `8 & 7` | The selector at `0x02241630` compares these low three bits with `WBT_TRPRI` requests 1–5. |
 
-The relevant disassembly is the predicate at `0x02241874`, the pool counter at
-`0x02241630`, and the selector at `0x02241704`. These are internal source-table
-fields, not downloadable `.pwt` `YY` values.
+The relevant disassembly is the predicate at `0x02241874`, the priority
+counter at `0x02241630`, and the selector at `0x02241704`. These are internal
+source-table fields. The priority is stored differently from downloadable
+`.pwt` `YY`, but the recovered source proves that both become the same runtime
+`WBTTRAINER.pri` field and have the same numeric and behavioral meaning.
 
 The mask bits used by the static cup predicates are:
 

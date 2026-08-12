@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Decode the built-in WBT constructor pools from an extracted table.
+"""Decode built-in WBT constructor priorities from an extracted table.
 
 The input may be the extracted one-member WBT NARC (for example the
 development ``/a/2/6/1`` artifact) or its 2048-byte member.  This is a static
@@ -11,7 +11,7 @@ Overlay 135 supplies the field meanings used here:
 * record byte 5: constructor eligibility mask;
 * record byte 6: fixed-family selector for cup IDs 1 and 5--9;
 * record byte 7: Type Expert ``type_tournament_id``;
-* low three bits of record byte 8: internal constructor pool 1--5;
+* low three bits of record byte 8: ``WBT_TRPRI`` priority 1--5;
 * high five bits of record byte 8: ``power_rnd``, passed to the normal and
   Rental Pokémon builders as the value for all six IVs.
 
@@ -43,7 +43,7 @@ TABLE_SIZE = RECORD_SIZE * RECORD_COUNT
 MASK_OFFSET = 5
 FAMILY_OFFSET = 6
 TYPE_OFFSET = 7
-POOL_OFFSET = 8
+PRIORITY_OFFSET = 8
 POWER_RND_OFFSET = 8
 SEX_OFFSET = 1
 MMDL_OFFSET = 2
@@ -127,10 +127,14 @@ def candidate_indices(table: bytes, cup_id: int) -> list[int]:
     return [i for i, row in enumerate(rows) if row[MASK_OFFSET] & (1 << bit)]
 
 
-def pool_indices(table: bytes, cup_id: int, pool: int) -> list[int]:
+def priority_indices(table: bytes, cup_id: int, priority: int) -> list[int]:
     rows = records(table)
     eligible = set(candidate_indices(table, cup_id))
-    return [i for i, row in enumerate(rows) if i in eligible and (row[POOL_OFFSET] & 7) == pool]
+    return [
+        i
+        for i, row in enumerate(rows)
+        if i in eligible and (row[PRIORITY_OFFSET] & 7) == priority
+    ]
 
 
 def compact_indices(indices: list[int]) -> str:
@@ -161,7 +165,7 @@ def npc_result_fields(row: bytes) -> tuple[int, int, int]:
     """
 
     return (
-        row[POOL_OFFSET] & 7,
+        row[PRIORITY_OFFSET] & 7,
         row[RESULT_CATEGORY_OFFSET],
         NPC_TRAINER_TYPE,
     )
@@ -181,7 +185,7 @@ def format_record(index: int, row: bytes) -> str:
     return (
         f"record {index:03d}: {row.hex(' ')} "
         f"mask=0x{row[MASK_OFFSET]:02x} family=0x{row[FAMILY_OFFSET]:02x} "
-        f"type=0x{row[TYPE_OFFSET]:02x} pool={row[POOL_OFFSET] & 7} "
+        f"type=0x{row[TYPE_OFFSET]:02x} priority={row[PRIORITY_OFFSET] & 7} "
         f"power_rnd={trainer_power_rnd(row)} "
         f"sex={row[SEX_OFFSET]} mmdl_id=0x{int.from_bytes(row[MMDL_OFFSET:MMDL_OFFSET + 2], 'little'):04x} "
         f"btl_tr_type={row[BTL_TRAINER_TYPE_OFFSET]} "
@@ -219,9 +223,9 @@ def main() -> int:
     print(
         f"records={RECORD_COUNT} size={RECORD_SIZE} "
         f"fields=mask@{MASK_OFFSET},family@{FAMILY_OFFSET},"
-        f"type@{TYPE_OFFSET},pool=byte{POOL_OFFSET}&7,"
+        f"type@{TYPE_OFFSET},priority=byte{PRIORITY_OFFSET}&7,"
         f"power_rnd=byte{POWER_RND_OFFSET}>>3,"
-        f"result_priority=byte{POOL_OFFSET}&7,result_category=byte{RESULT_CATEGORY_OFFSET},"
+        f"result_priority=byte{PRIORITY_OFFSET}&7,result_category=byte{RESULT_CATEGORY_OFFSET},"
         f"npc_trainer_type={NPC_TRAINER_TYPE}"
     )
     rows = records(table)
@@ -237,11 +241,14 @@ def main() -> int:
         )
         print(f"cup {cup_id} {MODE_NAMES[cup_id]}: {predicate}; eligible={compact_indices(eligible)}")
         # Family-selector cups have an eligibility predicate but no explicit
-        # pool/count request in this decoder. Their eligible rows are the
+        # priority/count request in this decoder. Their eligible rows are the
         # useful output; later selection is documented separately.
-        for pool, count in sorted(REQUESTS.get(cup_id, {}).items()):
-            indices = pool_indices(table, cup_id, pool)
-            print(f"  pool {pool} request {count}: {compact_indices(indices)}")
+        for priority, count in sorted(REQUESTS.get(cup_id, {}).items()):
+            indices = priority_indices(table, cup_id, priority)
+            print(
+                f"  priority {priority} request {count}: "
+                f"{compact_indices(indices)}"
+            )
     return 0
 
 

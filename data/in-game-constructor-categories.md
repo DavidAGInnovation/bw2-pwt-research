@@ -1,26 +1,30 @@
-# Built-in PWT constructor/category data
+# Built-in PWT constructor/priority data
 
 This document separates the permanent, in-game PWT cups from downloadable
-`.pwt` bracket files.  It records what the examined development build does at
-the constructor and candidate-table level.  It does not treat the internal
-fields as downloadable `YY` values unless the data mapping is demonstrated.
+`.pwt` bracket files. It records what the examined development build does at
+the constructor and candidate-table level. The recovered source proves that
+the constructor's numeric groups 1–5 are `WBT_TRPRI` priorities: they share
+their numeric meaning and runtime destination with downloadable `YY`, although
+the two formats store the value differently.
 
 ## What the constructor does
 
 The match builder receives a cup ID, creates an eight-trainer field (player
 plus seven NPCs), and selects NPC records from the internal WBT table.  A
-constructor request such as `category 3, count 7` means “request seven records
-accepted by the internal category-3 predicate.”  It is a slot request, not a
-claim that the source table contains seven records or a literal `YY=03` byte.
+constructor request such as `priority 3, count 7` means “request seven eligible
+records whose built-in `WBT_TRDATA.priority` equals 3.” It is a slot request,
+not a claim that the source table contains only seven priority-3 records or a
+literal standalone `YY=03` byte. Built-in priority is packed into the low three
+bits of table byte 8; downloadable `YY` is a separate byte.
 
 The relevant overlay-135 routines are:
 
 | Address | Role |
 |---|---|
 | `0x02241D02` | Reads the cup ID and dispatches IDs `0..15`. |
-| `0x02241920` | Builds the per-record internal category flags. |
-| `0x02241874` | Tests one record against a cup/category predicate. |
-| `0x02241630` | Counts candidates matching a requested internal pool. |
+| `0x02241920` | Builds the per-record eligibility state. |
+| `0x02241874` | Tests one record against the cup eligibility predicate. |
+| `0x02241630` | Counts candidates matching a requested priority. |
 | `0x02241704` | Selects a requested number of candidates using RNG. |
 | `0x022415E0` | Finalizes the selected seven NPC records. |
 | `0x02241A88` | Fixed Champion path; selects records whose family selector at offset `6` equals `0x01`. |
@@ -31,27 +35,27 @@ The relevant overlay-135 routines are:
 The jump table at `0x02241D20–0x02241D3E` and the calls following it give this
 exact mapping in the examined build.  The switch reads one signed 16-bit
 displacement per ID and adds it to the Thumb PC base `0x02241D22`; this matters
-because the table is not an array of absolute addresses.  “Cat. 1–5” are
-internal selector categories.
+because the table is not an array of absolute addresses. “Pri. 1–5” are
+source-defined `WBT_TRPRI` priorities.
 
-| Cup ID | Constructor | Cat. 1 | Cat. 2 | Cat. 3 | Cat. 4 | Cat. 5 | Code-level description |
+| Cup ID | Constructor | Pri. 1 | Pri. 2 | Pri. 3 | Pri. 4 | Pri. 5 | Code-level description |
 |---:|---|---:|---:|---:|---:|---:|---|
-| 0 | default/error path, then `0x02241B20` | 4 | 1 | 2 | 0 | 0 | Four cat. 1, one cat. 2, two cat. 3 |
+| 0 | default/error path, then `0x02241B20` | 4 | 1 | 2 | 0 | 0 | Four priority 1, one priority 2, two priority 3 |
 | 1 | `0x02241A88` | selector `0x01` | — | — | — | — | Select records whose family selector equals `0x01` |
 | 2 | `0x02241C0C` | dynamic | dynamic | dynamic | — | — | Leader/mob/weak-mob pools |
 | 3 | `0x02241998` | — | — | — | — | — | Generic/download-style shuffle path |
-| 4 | `0x02241B20` | 4 | 1 | 2 | 0 | 0 | Four cat. 1, one cat. 2, two cat. 3 |
-| 5 | `0x02241B08` | 0 | 0 | 7 | 0 | 0 | Seven cat.-3 selections |
-| 6 | `0x02241B08` | 0 | 0 | 7 | 0 | 0 | Seven cat.-3 selections |
-| 7 | `0x02241B08` | 0 | 0 | 7 | 0 | 0 | Seven cat.-3 selections |
-| 8 | `0x02241B08` | 0 | 0 | 7 | 0 | 0 | Seven cat.-3 selections |
-| 9 | `0x02241B08` | 0 | 0 | 7 | 0 | 0 | Seven cat.-3 selections |
-| 10 | `0x02241AF0` | 0 | 0 | 7 | 0 | 0 | Seven cat.-3 selections |
-| 11 | `0x02241B4C` | 4 | 0 | 1 | 1 | 1 | Four cat. 1, one each cat. 3/4/5 |
-| 12 | `0x02241B84` | 3 | 2 | 2 | 0 | 0 | Three cat. 1, two cat. 2, two cat. 3 |
-| 13 | `0x02241BDC` | 0 | 0 | 7 | 0 | 0 | Seven cat.-3 selections |
-| 14 | `0x02241BB0` | 3 | 2 | 2 | 0 | 0 | Three cat. 1, two cat. 2, two cat. 3 |
-| 15 | `0x02241BF4` | 0 | 0 | 7 | 0 | 0 | Seven cat.-3 selections |
+| 4 | `0x02241B20` | 4 | 1 | 2 | 0 | 0 | Four priority 1, one priority 2, two priority 3 |
+| 5 | `0x02241B08` | 0 | 0 | 7 | 0 | 0 | Seven priority-3 selections |
+| 6 | `0x02241B08` | 0 | 0 | 7 | 0 | 0 | Seven priority-3 selections |
+| 7 | `0x02241B08` | 0 | 0 | 7 | 0 | 0 | Seven priority-3 selections |
+| 8 | `0x02241B08` | 0 | 0 | 7 | 0 | 0 | Seven priority-3 selections |
+| 9 | `0x02241B08` | 0 | 0 | 7 | 0 | 0 | Seven priority-3 selections |
+| 10 | `0x02241AF0` | 0 | 0 | 7 | 0 | 0 | Seven priority-3 selections |
+| 11 | `0x02241B4C` | 4 | 0 | 1 | 1 | 1 | Four priority 1, one each priority 3/4/5 |
+| 12 | `0x02241B84` | 3 | 2 | 2 | 0 | 0 | Three priority 1, two priority 2, two priority 3 |
+| 13 | `0x02241BDC` | 0 | 0 | 7 | 0 | 0 | Seven priority-3 selections |
+| 14 | `0x02241BB0` | 3 | 2 | 2 | 0 | 0 | Three priority 1, two priority 2, two priority 3 |
+| 15 | `0x02241BF4` | 0 | 0 | 7 | 0 | 0 | Seven priority-3 selections |
 
 Cup ID 0 reaches the same constructor as cup 4 after logging the
 `WBTCUP_NULL!!` error path; it is not a separate named cup in this artifact.
@@ -60,12 +64,12 @@ The rows above are the result of evaluating that switch table directly. In
 particular, ID 12 branches to `0x02241B84`, ID 14 to `0x02241BB0`, and ID 15
 to `0x02241BF4`.
 
-The exact raw-record masks and pool memberships for the generic, Rental, and
+The exact raw-record masks and priority memberships for the generic, Rental, and
 Mix paths are tabulated in
 [`generic-and-rental-records.md`](generic-and-rental-records.md). In particular,
-ordinary Rental pool 3 is records `0–4, 8` (Cheren, Roxie, Burgh, Elesa, Clay,
-and Bianca), while Rental Master pool 3 is records `0–13, 20–52`; the seven
-standard Champion records are absent from both.
+ordinary Rental priority 3 is records `0–4, 8` (Cheren, Roxie, Burgh, Elesa,
+Clay, and Bianca), while Rental Master priority 3 is records `0–13, 20–52`;
+the seven standard Champion records are absent from both.
 
 ## Mapping to named permanent cups
 
@@ -79,20 +83,20 @@ byte.
 | Named cup | Cup ID | Constructor | Raw family byte (offset 6) | Source-table records in this build | Evidence status |
 |---|---:|---|---:|---|---|
 | Champions | 1 | `0x02241A88` | `0x01` | indices `14–19, 53` (7 records) | Confirmed: menu branch + fixed Champion roster |
-| Type Expert | 2 | `0x02241C0C` | dynamic | Type/category-specific leader/mob/weak-mob pools | Confirmed: menu branch + dynamic constructor |
+| Type Expert | 2 | `0x02241C0C` | dynamic | Type-specific priority-3/2/1 pools | Confirmed: menu branch + dynamic constructor |
 | Download | 3 | `0x02241998` | download/special | Generic/download-style shuffle path | Confirmed: menu branch + constructor; payload is mode-specific |
-| Driftveil | 4 | `0x02241B20` | mixed | Four cat. 1, one cat. 2, two cat. 3 | Confirmed: menu branch + constructor |
+| Driftveil | 4 | `0x02241B20` | mixed | Four priority 1, one priority 2, two priority 3 | Confirmed: menu branch + constructor |
 | Unova/Teselia Leaders | 5 | `0x02241B08` | `0x05` | indices `0–7, 9–13` (13 standard Leaders) | Confirmed: family roster/order + cup progression |
 | Kanto Leaders | 6 | `0x02241B08` | `0x06` | indices `20–26, 35` (8 records) | Confirmed: family roster/order |
 | Johto Leaders | 7 | `0x02241B08` | `0x07` | indices `27–34` (8 records) | Confirmed: family roster/order |
 | Hoenn Leaders | 8 | `0x02241B08` | `0x08` | indices `36–44` (9 records) | Confirmed: family roster/order |
 | Sinnoh Leaders | 9 | `0x02241B08` | `0x09` | indices `45–52` (8 records) | Confirmed: family roster/order |
-| World Leaders | 10 | `0x02241AF0` | mixed leader families | Seven cat.-3 selections | Confirmed: menu branch + constructor |
-| Rental | 12 | `0x02241B84` | special | Three cat. 1, two cat. 2, two cat. 3 | Confirmed: menu branch + constructor |
-| Rental Master | 13 | `0x02241BDC` | special | Seven cat.-3 selections | Confirmed: menu branch + constructor |
-| Mix | 14 | `0x02241BB0` | special | Three cat. 1, two cat. 2, two cat. 3 | Confirmed: menu branch + constructor |
-| Mix Master | 15 | `0x02241BF4` | special | Seven cat.-3 selections | Confirmed: menu branch + constructor |
-| Driftveil event | 11 | `0x02241B4C` | `WBTCUP_HODOMOE_EVENT` | Four cat. 1, one each cat. 3/4/5 | Confirmed: source enum + menu branch + enable predicate |
+| World Leaders | 10 | `0x02241AF0` | mixed leader families | Seven priority-3 selections | Confirmed: menu branch + constructor |
+| Rental | 12 | `0x02241B84` | special | Three priority 1, two priority 2, two priority 3 | Confirmed: menu branch + constructor |
+| Rental Master | 13 | `0x02241BDC` | special | Seven priority-3 selections | Confirmed: menu branch + constructor |
+| Mix | 14 | `0x02241BB0` | special | Three priority 1, two priority 2, two priority 3 | Confirmed: menu branch + constructor |
+| Mix Master | 15 | `0x02241BF4` | special | Seven priority-3 selections | Confirmed: menu branch + constructor |
+| Driftveil event | 11 | `0x02241B4C` | `WBTCUP_HODOMOE_EVENT` | Four priority 1, one each priority 3/4/5 | Confirmed: source enum + menu branch + enable predicate |
 
 “Confirmed” means the mapping is deterministic and supported by the source,
 script menu/description branch, and constructor evidence for the examined build;
@@ -246,7 +250,7 @@ switch because it is the null/error path.
 
 The direct script branch assigns ID 2 to Type Expert and ID 10 to World Leaders;
 the constructor code independently agrees that ID 2 is the dynamic
-leader/mob/weak-mob path while ID 10 requests seven category-3 records.
+leader/mob/weak-mob path while ID 10 requests seven priority-3 records.
 
 The public BW2 retail symbol database lists `LoadPWTTournamentTypeText` at
 `0x021C98F5`. This independently confirms a retail tournament-type text-loader
@@ -282,7 +286,7 @@ eight participant positions.
 
 Therefore Type Expert is a dynamic candidate-pool selection, not a fixed
 downloadable-style `YY` histogram. World Leaders is cup ID 10 and uses its
-separate seven-category-3 constructor path.
+separate seven-priority-3 constructor path.
 
 ## Relationship to the winner routine
 
@@ -290,7 +294,7 @@ Construction, slot placement, and result calculation remain separate:
 
 ```text
 cup ID
-  → constructor/category selection
+  → constructor eligibility/priority selection
   → seven NPC records + player
   → common eight-position shuffle/finalization
   → automated NPC-vs-NPC match (if simulated)
@@ -312,9 +316,10 @@ SHA-256 `30b48d2cc1e724470351f57fa6fa28d2844f195732737052bc9ce41e57ef98b8`).
 The corresponding retail anchors are candidate selector `0x021EEE08`,
 Type Expert eligibility predicate `0x021EEF90`, cup dispatch `0x021EF298`
 with its 16-entry switch at `0x021EF2C0`, and common eight-position shuffle
-`0x021EF344`. The decoded control flow preserves category filtering and the
-Type Expert `POKETYPE_NULL` (`0x11`) wildcard, while the separate Overlay-55
-result helper handles category-17 neutrality during matchup calculation.
+`0x021EF344`. The decoded control flow preserves priority filtering and the
+separate Type Expert `POKETYPE_NULL` (`0x11`) eligibility wildcard, while the
+Overlay-55 result helper handles category-17 neutrality during matchup
+calculation.
 
 The USA/Europe retail WBT table is `/a/2/4/7`, not `/a/2/6/1`. Its 2,108-byte
 NARC (one 2,048-byte member) has the same SHA-256 as the development table,
