@@ -101,12 +101,13 @@ turns a nonzero value into `has_ace`. The complete coverage audit is:
 | `wbt3` party tables (IDs 0–67) | 68 | 64 | 4 | Every present ace row resolves to a valid, nonzero species record; the four unmarked rows use the normal selector. |
 | Trainer-list IDs 119–127 | 9 | 0 | 9 | No corresponding `wbt1/2/3` party-table rows, so no party-order claim is made from these resources. |
 
-For the 74 ace-marked trainers, both `wbt1n_pd.narc` and `wbt2n_pd.narc`
-contain a nonzero Pokémon record at the ace index supplied by the matching
-`wbt1a_tr.tdm`/`wbt2a_tr.tdm` row. The 64 ace-marked trainers represented in
-`wbt3` pass the same check against `wbt3n_pd.narc`. Therefore the fixed-first
-algorithm is verified across every ace-marked trainer that has a party-table
-record in the examined build.
+The ace trainer table (`wbt1a_tr.tdm` / `wbt2a_tr.tdm`) supplies an index into
+the matching ace Pokémon archive (`wbt1a_pd.narc` / `wbt2a_pd.narc`);
+`wbt3a_tr.tdm` and `wbt3a_pd.narc` provide the limited-data equivalent. The
+first u16 in the selected PDM record is the species ID. For all 74 ace rows in
+`wbt1`/`wbt2` and the 64 rows represented in `wbt3`, that species record is
+nonzero. Therefore the fixed-first algorithm is verified across every
+ace-marked trainer that has a party-table record in the examined build.
 
 ### Complete ace-marked trainer list
 
@@ -114,85 +115,100 @@ The following is the complete set of 74 rows whose `エースポケモン` field
 marked `○` in `wbt_trainer_list.txt`. These are the trainers that enter the
 fixed-first (ace) path above. IDs and display codes are the source keys; the
 names use the English/common names for recognizable characters. For the
-generic rows, the Japanese source name is included in parentheses so the
-label cannot be confused with a language-specific localization.
+generic rows, the Japanese source name is included in parentheses so the label
+cannot be confused with a language-specific localization.
 
-| ID | Trainer | Display code |
-|---:|---|---|
-| 000 | Cheren | `SWLEADER1` |
-| 001 | Roxie | `SWLEADER2` |
-| 002 | Burgh | `SWLEADER3` |
-| 003 | Elesa | `SWLEADER4` |
-| 004 | Clay | `SWLEADER5` |
-| 005 | Skyla | `SWLEADER6` |
-| 006 | Drayden | `SWLEADER7` |
-| 007 | Marlon | `SWLEADER8` |
-| 008 | Bianca | `SWBELL` |
-| 009 | Chili | `LEADER1A` |
-| 010 | Cress | `LEADER1B` |
-| 011 | Cilan | `LEADER1C` |
-| 012 | Lenora | `LEADER2` |
-| 013 | Brycen | `LEADER7` |
-| 015 | Lance | `GSCHAMPION` |
-| 016 | Steven | `RSCHAMPION` |
-| 017 | Wallace | `ECHAMPION` |
-| 018 | Cynthia | `SHIRONA` |
-| 019 | Alder | `CHAMPION` |
-| 020 | Brock | `RGLEADER1` |
-| 021 | Misty | `RGLEADER2` |
-| 022 | Lt. Surge | `RGLEADER3` |
-| 023 | Erika | `RGLEADER4` |
-| 024 | Sabrina | `RGLEADER5` |
-| 025 | Blaine | `RGLEADER6` |
-| 026 | Giovanni | `RGLEADER7` |
-| 027 | Falkner | `GSLEADER1` |
-| 028 | Bugsy | `GSLEADER2` |
-| 029 | Whitney | `GSLEADER3` |
-| 030 | Morty | `GSLEADER4` |
-| 031 | Chuck | `GSLEADER5` |
-| 032 | Jasmine | `GSLEADER6` |
-| 033 | Pryce | `GSLEADER7` |
-| 034 | Clair | `GSLEADER8` |
-| 035 | Janine | `GSLEADER9` |
-| 036 | Roxanne | `RSLEADER1` |
-| 037 | Brawly | `RSLEADER2` |
-| 038 | Wattson | `RSLEADER3` |
-| 039 | Flannery | `RSLEADER4` |
-| 040 | Norman | `RSLEADER5` |
-| 041 | Winona | `RSLEADER6` |
-| 042 | Tate | `RSLEADER7` |
-| 043 | Liza | `RSLEADER8` |
-| 044 | Juan | `ELEADER1` |
-| 045 | Roark | `DPLEADER1` |
-| 046 | Gardenia | `DPLEADER2` |
-| 047 | Fantina | `DPLEADER3` |
-| 048 | Maylene | `DPLEADER4` |
-| 049 | Crasher Wake | `DPLEADER5` |
-| 050 | Byron | `DPLEADER6` |
-| 051 | Candice | `DPLEADER7` |
-| 052 | Volkner | `DPLEADER8` |
-| 056 | Cheren (event) | `SWLEADER1` |
-| 057 | Colress | `SWBOSS` |
-| 058 | Botsuri (ボツリ) | `ASSISTANTM` |
-| 059 | Ieji (イエジ) | `MOUNTMAN` |
-| 060 | Karuto (カルト) | `ESPW` |
-| 061 | Walter (ウォルター) | `VETERANM` |
-| 062 | Rensuke (レンスケ) | `ESPM` |
-| 063 | Ryuichi (リュウイチ) | `TRAINERM` |
-| 064 | Thatcher (サッチャー) | `VETERANW` |
-| 065 | Vito (ヴィトー) | `VETERANM` |
-| 066 | Ilsane (イルサーネ) | `VETERANW` |
-| 067 | Bonnie (ボニー) | `TRAINERW` |
-| 068 | Ex (エクス) | `TRAINERM` |
-| 069 | Makina (マキナ) | `TRAINERW` |
-| 070 | Castro (カストロ) | `VETERANM` |
-| 071 | Tsugumi (ツグミ) | `VETERANW` |
-| 072 | Arashiyama (アラシヤマ) | `FIGHTERM` |
-| 073 | Jane (ジェーン) | `FIGHTERW` |
-| 074 | Shuichi (シュウイチ) | `ASSISTANTM` |
-| 075 | Eclaire (エクレア) | `ASSISTANTW` |
-| 076 | Rurio (ルリオ) | `ESPM` |
-| 077 | Soprano (ソプラノ) | `ESPW` |
+The `Source trainer type` column is the exact `トレーナータイプ` value from the
+source list. `Code meaning` translates the source `ポジション` field, so the
+display code's runtime role is visible rather than just its symbolic name.
+
+The three ace columns are separate party-data archives from the source enum:
+
+- `WBT1` = `WBTBTDATA_1` (clear-before data)
+- `WBT2` = `WBTBTDATA_2` (clear-after data)
+- `WBT3` = `WBTBTDATA_3` (limited data)
+
+The game resolves each column as `wbtXa_tr.tdm` ace index → matching
+`wbtXa_pd.narc` record → first u16 species ID. Since these are separate
+archives, the same trainer can have different ace species in different columns.
+`—` means no corresponding WBT3 party-table row exists in the examined build.
+
+| ID | Trainer | Display code | Source trainer type | Code meaning | Ace Pokémon — WBT1 | Ace Pokémon — WBT2 | Ace Pokémon — WBT3 |
+|---:|---|---|---|---|---|---|---|
+| 000 | Cheren | `SWLEADER1` | `SWLEADER1` | BW2 Gym Leader | Stoutland | Stoutland | Stoutland |
+| 001 | Roxie | `SWLEADER2` | `SWLEADER2` | BW2 Gym Leader | Scolipede | Scolipede | Scolipede |
+| 002 | Burgh | `SWLEADER3` | `SWLEADER3` | BW2 Gym Leader | Leavanny | Leavanny | Leavanny |
+| 003 | Elesa | `SWLEADER4` | `SWLEADER4` | BW2 Gym Leader | Zebstrika | Zebstrika | Zebstrika |
+| 004 | Clay | `SWLEADER5` | `SWLEADER5` | BW2 Gym Leader | Excadrill | Excadrill | Excadrill |
+| 005 | Skyla | `SWLEADER6` | `SWLEADER6` | BW2 Gym Leader | Magneton | Swanna | Swanna |
+| 006 | Drayden | `SWLEADER7` | `SWLEADER7` | BW2 Gym Leader | Stoutland | Haxorus | Haxorus |
+| 007 | Marlon | `SWLEADER8` | `SWLEADER8` | BW2 Gym Leader | Zangoose | Jellicent | Jellicent |
+| 008 | Bianca | `SWBELL` | `SUPPORT` | BW character / support | Musharna | Jellicent | Musharna |
+| 009 | Chili | `LEADER1A` | `LEADER1A` | BW Gym Leader | Rotom-Mow | Simisear | Simisear |
+| 010 | Cress | `LEADER1B` | `LEADER1B` | BW Gym Leader | Cinccino | Simipour | Simipour |
+| 011 | Cilan | `LEADER1C` | `LEADER1C` | BW Gym Leader | Rotom-Mow | Simisage | Simisage |
+| 012 | Lenora | `LEADER2` | `LEADER2` | BW Gym Leader | Scolipede | Rotom-Mow | Rotom-Mow |
+| 013 | Brycen | `LEADER7` | `LEADER7` | BW Gym Leader | Seviper | Cryogonal | Cryogonal |
+| 015 | Lance | `GSCHAMPION` | `GSCHAMPION` | Gold/Silver Champion | Golbat | Cryogonal | Dragonite |
+| 016 | Steven | `RSCHAMPION` | `RSCHAMPION` | Ruby/Sapphire Champion | Garbodor | Cryogonal | Metagross |
+| 017 | Wallace | `ECHAMPION` | `ECHAMPION` | Emerald Champion | Golbat | Cryogonal | Milotic |
+| 018 | Cynthia | `SHIRONA` | `DPCHAMPION` | Diamond/Pearl Champion | Leavanny | Cryogonal | Garchomp |
+| 019 | Alder | `CHAMPION` | `CHAMPION` | Black/White Champion | Vespiquen | Cryogonal | Volcarona |
+| 020 | Brock | `RGLEADER1` | `RGLEADER1` | Red/Green Gym Leader | Crustle | Onix | Onix |
+| 021 | Misty | `RGLEADER2` | `RGLEADER2` | Red/Green Gym Leader | Escavalier | Starmie | Starmie |
+| 022 | Lt. Surge | `RGLEADER3` | `RGLEADER3` | Red/Green Gym Leader | Crustle | Raichu | Raichu |
+| 023 | Erika | `RGLEADER4` | `RGLEADER4` | Red/Green Gym Leader | Escavalier | Vileplume | Vileplume |
+| 024 | Sabrina | `RGLEADER5` | `RGLEADER5` | Red/Green Gym Leader | Zebstrika | Alakazam | Alakazam |
+| 025 | Blaine | `RGLEADER6` | `RGLEADER6` | Red/Green Gym Leader | Flaaffy | Arcanine | Arcanine |
+| 026 | Giovanni | `RGLEADER7` | `RGLEADER7` | Red/Green Gym Leader / enemy character | Galvantula | Rhyperior | Rhyperior |
+| 027 | Falkner | `GSLEADER1` | `GSLEADER1` | Gold/Silver Gym Leader | Emolga | Pidgeot | Pidgeot |
+| 028 | Bugsy | `GSLEADER2` | `GSLEADER2` | Gold/Silver Gym Leader | Galvantula | Scizor | Scizor |
+| 029 | Whitney | `GSLEADER3` | `GSLEADER3` | Gold/Silver Gym Leader | Emolga | Miltank | Miltank |
+| 030 | Morty | `GSLEADER4` | `GSLEADER4` | Gold/Silver Gym Leader | Excadrill | Gengar | Gengar |
+| 031 | Chuck | `GSLEADER5` | `GSLEADER5` | Gold/Silver Gym Leader | Claydol | Poliwrath | Poliwrath |
+| 032 | Jasmine | `GSLEADER6` | `GSLEADER6` | Gold/Silver Gym Leader | Krokorok | Steelix | Steelix |
+| 033 | Pryce | `GSLEADER7` | `GSLEADER7` | Gold/Silver Gym Leader | Palpitoad | Mamoswine | Mamoswine |
+| 034 | Clair | `GSLEADER8` | `GSLEADER8` | Gold/Silver Gym Leader | Krokorok | Kingdra | Kingdra |
+| 035 | Janine | `GSLEADER9` | `GSLEADER9` | Gold/Silver Gym Leader / Kanto Gym Leader | Palpitoad | Venomoth | Venomoth |
+| 036 | Roxanne | `RSLEADER1` | `RSLEADER1` | Ruby/Sapphire Gym Leader | Archeops | Probopass | Probopass |
+| 037 | Brawly | `RSLEADER2` | `RSLEADER2` | Ruby/Sapphire Gym Leader | Simisage | Hariyama | Hariyama |
+| 038 | Wattson | `RSLEADER3` | `RSLEADER3` | Ruby/Sapphire Gym Leader | Rufflet | Manectric | Manectric |
+| 039 | Flannery | `RSLEADER4` | `RSLEADER4` | Ruby/Sapphire Gym Leader | Frillish | Torkoal | Torkoal |
+| 040 | Norman | `RSLEADER5` | `RSLEADER5` | Ruby/Sapphire Gym Leader | Rufflet | Slaking | Slaking |
+| 041 | Winona | `RSLEADER6` | `RSLEADER6` | Ruby/Sapphire Gym Leader | Frillish | Altaria | Altaria |
+| 042 | Tate | `RSLEADER7` | `RSLEADER7` | Ruby/Sapphire Gym Leader | Tirtouga | Solrock | Solrock |
+| 043 | Liza | `RSLEADER8` | `RSLEADER8` | Ruby/Sapphire Gym Leader | Simisear | Lunatone | Lunatone |
+| 044 | Juan | `ELEADER1` | `ELEADER1` | Emerald Gym Leader | Vullaby | Kingdra | Kingdra |
+| 045 | Roark | `DPLEADER1` | `DPLEADER1` | Diamond/Pearl Gym Leader | Ferroseed | Rampardos | Rampardos |
+| 046 | Gardenia | `DPLEADER2` | `DPLEADER2` | Diamond/Pearl Gym Leader | Vullaby | Roserade | Roserade |
+| 047 | Fantina | `DPLEADER3` | `DPLEADER3` | Diamond/Pearl Gym Leader | Ferroseed | Mismagius | Mismagius |
+| 048 | Maylene | `DPLEADER4` | `DPLEADER4` | Diamond/Pearl Gym Leader | Whimsicott | Lucario | Lucario |
+| 049 | Crasher Wake | `DPLEADER5` | `DPLEADER5` | Diamond/Pearl Gym Leader | Simipour | Floatzel | Floatzel |
+| 050 | Byron | `DPLEADER6` | `DPLEADER6` | Diamond/Pearl Gym Leader | Cubchoo | Bastiodon | Bastiodon |
+| 051 | Candice | `DPLEADER7` | `DPLEADER7` | Diamond/Pearl Gym Leader | Growlithe | Froslass | Froslass |
+| 052 | Volkner | `DPLEADER8` | `DPLEADER8` | Diamond/Pearl Gym Leader | Cubchoo | Electivire | Electivire |
+| 056 | Cheren (event) | `SWLEADER1` | `SWLEADER1` | Event Gym Leader 1 | Stoutland | Rotom-Mow | Stoutland |
+| 057 | Colress | `SWBOSS` | `SWBOSS` | Event Boss | Magneton | Audino | Stoutland |
+| 058 | Botsuri (ボツリ) | `ASSISTANTM` | `SCIENTISTM_1` | Scientist (male), battleable generic | Growlithe | Magmortar | Muk |
+| 059 | Ieji (イエジ) | `MOUNTMAN` | `MOUNT_1` | Hiker, battleable generic | Lilligant | Simipour | Krookodile |
+| 060 | Karuto (カルト) | `ESPW` | `ESPW_1` | Psychic (female), battleable generic | Alomomola | Golduck | Starmie |
+| 061 | Walter (ウォルター) | `VETERANM` | `VETERANM_2` | Veteran Trainer (male), battleable generic | Purrloin | Floatzel | Heracross |
+| 062 | Rensuke (レンスケ) | `ESPM` | `ESPM_1` | Psychic (male), battleable generic | Vanillite | Azumarill | Cofagrigus |
+| 063 | Ryuichi (リュウイチ) | `TRAINERM` | `ELITEM_1` | Elite Trainer (male), battleable generic | Purrloin | Slowking | Salamence |
+| 064 | Thatcher (サッチャー) | `VETERANW` | `VETERANW_2` | Veteran Trainer (female), battleable generic | Vanillite | Basculin | Aggron |
+| 065 | Vito (ヴィトー) | `VETERANM` | `VETERANM_2` | Veteran Trainer (male), battleable generic | Throh | Simisage | Shiftry |
+| 066 | Ilsane (イルサーネ) | `VETERANW` | `VETERANW_2` | Veteran Trainer (female), battleable generic | Sudowoodo | Ferrothorn | Umbreon |
+| 067 | Bonnie (ボニー) | `TRAINERW` | `ELITEW_1` | Elite Trainer (female), battleable generic | Scrafty | Maractus | Drapion |
+| 068 | Ex (エクス) | `TRAINERM` | `ELITEM_1` | Elite Trainer (male), clear-before generic | Archeops | Stoutland | — |
+| 069 | Makina (マキナ) | `TRAINERW` | `ELITEW_1` | Elite Trainer (female), clear-before generic | Tirtouga | Stoutland | — |
+| 070 | Castro (カストロ) | `VETERANM` | `VETERANM_2` | Veteran Trainer (male), clear-before generic | Whimsicott | Stoutland | — |
+| 071 | Tsugumi (ツグミ) | `VETERANW` | `VETERANW_2` | Veteran Trainer (female), clear-before generic | Lilligant | Stoutland | — |
+| 072 | Arashiyama (アラシヤマ) | `FIGHTERM` | `KARATE_1` | Black Belt, clear-before generic | Throh | Stoutland | — |
+| 073 | Jane (ジェーン) | `FIGHTERW` | `BATTLEG_1` | Battle Girl, clear-before generic | Sawk | Stoutland | — |
+| 074 | Shuichi (シュウイチ) | `ASSISTANTM` | `SCIENTISTM_1` | Scientist (male), clear-before generic | Golduck | Stoutland | — |
+| 075 | Eclaire (エクレア) | `ASSISTANTW` | `SCIENTISTW_1` | Scientist (female), clear-before generic | Lopunny | Stoutland | — |
+| 076 | Rurio (ルリオ) | `ESPM` | `ESPM_1` | Psychic (male), clear-before generic | Cofagrigus | Stoutland | — |
+| 077 | Soprano (ソプラノ) | `ESPW` | `ESPW_1` | Psychic (female), clear-before generic | Mr-Mime | Stoutland | — |
 
 The unmarked rows do not enter the ace branch at all: their complete party is
 selected from the normal candidate list by the no-replacement chooser. In the
