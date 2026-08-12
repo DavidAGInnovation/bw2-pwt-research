@@ -37,6 +37,20 @@ Cup IDs 1 and 5–9 use the family-selector comparison instead. The Download
 path (ID 3) uses its separate generic/download constructor. Type Expert (ID 2)
 uses the type-ID comparison and its dynamic leader/mob/weak-mob grouping.
 
+## Named special record: Bianca
+
+Bianca is a named candidate in the Rental and Mix data rather than a standard
+Leader-tournament entry. Her family byte is `0x00`, so the regional constructor
+does not admit her to the Unova Leaders pool. Her separate eligibility flags
+admit her to Rental, Mix, and Rental Master; she is not eligible for Mix Master.
+
+| Trainer | Display code | Code meaning | WBT index | Priority | Category | Eligible tournaments |
+|---|---|---|---:|---:|---:|---|
+| Bianca | `SWBELL` | Black/White character / support | 8 | 3 | 17 (neutral sentinel) | Rental, Mix, Rental Master |
+
+Her priority and category are stored in the source record and are not derived
+from the random Pokémon assigned to her in Rental or from her party in Mix.
+
 ## Complete non-regional/generic record groups
 
 The table below groups the records that are not the regional Leader/Champion
@@ -137,11 +151,11 @@ The complete raw rows and these derived fields are reproducible with
 python3 scripts/inspect_wbt_table.py rom/extracted/a/2/6/1 --dump-records
 ```
 
-For named Leader and Champion records, including the special Bianca row, see
-[`champions-and-leaders.md`](champions-and-leaders.md). Together, that table
-and the mapping above cover every source-table row's priority, category, and
-built-in NPC trainer-type fields: 46 standard Leaders, Bianca, 7 standard
-Champions, and 74 non-regional/generic rows (`0–127` in total).
+For named Leader and Champion records, see
+[`champions-and-leaders.md`](champions-and-leaders.md). Together, that table,
+the Bianca row above, and the mapping below cover every source-table row's
+priority and category: 46 standard Leaders, Bianca, 7 standard Champions, and
+74 non-regional/generic rows (`0–127` in total).
 
 ## Retail PWT names and result fields
 
@@ -176,9 +190,11 @@ three low-level columns (`mmdl_id`, `btl_tr_type`, and the packed NPC
 trainer-type flag) are intentionally omitted here because they do not affect
 candidate selection or the displayed NPC result.
 
-`Display code` is the exact `表示コード名` source key. `Code meaning` is an
-English reader-facing description of that code, normally based on the source
-`ポジション` field. Hilda's `HEROINE` code is therefore described as “Female
+`Display code` is the exact `表示コード名` source key. It is an identifier,
+not a strength or result-setting field. `Code meaning` is an English
+reader-facing description of the source role, normally based on the separate
+`ポジション` field rather than a literal expansion of the code. Hilda's
+`HEROINE` code is therefore described as “Female
 protagonist / heroine”; the underlying source row is separately marked as
 unused and is not selected by the built-in cup predicates.
 

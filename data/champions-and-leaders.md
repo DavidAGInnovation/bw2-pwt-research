@@ -8,8 +8,10 @@ identical to the development `/a/2/6/1` table (SHA-256
 `0a32d2956f75a6e6365f292eb20e129c5247fe9ec093ca881dd469ea698d00ca`), so the
 indices and names below are verified for both builds.
 
-`Display code` is the exact `表示コード名` source key. `Code meaning` is an
-English translation of the source `ポジション` field.
+`Display code` is the exact `表示コード名` source key. It is an identifier,
+not a strength or party-selection rule. `Code meaning` is an English
+translation or reader-facing interpretation of the separate source
+`ポジション` field.
 
 | Trainer | Display code | Code meaning | WBT index | Priority | Category |
 |---|---|---|---:|---:|---:|
@@ -128,20 +130,3 @@ either source index explicitly, depending on the `.pwt` match records.
 Therefore, statements that “Cheren has priority 3” refer to the standard Leader
 record at index `0`; statements that “Cheren has priority 4” refer only to the
 special/event record at index `56`.
-
-### Bianca special record
-
-Index 8 is Bianca's record. Its family byte is `0x00`, so it is not part of the
-standard Unova Leader-family (`0x05`) count. The regional constructor's
-predicate requires `region_tournament_id == WBTCUP_ISSYU` (`5`), so this record
-is excluded from the Unova Leaders pool. Bianca's eligibility in other modes is
-controlled by their separate entry flags; reuse of the record does not change
-the regional family count.
-
-The common built-in row conversion still gives Bianca the same result-routine
-fields as the other source rows: priority `3` (raw byte 8 low bits), trainer
-type `0`, and category `17` (`0x11`, the neutral sentinel from raw byte 0).
-Thus Bianca is a fully mapped NPC record even though she is excluded from the
-standard Unova Leaders constructor predicate. Her result category is stored in
-the record; it is not derived from the Pokémon shown for her in a particular
-mode.

@@ -12,14 +12,14 @@ DEFAULT_DISASSEMBLY = ROOT.parent / "disassembly" / "ov55.dis"
 
 
 EVIDENCE = (
-    ("six-entry request", "0x0223975a", r"movs r1, 6"),
-    ("six-entry output loop", "0x022397e6", r"cmp r5, 6"),
-    ("battle-rule field", "0x022395ba", r"0x13e4"),
-    ("rule branch 0", "0x022395c0", r"cmp r0, 0"),
-    ("rule branch 1", "0x022395c4", r"cmp r0, 1"),
-    ("rule branch 2", "0x022395c8", r"cmp r0, 2"),
-    ("three-entry split", "0x0223964c", r"movs r0, 3"),
-    ("remainder split", "0x02239682", r"subs r0, r4, 3"),
+    ("six-entry Rental request", "0x0223975a", r"movs r1, 6"),
+    ("six-entry Rental output loop", "0x022397e6", r"cmp r5, 6"),
+    ("Rental-type field", "0x022395ba", r"0x13e4"),
+    ("weak Rental branch", "0x022395c0", r"cmp r0, 0"),
+    ("strong Rental branch", "0x022395c4", r"cmp r0, 1"),
+    ("all Rental branch", "0x022395c8", r"cmp r0, 2"),
+    ("three-strong-entry split", "0x0223964c", r"movs r0, 3"),
+    ("weak-range remainder split", "0x02239682", r"subs r0, r4, 3"),
     ("available-record count", "0x02239280", r"push"),
     ("ordinal-to-index mapping", "0x022392c4", r"push"),
     ("remove selected record", "0x0223933c", r"strb r1, \[r0, r4\]"),
