@@ -233,17 +233,20 @@ random selection.
 
 ## Reproduction
 
-With the three extracted USA/Europe retail NARCs, regenerate the complete CSV:
+From `analysis/research-checkout`, verify or extract the three USA/Europe
+retail NARCs and regenerate the complete CSV:
 
 ```sh
+python3 ../../tools/extract_retail_resources.py
 python3 scripts/decode_rental_pokemon.py \
-  rom/retail-extracted/a/2/5/7 \
-  rom/retail-extracted/a/0/0/2 \
-  rom/retail-extracted/a/0/1/6 \
+  ../../rom/retail-extracted/a/2/5/7 \
+  ../../rom/retail-extracted/a/0/0/2 \
+  ../../rom/retail-extracted/a/0/1/6 \
   --output data/rental-pokemon-builds.csv
 ```
 
 The examined development `/a/2/7/1` can replace the first argument because
 its contents are byte-identical. The script reads names from the retail text
-archive and normal-ability and gender information from retail personal data;
-neither ROM resource is redistributed by this repository.
+archive and normal-ability and gender information from retail personal data.
+The surrounding local artifact retains these inputs for reproducible review;
+the standalone research repository does not redistribute them.

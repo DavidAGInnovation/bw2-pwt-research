@@ -150,7 +150,7 @@ The complete raw rows and these derived fields are reproducible with
 `--dump-records`:
 
 ```sh
-python3 scripts/inspect_wbt_table.py rom/extracted/a/2/6/1 --dump-records
+python3 scripts/inspect_wbt_table.py ../../rom/extracted/a/2/6/1 --dump-records
 ```
 
 For named Leader and Champion records, see
@@ -408,11 +408,11 @@ values are not used there through the standard Champion records.
 With the extracted development WBT NARC:
 
 ```sh
-python3 scripts/inspect_wbt_table.py rom/extracted/a/2/6/1 \
+python3 scripts/inspect_wbt_table.py ../../rom/extracted/a/2/6/1 \
   --cup 12 --cup 13 --cup 14 --cup 15
 
 # Optional: print all 128 complete source rows and decoded constructor fields.
-python3 scripts/inspect_wbt_table.py rom/extracted/a/2/6/1 --dump-records --cup 12
+python3 scripts/inspect_wbt_table.py ../../rom/extracted/a/2/6/1 --dump-records --cup 12
 ```
 
 The USA/Europe retail WBT NARC is `/a/2/4/7`; its member is byte-for-byte
