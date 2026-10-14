@@ -6,6 +6,8 @@ Pokémon, and simulated NPC results. It began with a practical question: when
 two NPC Trainers are shown battling, are they equally likely to win, or does
 the game use another rule?
 
+![Spanish Champions Tournament bracket in Triple Battle format](assets/champions-tournament-bracket.png)
+
 ## Short answer
 
 - In the normal NPC simulation path, priority and type-chart category determine
