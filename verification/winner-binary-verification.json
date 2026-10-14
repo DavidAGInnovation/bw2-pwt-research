@@ -1,0 +1,16 @@
+{
+  "development": {
+    "base": "0x22374a0",
+    "type_table_address": "0x22399ec",
+    "type_table_matches": true,
+    "disassembly_instruction_byte_count": 5800,
+    "disassembly_mismatches": []
+  },
+  "retail": {
+    "base": "0x21e5800",
+    "type_table_address": "0x21e73d4",
+    "type_table_matches": true,
+    "disassembly_instruction_byte_count": 3519,
+    "disassembly_mismatches": []
+  }
+}

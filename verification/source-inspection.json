@@ -1,0 +1,62 @@
+{
+  "revision": 59995,
+  "source_archive": "../original-builds/TeraLeak 13_10_2024/swanmirror-007.tar",
+  "source_category_override": {
+    "file": "branches/upper_version/prog/src/field/wbt_system_lobby.c",
+    "lines": [
+      254,
+      265
+    ],
+    "cup_ids": [
+      12,
+      13,
+      14,
+      15
+    ],
+    "category": 17,
+    "development_write": "0x022424FC",
+    "retail_write": "0x021EF8EE"
+  },
+  "sort": {
+    "file": "branches/upper_version/prog/src/field/wbt_makematch.c",
+    "lines": [
+      679,
+      690
+    ],
+    "stable": false
+  },
+  "player_override": {
+    "file": "branches/fes_rom/prog/src/field/wbt_calc_result.c",
+    "lines": [
+      198,
+      206
+    ],
+    "player_always_advances_in_simulation": true
+  },
+  "rival_override": {
+    "file": "branches/upper_version/prog/src/field/wbt_battle.c",
+    "lines": [
+      786,
+      807
+    ],
+    "development": "0x0224389E\u20130x022438B0",
+    "retail": "0x021F040E\u20130x021F0420",
+    "trainer_ids": [
+      368,
+      369,
+      370
+    ]
+  },
+  "runtime_ace_pd": {
+    "arc_definition": "branches/upper_version/prog/arc/arc_tool.lst",
+    "lines": [
+      320,
+      328
+    ],
+    "families": [
+      "wbt1n_pd",
+      "wbt2n_pd",
+      "wbt3n_pd"
+    ]
+  }
+}

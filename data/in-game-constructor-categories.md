@@ -352,8 +352,10 @@ guarantee identical addresses or data in untested regional/revision ROMs.
   symbols and source-level implementation evidence: WBT `CMD_3EA` is
   `EvCmdWBTSystemCheckEnable`, WBT `CMD_3FA` is
   `EvCmdWBTGetVictoryCount`, and Resort `CMD_3EA` is `EvCmdResortGetData`.
-  It is retained locally under the artifact's
-  `rom/original-builds/swanmirror.tar` and is not copied into this repository.
+  It is retained outside this bundle under
+  `../original-builds/TeraLeak 13_10_2024/swanmirror-007.tar`; its hash matches
+  the historical manifest's `rom/original-builds/swanmirror.tar` entry. Source
+  files are not copied into this repository.
   The addresses above remain build-specific disassembly cross-checks.
 - The USA/Europe retail Overlay 135 and the retail WBT
   table `/a/2/4/7` are cross-checked as described above. Other

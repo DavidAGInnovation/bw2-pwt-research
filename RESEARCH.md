@@ -4,6 +4,11 @@
 
 For the normal NPC simulation call, the routine at `0x02238314` receives two packed trainer records. It extracts priority bits from byte 0 and reads byte 1 as the category used by the type-chart helper. The recovered source implementation is `branches/fes_rom/prog/src/field/wbt_calc_result.c`, function `calcWBTResult`, called by `WBTSYS_CalcResult`.
 
+The routine reads the final runtime categories, after tournament setup. Rental,
+Rental Master, Mix, and Mix Master (cup IDs `12–15`) replace every participant's
+source category with neutral category `17`; the type-advantage examples below
+apply to modes that retain the original categories.
+
 The behavior is equivalent to:
 
 ```text
@@ -11,16 +16,22 @@ priorityA = (recordA.byte0 >> 4) & 7
 priorityB = (recordB.byte0 >> 4) & 7
 
 if priorityA != priorityB:
-    winner = A if priorityA > priorityB else B
+    a_wins = (priorityA > priorityB)
 elif a_affinity == b_affinity:
-    winner = (rand(2) == 0)       # exact 50/50 source branch
+    a_wins = (rand(2) == 0)       # exact 50/50 source branch
 else:
-    winner = (a_affinity > b_affinity)
+    a_wins = (a_affinity > b_affinity)
     if rand(10) >= 7:              # 3 of 10 source outputs
-        winner = not winner        # reverse the type-advantage result
+        a_wins = not a_wins        # reverse the type-advantage result
 
-# After this, the source forces player battles: a player in A wins and a
-# player in B loses. NPC-vs-NPC calls do not use that override.
+# The simulated result always advances the player, whichever side they occupy.
+if A is the player:
+    a_wins = True
+elif B is the player:
+    a_wins = False                 # A loses; B (the player) wins
+
+# NPC-vs-NPC calls do not use this override. Actual player battles still
+# require the player to win; this flag only constructs the simulated bracket.
 ```
 
 The two RNG calls are used in different situations:
@@ -250,10 +261,12 @@ path.
 
 Champions decode to priority 4; standard Gym Leaders decode to priority 3. Since the priorities differ, the routine selects the Champion immediately and skips the equal-priority upside check. Thus, a standard Champion-vs-Leader simulation is Champion 100% in this routine.
 
-### Gym Leader versus Gym Leader
+### Gym Leader versus Gym Leader with retained type categories
 
 Both standard Leader records have priority 3, so their stored matchup
-categories decide the odds. The routine compares both directions of the type
+categories decide the odds when tournament setup retains those categories.
+Rental/Rental Master/Mix/Mix Master instead set both categories to `17`, giving
+an equal-affinity 50/50 result. The routine compares both directions of the type
 chart. At the comparison level, a super-effective result is better than a
 neutral result, a neutral result is better than a resisted result, and a
 resisted result is better than an ineffective result. Thus a super-effective
@@ -354,12 +367,18 @@ not the same thing as the seven NPC slots selected for one run.
 The raw mask/type/pool fields and the exact generic, Rental, and Mix candidate
 sets are documented in
 [`data/generic-and-rental-records.md`](data/generic-and-rental-records.md).
-That page also records the result fields for every unnamed row: the built-in
+That page also records the source-derived result fields for every unnamed row: the built-in
 converter around `0x022421C6` maps source byte `8 & 7` to packed priority,
 source byte `0` to packed category, and uses trainer-type flag `0` for these
 NPC records. The named Leader, Champion, and Bianca mappings are in
 [`data/champions-and-leaders.md`](data/champions-and-leaders.md), so the two
-tables together cover every row that can enter the built-in NPC path.
+tables together cover every row that can enter the built-in NPC path. These
+conversion fields are not necessarily the final runtime values:
+`WBTSYS_SetupTrainer` subsequently sets `poketype = POKETYPE_MAX` (`17`) for
+all participants in cup IDs `12–15`. Development Overlay 135 performs that
+overwrite at `0x022424DE–0x022424FC`; the retail counterpart is
+`0x021EF8D0–0x021EF8EE`. This neutralizes type advantages in all Rental and Mix
+modes without changing the selected participants' priorities.
 
 The development build's Japanese text archive independently names the
 permanent modes. NARC `/a/2/3/9`, member 11, entries 151–162 decode in order to

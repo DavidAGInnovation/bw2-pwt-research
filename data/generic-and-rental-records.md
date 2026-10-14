@@ -127,7 +127,7 @@ source row and prepares the common packer at `0x0224208C` as follows:
 | Source-table value | Packed runtime field | Meaning |
 |---|---|---|
 | `byte 8 & 7` | priority bits 4–6 of packed byte 0 | Priority compared first by the NPC result routine. |
-| `byte 0` | packed byte 1 | Matchup category read by the type-affinity helper. |
+| `byte 0` | packed byte 1 at conversion | Source matchup category; Rental/Mix setup subsequently overwrites it with neutral `17`. |
 | built-in source-row path | trainer-type flag `0` in packed byte 0 bits 0–2 | NPC record; the player override uses a different flag. |
 
 The converter passes the source row's byte 1 as the sex selector, the row's
@@ -142,9 +142,11 @@ This explains why records `58–67` have ordinary type categories when they are
 selected by the Type Expert constructor, while Rental/Mix generic records are
 neutral in the NPC result routine even though their byte-7 constructor values
 are `0x12` or the `0x11` Type Expert wildcard. It also explains why a generic
-record does not acquire a category from the six Pokémon later associated with
-it: the packed category is copied from the source row before the winner
-routine runs. The full per-record result-field table appears below.
+record does not acquire a category from the Pokémon later associated with
+it. The packed category is initially copied from the source row; for cup IDs
+`12–15`, `WBTSYS_SetupTrainer` then replaces it with neutral `17` before the
+winner routine runs, including for named Leaders. The full per-record
+source-field table appears below.
 
 The complete raw rows and these derived fields are reproducible with
 `--dump-records`:
@@ -389,19 +391,24 @@ record-level Pokémon table therefore describes opponent IVs as Trainer-fixed
 and links back to this mapping; `0`, `8`, and `20` are not three outcomes of a
 per-Pokémon random roll.
 
-## What the record-packing path proves
+## Final runtime category in Rental and Mix modes
 
-Rental selection admits records through the pool predicates without replacing
-their stored result-routine category with a type derived from the Rental
-Pokémon. For example, record index 3 (Elesa) stores category 12 (Electric), as
-shown in [`champions-and-leaders.md`](champions-and-leaders.md). The common
-record packer at `0x0224208C` supplies the selected record to the same winner
-routine documented in [`RESEARCH.md`](../RESEARCH.md), which reads the packed
-priority/category fields and never inspects the six-Pokémon roster. The same
-principle applies to every selected record: its stored category remains the
-input to the displayed NPC result calculation. Standard Champions are not
-selected by Rental or Rental Master in this table, so their priority/category
-values are not used there through the standard Champion records.
+The common packer at `0x0224208C` initially copies the selected source
+category, but this is not the end of setup. `WBTSYS_SetupTrainer` in
+`wbt_system_lobby.c` overwrites `poketype` with `POKETYPE_MAX` (the neutral
+sentinel `17`) for every participant in Rental, Rental Master, Mix, and Mix
+Master. The overwrite is present in development Overlay 135 at
+`0x022424DE–0x022424FC` and retail Overlay 135 at
+`0x021EF8D0–0x021EF8EE`.
+
+For example, Elesa's source row stores category `12` (Electric), but her
+runtime category in these modes is `17`. Two priority-3 Leaders therefore
+have equal neutral affinities and a 50/50 simulated NPC result, even when
+their source types would give a 70/30 result elsewhere. Different priorities
+still give the higher-priority NPC a deterministic win. The winner routine
+never derives a type from their actual Pokémon parties. Standard Champions
+are not selected by Rental or Rental Master through this table's candidate
+predicates.
 
 ## Reproduction
 

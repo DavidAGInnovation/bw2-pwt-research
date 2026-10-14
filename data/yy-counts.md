@@ -11,7 +11,7 @@ NPC records. `YY` is the second byte of each four-byte bracket record
 |---|---:|---:|---:|---:|---:|---:|---:|---|
 | [2012 Junior Division Challenge](https://projectpokemon.org/home/files/file/1500-2012-junior-division-challenge/) | 0 | 3 | 0 | 2 | 1 | 1 | 7 | `[ENG10004]`; `5ddb96a6988de79a1458e5a1933274760f58cf6b3aefbf6bf3e6dd1a35d8d7f4` |
 | [2012 Master Division Challenge](https://projectpokemon.org/home/files/file/1502-2012-master-division-challenge/) | 0 | 3 | 0 | 2 | 1 | 1 | 7 | `[ENG10005]`; `d0761244cf7be76da9df1cf9878a13b2490638925d7d5fa5a78faa196fac29d6` |
-| [You Can Challenge the Unova League Too!](https://projectpokemon.org/home/files/file/1508-you-can-challenge-the-unova-league-too/) | 0 | 3 | 0 | 0 | 2 | 2 | 7 | `[JPN00009]`; `6633294afa8f021bc7080488a5b52c990a47588d6c79d9378afc919897d7b7` |
+| [You Can Challenge the Unova League Too!](https://projectpokemon.org/home/files/file/1508-you-can-challenge-the-unova-league-too/) | 0 | 3 | 0 | 0 | 2 | 2 | 7 | `[JPN00009]`; `6633294afa8f021bc7080488a5b52c990a47588d6d8c79d9378afc919897d7b7` |
 | [Battle of Legendary Pokémon](https://projectpokemon.org/home/files/file/1507-battle-of-legendary-pok%C3%A9mon/) | 0 | 3 | 0 | 4 | 0 | 0 | 7 | `[JPN00005]`; `a854f94568153442b86925278e4e57e6a2bed6d7907d9c4653c809fd29fb2465` |
 | [Legendary Rotation Battle!](https://projectpokemon.org/home/files/file/1506-legendary-rotation-battle/) | 0 | 4 | 1 | 2 | 0 | 0 | 7 | `[JPN00004]`; `fbf0ef1185a341eb9ec0f40d51c42f54adcc746aa8b21727c2f3d9ee194f379c` |
 | [Gym Leaders Assemble!](https://projectpokemon.org/home/files/file/1505-gym-leaders-assemble/) | 0 | 3 | 0 | 0 | 0 | 4 | 7 | `[JPN00003]`; `d9419516dd05a95e5c56ac2025f3cbe9a2cc487103d82cc25261aeb1d228acf4` |
@@ -91,3 +91,29 @@ post. The USA/Europe retail WBT NARC is `/a/2/4/7` and matches the development
 table byte-for-byte; the separate retail `/a/2/6/1` NARC has 1,000 members and
 is not the WBT roster table. Neither is folded into these downloadable `YY`
 counts. No retail ROM is redistributed here.
+
+## Artifact identity cross-check on 2026-10-14
+
+The current [Project Pokémon EventsGallery files](https://github.com/projectpokemon/EventsGallery/tree/master/Released/Gen%205/World%20Tournaments)
+independently reproduce all nine histograms above at offset `0x11F4`. The
+Unova SHA-256 has been corrected from a truncated 62-character value to the
+64-character hash verified against that file.
+
+The original webpage files for corrected English Junior (`ENG10004`), Master
+(`ENG10005`), Senior (`ENG10002`), and Japanese Legendary Rotation (`JPN00004`)
+were downloaded through their language-specific browser download controls.
+All four SHA-256 hashes exactly match the historical values in the table
+above, and all four raw bracket histograms agree.
+
+Their current GitHub copies have different whole-file hashes because they are
+not byte-identical to the webpage downloads. Every differing byte is after the
+seven-record bracket block: Junior and Senior differ at `0x1218–0x12FF`;
+Master additionally differs at `0x1214` and `0x1304`; Legendary Rotation
+only differs at `0x1214` and `0x1304`. The bracket bytes at
+`0x11F4–0x120F` are identical between each pair.
+
+The four webpage files are retained in
+[`../verification/historical-downloads/`](../verification/historical-downloads/), with their source pages, hashes,
+raw bracket bytes and comparisons recorded in
+[`../verification/historical-download-verification.json`](../verification/historical-download-verification.json).
+All nine selected artifact hashes and bracket histograms are now verified.

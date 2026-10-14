@@ -14,7 +14,8 @@ the game use another rule?
 - Standard Champion records (Blue, Lance, Steven, Wallace, Cynthia, Alder, and Red) all decode to the same relevant values: priority 4, trainer type 0, and category 17. The result routine does not read the trainer name or ID.
 - Therefore, a Champion-vs-Champion tie is exactly 50/50 in the source routine: both have equal priority and neutral category-17 affinity, so the code calls `GFL_STD_Rand(context, 2)`.
 - A priority-4 Champion beats a standard priority-3 Gym Leader before the tie/random branch, so the standard Champion-vs-Leader result is deterministic in favor of the Champion.
-- Standard Gym Leaders all have priority 3, so Leader-vs-Leader results are decided by comparing their stored type categories in both directions. The effectiveness levels are ranked from best to worst as super effective, neutral, not very effective, and no effect. If both directions produce the same effectiveness, the match is exactly 50/50. If one Leader has the better result—even if it is super effective versus no effect, or neutral versus not very effective—that Leader wins about 70% of the time, while the other still wins about 30% of the time.
+- Standard Gym Leaders all have priority 3. In modes that retain their stored type categories, Leader-vs-Leader results compare those categories in both directions. The effectiveness levels are ranked from best to worst as super effective, neutral, not very effective, and no effect. If both directions produce the same effectiveness, the match is exactly 50/50. If one Leader has the better result—even if it is super effective versus no effect, or neutral versus not very effective—that Leader wins about 70% of the time, while the other still wins about 30% of the time.
+- Rental, Rental Master, Mix, and Mix Master overwrite every participant's matchup category with neutral category 17. Equal-priority NPC matches in those modes are therefore 50/50, including Leader pairs whose source types would otherwise give a 70/30 result. Different priorities still give the higher-priority NPC a deterministic win.
 
 ## Other verified findings
 
@@ -33,8 +34,10 @@ the game use another rule?
   not change that result stream.
 - Rental Pokémon records 909–988 contain complete legendary builds, but every
   built-in Rental range ends at 908, so those records cannot be selected.
-- Trainer IDs 78–127 are NPC-only bracket fillers. They can occupy simulated
-  bracket positions but cannot become the player's opponent.
+- In normal built-in cup construction, Trainer IDs 78–127 are NPC-only bracket
+  fillers. They can occupy simulated bracket positions but cannot become the
+  player's opponent. A custom downloadable file can override their priorities,
+  so this restriction does not describe every possible download.
 
 ## Verified scope
 
@@ -107,6 +110,17 @@ development table. Detailed addresses, archive paths, hashes, and the resolved
 Join Avenue/PWT command distinction are retained in [`RESEARCH.md`](RESEARCH.md)
 and the corresponding pages under [`data/`](data/); ROM and recovered source
 artifacts are not redistributed.
+
+## Independent verification
+
+The [2026-10-14 findings review](docs/VERIFICATION.md) documents the source and
+ROM cross-checks, corrected mechanics and complete download-hash verification.
+The [verification evidence](verification/) includes decoded results and
+independent checks. ROM images and recovered source files remain local.
+
+```sh
+python3 verification/verify_historical_downloads.py
+```
 
 ## Sources and discussion
 

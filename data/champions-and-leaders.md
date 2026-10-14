@@ -63,12 +63,17 @@ additional winner adjustment. This value is not a bracket `YY` setting.
 ## Standard Gym Leader records
 
 The standard Gym Leader records are priority 3. The
-`Category` column is the decoded type-chart category passed to the result
-routine; the label in parentheses is the corresponding Generation V type. It
+`Category` column is the source type-chart category, passed to the result
+routine in modes that retain it; the label in parentheses is the corresponding Generation V type. It
 is a precomputed matchup field, not a simulation of the trainer's individual
 Pokémon teams. The WBT index is the record index in the examined development
 build's `/a/2/6/1` table, not the order in which a tournament displays the
 trainers.
+
+Rental, Rental Master, Mix, and Mix Master overwrite every runtime category
+with neutral `17` after conversion. Their equal-priority Leader-vs-Leader
+results are consequently 50/50 regardless of the source types listed below.
+This setup override leaves priorities and Trainer IV metadata unchanged.
 
 All 46 standard Gym Leader rows store `PowerRnd = 20`. The normal WBT party
 builder passes that fixed Trainer value to `FBI_TOOL_MakePokemonParam` for the

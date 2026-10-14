@@ -1,0 +1,110 @@
+[
+  {
+    "file": "00002 - Challenge Champion Lance (JPN).pwt",
+    "source": "https://github.com/projectpokemon/EventsGallery/tree/master/Released/Gen%205/World%20Tournaments",
+    "size": 4884,
+    "sha256": "8ff3d77de414b7be617af6c47c65833b3c1ddc6c6ea92140274ecbb0ec5e1443",
+    "YY_counts": {
+      "1": 3,
+      "3": 3,
+      "5": 1
+    },
+    "bracket_hex": "0205100002031f000203180002031e00010100000101000000010000"
+  },
+  {
+    "file": "00004 - Legendary Rotation Battle (JPN).pwt",
+    "source": "https://github.com/projectpokemon/EventsGallery/tree/master/Released/Gen%205/World%20Tournaments",
+    "size": 4884,
+    "sha256": "7a936753cb59b1c3b96763f50381397ebb4cbfc8a99a704402d0496e1b4b18b6",
+    "YY_counts": {
+      "1": 4,
+      "2": 1,
+      "3": 2
+    },
+    "bracket_hex": "02030000020300000002000001010000010100000101000001010000"
+  },
+  {
+    "file": "10005 - 2012 Masters Division Challenge (ENG).pwt",
+    "source": "https://github.com/projectpokemon/EventsGallery/tree/master/Released/Gen%205/World%20Tournaments",
+    "size": 4884,
+    "sha256": "dd3f71917c44d4a54dce19b1447e17679c2764b7c51b0dd45465611bffe41017",
+    "YY_counts": {
+      "1": 3,
+      "3": 2,
+      "4": 1,
+      "5": 1
+    },
+    "bracket_hex": "02050000020400000203000002030000010100000101000001010000"
+  },
+  {
+    "file": "00005 - Battle of Legendary Pokemon (JPN).pwt",
+    "source": "https://github.com/projectpokemon/EventsGallery/tree/master/Released/Gen%205/World%20Tournaments",
+    "size": 4884,
+    "sha256": "a854f94568153442b86925278e4e57e6a2bed6d7907d9c4653c809fd29fb2465",
+    "YY_counts": {
+      "1": 3,
+      "3": 4
+    },
+    "bracket_hex": "0203190002031c0002032a0002033000010100000101000001010000"
+  },
+  {
+    "file": "00003 - Gym Leaders Assemble (JPN).pwt",
+    "source": "https://github.com/projectpokemon/EventsGallery/tree/master/Released/Gen%205/World%20Tournaments",
+    "size": 4884,
+    "sha256": "d9419516dd05a95e5c56ac2025f3cbe9a2cc487103d82cc25261aeb1d228acf4",
+    "YY_counts": {
+      "1": 3,
+      "5": 4
+    },
+    "bracket_hex": "02051600020521000205290002053500010100000101000001010000"
+  },
+  {
+    "file": "00001 - 2012 VGC Japan Representatives (JPN).pwt",
+    "source": "https://github.com/projectpokemon/EventsGallery/tree/master/Released/Gen%205/World%20Tournaments",
+    "size": 4884,
+    "sha256": "9c6110ef28ce168670315ba696e47f7cf2d915fc1e9fd6f8b661bddb9e8cfdcc",
+    "YY_counts": {
+      "1": 4,
+      "3": 3
+    },
+    "bracket_hex": "02030000020300000203000001010000010100000101000001010000"
+  },
+  {
+    "file": "10002 - 2012 Senior Division Challenge (ENG).pwt",
+    "source": "https://github.com/projectpokemon/EventsGallery/tree/master/Released/Gen%205/World%20Tournaments",
+    "size": 4884,
+    "sha256": "9a116d4942153d6d7c2ca7bef296c24442057ff51d212626e441f3a8462e461a",
+    "YY_counts": {
+      "1": 3,
+      "3": 2,
+      "4": 1,
+      "5": 1
+    },
+    "bracket_hex": "02050000020400000203000002030000010100000101000001010000"
+  },
+  {
+    "file": "00009 - You Can Challenge the Unova League (JPN).pwt",
+    "source": "https://github.com/projectpokemon/EventsGallery/tree/master/Released/Gen%205/World%20Tournaments",
+    "size": 4884,
+    "sha256": "6633294afa8f021bc7080488a5b52c990a47588d6d8c79d9378afc919897d7b7",
+    "YY_counts": {
+      "1": 3,
+      "4": 2,
+      "5": 2
+    },
+    "bracket_hex": "02050000020500000204000002040000010100000101000001010000"
+  },
+  {
+    "file": "10004 - 2012 Junior Division Challenge (ENG).pwt",
+    "source": "https://github.com/projectpokemon/EventsGallery/tree/master/Released/Gen%205/World%20Tournaments",
+    "size": 4884,
+    "sha256": "4f72c8f4c4dc3b4a27b2ed3d4dacefa13c503d22836e3f52a683ddb9553076f5",
+    "YY_counts": {
+      "1": 3,
+      "3": 2,
+      "4": 1,
+      "5": 1
+    },
+    "bracket_hex": "02050000020400000203000002030000010100000101000001010000"
+  }
+]

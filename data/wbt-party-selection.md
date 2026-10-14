@@ -16,12 +16,13 @@ builder for every opponent.
 The source-level rule table is explicit. `wbt.h` assigns rule IDs 0, 1, 2,
 and 3 to single, double, triple, and rotation battles respectively;
 `wbt_tool.c` stores `need_pokemon_num` as `3, 4, 6, 4` for those four IDs, and
-`WBTTOOL_GetPartyMaxByRule` returns that field. Normal ROM opponents are built
-with that returned count; they do not first receive six Pokémon and then have
+`WBTTOOL_GetPartyMaxByRule` returns that field. Normal ROM opponents other than
+the Rival override described below are built with that returned count; they
+do not first receive six Pokémon and then have
 some hidden. The same table is present in Overlay 55: the getter at
 `0x022387FC` indexes the byte table at
 `0x02239B36`, whose four entries decode to `3, 4, 6, 4`. Consequently the
-active-party mapping is verified as:
+active-party mapping for this builder is verified as:
 
 | Battle rule | Internal rule ID | Active Pokémon |
 |---|---:|---:|
@@ -53,7 +54,9 @@ source names it `rental_type`, with branches for weak, strong, and all. In the
 `all` branch, the builder requests three Pokémon from the strong range and,
 when more are needed, `count - 3` from the weak range. This split is unrelated
 to Triple battles. The range-bound table is referenced through the literal
-pointers at `0x02239850` and `0x0223985c`.
+pointers stored at `0x0223949C` and `0x022394A0`, whose values are
+`0x0223A3EC` and `0x0223A3EE`. These are data words in a literal pool;
+disassembling them as instructions produces misleading `adr` target addresses.
 
 The lobby script shows how that internal field is chosen. It displays three
 tickets labelled right, middle, and left; these are associated in order with
@@ -162,8 +165,8 @@ turns a nonzero value into `has_ace`. The complete coverage audit is:
 | Data scope | Trainer rows | Ace-marked | Unmarked | Result |
 |---|---:|---:|---:|---|
 | Trainer list | 128 | 74 | 54 | Metadata for the full list. |
-| `wbt1` / `wbt2` party tables (IDs 0–118) | 119 | 74 | 45 | Every ace row resolves to a valid, nonzero species record; unmarked rows use the normal selector. |
-| `wbt3` party tables (IDs 0–67) | 68 | 64 | 4 | Every present ace row resolves to a valid, nonzero species record; the four unmarked rows use the normal selector. |
+| `wbt1` / `wbt2` party tables (IDs 0–118) | 119 | 74 | 45 | Every ace row resolves to a valid, nonzero species record; unmarked rows use the normal selector when this party builder is invoked. The Rival has a separate runtime override. |
+| `wbt3` party tables (IDs 0–67) | 68 | 64 | 4 | Every present ace row resolves to a valid, nonzero species record; the four unmarked rows have no forced ace in this builder. This does not establish their actual runtime party path. |
 | Trainer-list IDs 119–127 | 9 | 0 | 9 | Deliberate non-battling bracket fillers; no corresponding `wbt1/2/3` party-table rows are needed. |
 
 The source classifies the larger ID `78–127` range as non-battling mob
@@ -174,9 +177,12 @@ Kelly, Alison, Butch, Carver, Gavin, and Larry. Their missing normal party rows
 are therefore intentional, rather than nine unfinished battle opponents. No
 ace or party-order claim should be inferred for them.
 
-The ace trainer table (`wbt1a_tr.tdm` / `wbt2a_tr.tdm`) supplies an index into
-the matching ace Pokémon archive (`wbt1a_pd.narc` / `wbt2a_pd.narc`);
-`wbt3a_tr.tdm` and `wbt3a_pd.narc` provide the limited-data equivalent. The
+The ace trainer tables (`wbt1a_tr.tdm`, `wbt2a_tr.tdm`, and `wbt3a_tr.tdm`)
+supply indices into the runtime normal Pokémon archives (`wbt1n_pd.narc`,
+`wbt2n_pd.narc`, and `wbt3n_pd.narc`). Both fixed-ace and random construction
+read `base_arc_id + WBTBTD_ARCOFS_PM`. The source-generated `a_pd` archives
+are not the runtime archive mapping. Trainer NARCs include a dummy member 0;
+`FBI_TOOL_GetTrainerRomData` reads member `trainer_id + 1`. The
 first u16 in the selected PDM record is the species ID. For all 74 ace rows in
 `wbt1`/`wbt2` and the 64 rows represented in `wbt3`, that species record is
 nonzero. Therefore the fixed-first algorithm is verified across every
@@ -313,9 +319,34 @@ Pokémon archive with different candidate ranges:
 | 076 | Rylan | `ESPM` | Psychic (male) | Cofagrigus | Driftveil |
 | 077 | Destiny | `ESPW` | Psychic (female) | Mr. Mime | Driftveil |
 
-The unmarked rows do not enter the ace branch at all: their complete party is
-selected from the normal candidate list by the no-replacement chooser. The
+An unmarked row does not enter the ace branch of `makeRomTrainerData`: when
+that builder is invoked, its complete party is selected from the normal
+candidate list by the no-replacement chooser. The
 four unmarked records represented in WBT3 are Blue (ID 14), Red (ID 53), Hilda
 (ID 54), and the Rival (ID 55). Only Blue and Red are eligible for the built-in
 Champions roster; Hilda is unused data and the Rival belongs to the Driftveil
-event. None of the four has a fixed first Pokémon in the normal ROM-party path.
+event. Blue and Red use the normal no-ace selection path. Hilda is not a
+built-in battle opponent, and the Rival bypasses this builder entirely.
+
+### Rival party override
+
+`WBTSYS_SetupEnemyParty` in `wbt_battle.c` checks `TRTYPE_SWRIVAL` before
+calling `setRomPokeParty`. For the Rival, it instead calls
+`TT_EncountTrainerPokeDataMake` with the ordinary trainer ID chosen by
+`getWBTRivalTrainerID`: IDs `368`, `369`, and `370` for a Grass, Fire, or Water
+player starter respectively. The retained retail trainer archives `/a/0/9/1`
+and `/a/0/9/2` contain these three-Pokémon parties in stored order:
+
+| Player starter | Ordinary trainer ID | Party order |
+|---|---:|---|
+| Grass | 368 | Pignite, Simipour, Tranquill |
+| Fire | 369 | Dewott, Simisage, Tranquill |
+| Water | 370 | Servine, Simisear, Tranquill |
+
+Thus the event Rival has a fixed first Pokémon determined by the player's
+starter despite having no WBT ace marker. The lobby forces this event to
+Single battles. The override is present in development Overlay 134 at
+`0x0224389E–0x022438B0` and retail Overlay 134 at
+`0x021F040E–0x021F0420`; the starter-to-trainer getters begin at
+`0x02243660` and `0x021F0220`. The ordinary trainer party data, rather than
+the WBT no-replacement selector, controls this exception.

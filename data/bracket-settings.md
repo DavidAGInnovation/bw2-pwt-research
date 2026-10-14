@@ -55,10 +55,14 @@ value. It first randomizes the trainer order, then sorts the seven NPCs by
 descending priority. The highest-priority record is placed on the player's
 final path, the second-highest on the semifinal path, and the third-highest in
 the first-round path; the remaining four fill the other positions. Equal-
-priority records retain their randomized relative order. Consequently, a file
+priority records can change relative order when swaps with higher-priority
+records cross them. The source uses an exchange sort: for each position `i`,
+it compares every later position `j` and swaps when `priority[i] < priority[j]`.
+It is not a stable sort; for example, `[2a, 2b, 3]` becomes `[3, 2b, 2a]`.
+Exact seed-to-bracket reproduction must use these swaps. Consequently, a file
 with two `YY=05` records can place one on the final path and the other on the
-semifinal path, and `YY=04` is not guaranteed to be the semifinal when a
-priority-5 record is present.
+semifinal path, and multiple priority-5 records can displace a priority-4
+record from the semifinal path.
 
 The public reverse-engineering notes still use behavioral labels such as
 “Filler,” “Possible First,” “Semifinalist,” and “Finalist.” Those labels remain
@@ -125,12 +129,17 @@ player paths. It does not independently choose one `YY=05` record for the final
 and one `YY=04` record for the semifinal. Built-in per-family histograms are
 documented separately in [`in-game-tournaments.md`](in-game-tournaments.md).
 
-### No hidden victory roll
+### Placement and simulated qualification
 
-The `YY` setup does not call the NPC result routine to make a tagged trainer
-qualify. The priority sorter places the highest-ranked available record on the
-player's final path; the player then battles that trainer directly. The
-source-backed 50/50 equal-affinity or 70/30 type-advantage results documented
+The `YY` setup places the highest-ranked available record in the opposite half
+of the bracket; it does not bypass that Trainer's simulated matches. The
+second-highest record goes in the player's half on the semifinal path, and the
+third-highest is the player's first opponent. The final opponent is the winner
+of the opposite half, and the semifinal opponent is the winner of the other
+first-round pair in the player's half. A strictly higher-priority candidate
+defeats lower-priority NPCs deterministically, but an equal-priority rival can
+eliminate it before the scheduled player round. The source-backed 50/50
+equal-affinity or 70/30 type-advantage results documented
 in [`../RESEARCH.md`](../RESEARCH.md) apply only when two NPC records are
 actually passed to `wbt_calc_result` for an all-NPC simulated match.
 

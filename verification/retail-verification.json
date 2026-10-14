@@ -1,0 +1,108 @@
+{
+  "rom": {
+    "size": 536870912,
+    "game_code": "IREO",
+    "md5": "4c65a32989c78b8070751765592b0ea6",
+    "sha1": "e51e6dfb8678a3d19dcd2a10691b96a569ca0abb",
+    "sha256": "2e6b2415354aa41471bc7617068dce059a59931bf5c4348a264f8043f297683a"
+  },
+  "resources": [
+    {
+      "path": "a/0/5/6",
+      "file_id": 403,
+      "start": 193113088,
+      "end_exclusive": 193734168,
+      "size": 621080,
+      "sha256": "059f51ebca903e73a6c2d3251dde1bd83c3bbc0f590d3ce1b9533f0156abe024",
+      "members": 1289,
+      "equals_retained": true
+    },
+    {
+      "path": "a/2/4/7",
+      "file_id": 594,
+      "start": 279364608,
+      "end_exclusive": 279366716,
+      "size": 2108,
+      "sha256": "0a32d2956f75a6e6365f292eb20e129c5247fe9ec093ca881dd469ea698d00ca",
+      "members": 1,
+      "equals_retained": true
+    },
+    {
+      "path": "a/2/6/1",
+      "file_id": 608,
+      "start": 279584256,
+      "end_exclusive": 279608308,
+      "size": 24052,
+      "sha256": "416ddd7a37b89bcada27e977dc0a59df818ccddf4b9e47dd2f3ae39d742b5980",
+      "members": 1000,
+      "equals_retained": true
+    },
+    {
+      "path": "a/2/5/7",
+      "file_id": 604,
+      "start": 279452672,
+      "end_exclusive": 279476724,
+      "size": 24052,
+      "sha256": "2644c167f8a5775b5161c8e9b878255d2ae7cf5c0ec7431ae1dad257051d1110",
+      "members": 1000,
+      "equals_retained": true
+    },
+    {
+      "path": "a/0/0/2",
+      "file_id": 349,
+      "start": 93071872,
+      "end_exclusive": 98421504,
+      "size": 5349632,
+      "sha256": "7510c6af4588f5f02491fd1e9b9180acf95f30d869b240953fda8f0e0e873953",
+      "members": 495,
+      "equals_retained": true
+    },
+    {
+      "path": "a/0/1/6",
+      "file_id": 363,
+      "start": 175538176,
+      "end_exclusive": 175599164,
+      "size": 60988,
+      "sha256": "23ec94f7af6013f83a017e85387c4a74968e2260e53e9467a073a061387e6410",
+      "members": 710,
+      "equals_retained": true
+    }
+  ],
+  "overlays": [
+    {
+      "id": 55,
+      "file_id": 55,
+      "base": "0x21e5800",
+      "start": "0x11d200",
+      "end_exclusive": "0x11eae0",
+      "compressed_size": 6368,
+      "decompressed_size": 7616,
+      "sha256": "1d7ed4cc8ffb33a1bd715f621a38203f45e2a4453864a8fafb287aa5d744ad33",
+      "equals_retained": true
+    },
+    {
+      "id": 135,
+      "file_id": 135,
+      "base": "0x21eec80",
+      "start": "0x156600",
+      "end_exclusive": "0x157488",
+      "compressed_size": 3720,
+      "decompressed_size": 4032,
+      "sha256": "30b48d2cc1e724470351f57fa6fa28d2844f195732737052bc9ce41e57ef98b8",
+      "equals_retained": true
+    }
+  ],
+  "development_retail_matches": [
+    {
+      "development": "a/2/6/1",
+      "retail": "a/2/4/7",
+      "equal": true
+    },
+    {
+      "development": "a/2/7/1",
+      "retail": "a/2/5/7",
+      "equal": true
+    }
+  ],
+  "development_rom_sha256": "ac4fb3e97b90831bd878f4e6ab0bed4ad355311ff90becba79ab79456f4e12da"
+}
