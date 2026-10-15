@@ -50,6 +50,24 @@ higher `PowerRnd` is a strength distinction, but smarter AI is not. A pure
 downloaded Trainer can carry its own downloaded `ai_bit`, which is a separate
 path from the built-in roster.
 
+### Shared move-scoring mechanics
+
+The shared Strong routine estimates damage with the minimum 85% damage roll.
+For ordinary damaging moves, a predicted KO receives +4 points; otherwise,
+a move receives -1 if another known move predicts strictly greater damage.
+The comparison includes moves that are currently unavailable, so disabling
+the strongest move does not necessarily make the second strongest the
+preferred choice. The final selector chooses randomly among the highest
+scoring moves. Other enabled routines and move-specific effects can change
+these scores, so this is not a universal highest-damage rule.
+
+While Illusion is active, the damage and type-effectiveness simulators use
+the impersonated party member's defensive parameters. The KO test separately
+reads the active Pokémon's current HP. These mechanics concern actual
+battles against the player; the separate NPC bracket-result routine does not
+run this move-selection AI. Retail verification details are in
+[VERIFICATION.md](../docs/VERIFICATION.md#shared-battle-ai-mechanics).
+
 ### Meaning of Champion category `17`
 
 Category `17` (`0x11`) is the neutral/sentinel value recognized by the

@@ -1,11 +1,11 @@
 # BW2 PWT findings verification
 
 Reviewed on 2026-10-14. **Ready within reviewed scope.** The principal mechanics
-and data are supported after the corrections below. Coverage is **complete**
+and data are supported by the reviewed evidence. Coverage is **complete**
 for the stated document and artifact scope, including all nine selected
 download hashes. Every requested README, RESEARCH section, and Data page was inspected;
 repetitive raw tables received full record comparisons where stated below.
-The corrections are documentation changes. The reviewed scope includes the
+The reviewed scope includes the
 local artifact bundle README as well as this repository's research documents. ROMs, source archives, raw
 CSV data, and the historical checksum manifest were preserved.
 
@@ -40,85 +40,26 @@ actual development and retail binaries.
   The additional preset counts agree with the original
   [reverse-engineering post](https://projectpokemon.org/home/forums/topic/23084-pwt-download-tournaments/page/2/).
 
-## Corrected mechanics and evidence
+## Shared battle AI mechanics
 
-1. **Rental and Mix category override.** The original generic-records page
-   traced record conversion but missed the later `WBTSYS_SetupTrainer`
-   overwrite. All participants in cup IDs 12–15 receive neutral category 17.
-   Equal-priority NPC results in these modes are 50/50, including named Leaders;
-   their stored type advantages do not apply. Different priorities still give
-   a deterministic win to the higher value. **Fixed:** the README, RESEARCH,
-   generic-record and Leader explanations now distinguish source fields from
-   final runtime categories. Evidence: `wbt_system_lobby.c:254–265`, development
-   Overlay 135 `0x022424DE–0x022424FC`, retail `0x021EF8D0–0x021EF8EE`.
+Checked on 2026-10-15 against the same Black 2 USA/Europe retail image.
+The complete retail AI archive `/a/1/6/9` is byte-for-byte identical to the
+recovered SVN revision 59995 archive: 44,400 bytes, SHA-256
+`eb4caa69e2a4d0464bd38cda8b5ce6403aeb8a626e5736b0c4e578c573a668af`.
+The shared Strong script's KO and relative-damage branches support the
+move-scoring explanation in [champions-and-leaders.md](../data/champions-and-leaders.md#shared-move-scoring-mechanics).
 
-2. **Player override and bracket qualification.** The pseudocode incorrectly
-   said player B loses. `upside_win = FALSE` means A loses and player B wins.
-   The bracket notes also said the player directly battles the top-ranked
-   candidate, although that candidate must survive the opposite half's NPC
-   matches. **Fixed:** boolean semantics and survival conditions are explicit.
-   Evidence: `wbt_calc_result.c:198–206`, result pass `:271–307` and opponent
-   lookup `:76–146`; placement in `wbt_makematch.c:698–713`.
-
-3. **Priority sort behavior.** Equal-priority records do not necessarily retain
-   their shuffled order. Nonadjacent swaps with stronger records can reverse
-   them: `[2A, 2B, 3C]` becomes `[3C, 2B, 2A]`. **Fixed:** the bracket notes
-   describe the actual exchange sort and clarify how multiple priority-5
-   entries can displace priority 4. Evidence: `wbt_makematch.c:679–690` and
-   development `0x02241EDA–0x02241F32`. When all NPC priorities are equal,
-   including the Champion cup, no sorting swaps occur.
-
-4. **Rival party exception.** The claim that every unmarked Trainer uses the
-   WBT random chooser omitted the event Rival. `WBTSYS_SetupEnemyParty`
-   instead selects ordinary Trainer ID 368, 369 or 370 according to the
-   player's starter. The first Pokémon is respectively Pignite, Dewott or
-   Servine; the party is stored in a fixed order. **Fixed:** normal-builder
-   coverage and the Rival exception are documented separately. Evidence:
-   `wbt_battle.c:666–681,786–807`, development Overlay 134
-   `0x0224389E–0x022438B0`, retail `0x021F040E–0x021F0420`, and ordinary retail
-   Trainer archives `/a/0/9/1` and `/a/0/9/2`.
-
-5. **Party archive and address citations.** Fixed-ace indices read the runtime
-   normal `wbt1n_pd`/`wbt2n_pd`/`wbt3n_pd` archives, rather than the generated
-   `a_pd` artifacts. The Rental range pointers are literal-pool words at
-   `0x0223949C` and `0x022394A0`, pointing to `0x0223A3EC`/`0x0223A3EE`.
-   The previous addresses were misleading instruction decodes of data.
-   **Fixed:** citations and the dummy Trainer-member offset are corrected;
-   all eligible ace species still match.
-
-6. **Provenance and scope.** Source archives moved to the sibling
-   `original-builds/TeraLeak 13_10_2024` directory; their identities were
-   verified against the historical manifest. The Unova download hash omitted
-   two characters and is now corrected to the independently verified 64-character
-   SHA-256. **Fixed:** stale paths and that hash. The NPC-only restriction for
-   IDs 78–127 now explicitly applies to normal built-in construction; custom
-   downloads can override priorities. The manifest was regenerated for current
-   local contents, preserving the previous manifest separately.
-
-## Remaining limits
-
-The four historical hashes questioned during the first pass are now verified
-against their exact original webpage downloads: corrected English Junior,
-Master and Senior, and Japanese Legendary Rotation. Each is 4,884 bytes;
-its SHA-256 exactly matches the documented value, and its bracket histogram
-matches both the documentation and the corresponding GitHub copy.
-
-The normal browser download controls supplied the original files. Their
-whole-file differences from the GitHub copies occur only after the bracket
-records, at offsets `0x1214`, `0x1218–0x12FF`, and/or `0x1304`, depending on
-the file. The historical hashes require no correction. The four original
-files and a reproducible hash/comparison check are retained under
-`verification/`.
-
-Only the development build and one Black 2 USA/Europe retail image were checked.
-White 2 retail and other regions/revisions have not been independently verified.
-The RNG probabilities describe the routine's branch behavior; for a fixed seed
-and ordered participant list, outcomes are deterministic. No emulator battle
-playthrough was performed.
-
-The historical gzip source copy was not found. File-integrity checks cover
-the local artifact bundle. Its ROMs, source archives and manifests are local
-evidence and are not redistributed in this repository.
+Native checks identify retail Overlay 170 `0x0218045C` as the comparison
+with all known moves, `0x02180870` as the KO helper, and
+`0x0217F90C–0x0217F96A` as the highest-score tie selector. Overlay 167
+`0x021AB954` and `0x021AB8EC` substitute Illusion's impersonated party
+member in damage and type-effectiveness simulation. The damage simulation
+branch sets the minimum multiplier to 85 at `0x021A5A34`. Six controlled
+executions of the relevant retail bytecode confirmed ordinary damage
+ranking, two- and four-move KO ties, comparison with an unavailable strongest
+move, and favorable twofold/fourfold type matchups. These were bytecode
+checks with controlled helper inputs, not emulator playthroughs or a full
+audit of every move effect, ability, or AI routine.
 
 ## Review coverage
 
@@ -174,6 +115,5 @@ python3 verification/verify_rental_independently.py \
 
 The source archive remains external; inspection uses `svnlook` against its
 recovered `export/svn2/swan_mirror` repository at revision 59995. Source files
-and ROM images are not included here. Numeric source line references above
-refer to that revision. The JSON results record inspected hashes, ranges,
+and ROM images are not included here. The JSON results record inspected hashes, ranges,
 disassembly anchors and complete row comparisons.
