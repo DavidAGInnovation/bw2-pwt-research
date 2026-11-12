@@ -181,6 +181,19 @@ that the generic rows use the generic `Trainer` class-domain values
 row 57 uses `186` (`Team Plasma`). Those normal class labels do not override
 the PWT-specific class table's generic `Trainer` display text.
 
+The remaining bytes of each 16-byte row are not read by the constructor
+predicates above. In the retail table they hold: a `u16` at offset `10` that
+groups exactly by battle theme (Unova Leaders and Bianca `1132`–`1133`, Alder
+`1136`, Kanto Leaders `1245`, Blue `1246`, Johto Leaders `1247`, Lance and Red
+`1248`, Hoenn Leaders `1249`, Steven and Wallace `1250`, Sinnoh Leaders `1251`,
+Cynthia `1252`, Type Expert rows `1131`, generic and Hilda/Colress rows `1254`,
+Rival `1262`), which is consistent with a battle-music ID but was not traced in
+code; a `u16` at offset `12` that is `1263` on all 128 rows; byte `14`, which
+is `1` on every ace-marked row and `0` on Blue, Red, Hilda, the Rival and rows
+78–127, matching the `ace_poke_id`-derived `has_ace` flag described in
+[`wbt-party-selection.md`](wbt-party-selection.md); and bytes `9` and `15`,
+which are `0` everywhere.
+
 `mmdl_id` is the internal model/appearance resource identifier copied into the
 runtime record. Equal IDs use the same model resource; resolving an ID to a
 rendered sprite or a human-readable outfit name requires the separate model

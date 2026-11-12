@@ -38,6 +38,12 @@ the game use another rule?
   not change that result stream.
 - Rental Pokémon records 909–988 contain complete legendary builds, but every
   built-in Rental range ends at 908, so those records cannot be selected.
+- The normal (non-Rental) opponent parties are stored in three table sets
+  whose retail paths are `/a/2/4/8`–`/a/2/5/6`. Every Unova Leader's regional
+  cup party stores EV mask `0`, while every other Leader, Champion and World
+  Leaders party stores two or more EV stats. The ace is the Pokémon-record
+  index in the trainer's six-byte header, not necessarily the first record of
+  the party.
 - In normal built-in cup construction, Trainer IDs 78–127 are NPC-only bracket
   fillers. They can occupy simulated bracket positions but cannot become the
   player's opponent. A custom downloadable file can override their priorities,
@@ -97,6 +103,15 @@ retained locally and are not redistributed here.
 - [`data/rental-pokemon-builds.csv`](data/rental-pokemon-builds.csv): all 908
   selectable builds and 80 valid excluded legendary builds, including species,
   form, item, moves, nature, EVs, IV rules, abilities, gender, and friendship.
+- [`data/wbt-normal-parties.md`](data/wbt-normal-parties.md): retail paths and
+  member layout of the `wbt1`/`wbt2`/`wbt3` normal party tables, placeholder
+  and duplicate rows, EV, nature and form observations, and the Serebii
+  cross-check.
+- [`data/wbt-normal-parties.csv`](data/wbt-normal-parties.csv): every stored
+  normal party record for all three table sets, with trainer, slot, ace,
+  species, form, item, moves, nature, EVs, trainer IVs, abilities and gender.
+- [`data/pwt-text-layout.md`](data/pwt-text-layout.md): layout of the retail
+  PWT text members (trainer dialogue, announcer lines, name table).
 - [`data/generic-and-rental-records.md`](data/generic-and-rental-records.md):
   generic and special Trainer names, display codes and meanings, source
   groups, priorities, categories, IV assignments, and verified Rental/Mix

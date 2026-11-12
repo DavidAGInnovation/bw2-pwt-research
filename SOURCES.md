@@ -21,6 +21,39 @@ them.
 - Local-only SWAN source paths `branches/upper_version/prog/src/field/wbt_party.c`, `branches/upper_version/prog/src/field/wbt_battle.c`, `branches/upper_version/prog/src/field/wbt_system_lobby.c`, and `branches/upper_version/prog/src/field/wbt_tool.c` are the source-level provenance for party construction, the fixed-ace path, trainer metadata, and the `3,4,6,4` rule-size table. This repository documents their behavior from the corresponding Overlay 55 disassembly at `0x02238FE8–0x022397F2` and does not copy the source files.
 - Complete party-data audit: `branches/upper_version/resource/wbt/wbt_trainer/wbt_trainer_list.txt` (SVN revision 59995) contains 128 rows, with 74 `○` values in the `エースポケモン` column and 54 unmarked rows. That field is compiled by `wbt_trainer.rb` into `ace_poke_id`. All 74 ace rows resolve to nonzero species through the `wbt1` and `wbt2` ace/normal tables; the 64 ace-marked rows represented in `wbt3` also resolve. Unmarked rows use the normal selector when that builder is invoked; Rival ID 55 instead uses the starter-dependent ordinary Trainer party override in `WBTSYS_SetupEnemyParty`. `wbt_system.h` defines `WBTROM_TRID_NOBATTLE_MOB_START = 78`, and the source trainer list labels IDs 78–127 as non-battling mob Trainers. IDs 119–127 have no corresponding `wbt1/2/3` party-table rows because this bracket-filler path never constructs their battle parties.
 - Ace-party species mapping: `branches/upper_version/resource/wbt/wbt_btd/wbt1a_tr.tdm`, `wbt2a_tr.tdm`, and `wbt3a_tr.tdm` supply ace indices; runtime `wbt1n_pd.narc`, `wbt2n_pd.narc`, and `wbt3n_pd.narc` records supply species IDs through `base_arc_id + WBTBTD_ARCOFS_PM`. The ace Trainer lookup uses member `trainer_id + 1` because its NARC includes a dummy row. The examined ROM resources are `/a/2/6/2`→`/a/2/6/4`, `/a/2/6/5`→`/a/2/6/7`, and `/a/2/6/8`→`/a/2/7/0`. In the normal-ROM-party path, `wbt_battle.c` reads that first ace index before random selection. `WBTTournamentData` configures WBT1 for Driftveil/event/Download/Rental/Mix, WBT2 for the five regional Leader cups, and WBT3 for Champions/World/Type Expert/Rental Master/Mix Master. The actual Rental and Rental Master opponent setup bypasses those normal ROM-party families and uses the dedicated Rental Pokémon archive, so the named participant's ace is not forced; trainer-list flags still determine which Trainers can appear in those cups.
+- USA/Europe retail normal party tables: `wbt1` is `/a/2/4/8` (trainer
+  headers, 120 members, SHA-256
+  `b1c4cc6c181955d7329362a9b59ed6a81f09e763d6a7a17da3ad93611c9893f4`),
+  `/a/2/4/9` (party index lists,
+  `a00f4d4167a13c1d9f4535217020f1e396a0b24319cad8a4cf3796fbcae314e2`) and
+  `/a/2/5/0` (1,000 Pokémon records,
+  `8f9ed785341a39da91dd7d4a4fd362eec73e624075b02d1830fa145839db70cd`);
+  `wbt2` is `/a/2/5/1`
+  (`eda84f5177c2df5db7658a0d06f9f686491b8b4169ab189907ce869c4e7880ab`),
+  `/a/2/5/2` (`1a7724bd21f8d375ed52cae37814691f60af35c326fd067051a02a3d22031f2d`)
+  and `/a/2/5/3`
+  (`101cba924fdc8cf69a5c709663dcf5d7bf92cdfc8c8a9e1523e8ba119a67fadf`);
+  `wbt3` is `/a/2/5/4` (69 members,
+  `f27d62d7876bf83f6c602685fd97b4d37f83d79b6322a2cabdd7ae7336bafd70`),
+  `/a/2/5/5` (`e30f1a7c1ad51c6de1c8cfa8426c2c175d2097f2e7e792e71d1e74a8b323296c`)
+  and `/a/2/5/6`
+  (`4f6eb1140b153765651c8866b5be2c9410efb27d9410ee3b2830db7ddc212725`).
+  These are the retail counterparts of the development `/a/2/6/2`→`/a/2/6/4`,
+  `/a/2/6/5`→`/a/2/6/7` and `/a/2/6/8`→`/a/2/7/0` resources listed above.
+  Retail `/a/2/1/1` is a second copy of the Rental archive with a different
+  NARC wrapper (SHA-256
+  `a211e9995a6ce519ca26affb266310ba3b563ebdd963efbf9937242f72840d74`; its
+  1,000 members decode identically). `scripts/decode_wbt_parties.py` decodes
+  the three table sets with the retail text `/a/0/0/2` (members 64, 90, 403
+  and the 9-bit-packed PWT name member 409), personal data `/a/0/1/6`
+  (SHA-256 `23ec94f7af6013f83a017e85387c4a74968e2260e53e9467a073a061387e6410`)
+  and the WBT table into `data/wbt-normal-parties.csv`.
+- USA/Europe retail text NARC `/a/0/0/2`, members 406 and 407: the PWT
+  announcer lines (33 entries) and per-trainer dialogue (1,008 entries, eight
+  per trainer); the layout is recorded in `data/pwt-text-layout.md`. Project
+  Pokémon's RawDB renders the same members as
+  [`msg/406.php`](https://projectpokemon.org/rawdb/black2/msg/406.php) and
+  [`msg/407.php`](https://projectpokemon.org/rawdb/black2/msg/407.php).
 - `scripts/audit_wbt_party.py` checks the disassembly signatures used for the player's six-entry Rental builder, Rental-type branches, random-without-replacement selector, party-size getter, and all four battle-rule party-size table bytes.
 - Dedicated Rental Pokémon archive: development `/a/2/7/1` and USA/Europe retail `/a/2/5/7` are byte-identical 1,000-member NARCs (SHA-256 `2644c167f8a5775b5161c8e9b878255d2ae7cf5c0ec7431ae1dad257051d1110`). Source `wbt_party.c` maps Rental weak/strong to indices `1–132`/`133–208` and Rental Master weak/strong to `209–558`/`559–908`. Record `0` and records `989–999` are zero-filled; records `909–988` are 80 complete legendary builds referenced by `wbt_rental_tr.tdm` but excluded by every runtime range. `BSUBWAY_POKEMON_ROM_DATA` in `bsubway_battle_data.h` establishes the 16-byte species/moves/EV-mask/nature/item/form layout. `FBI_TOOL_MakePokemonParam` in `fld_btl_inst_tool.c` proves the EV-mask expansion, uniform runtime `pow_rnd` IV assignment, personality-derived normal ability and gender, form copy, and friendship behavior. `wbt_party.c` supplies player IV value 20 and passes the opponent Trainer's `PowerRnd`; actual ordinary Rental opponents use 8 or 20, while priority-1 bracket fillers store 0 but never have a player-opponent party constructed. Every Rental Master-eligible built-in Trainer stores 20. `scripts/decode_rental_pokemon.py` combines those fields with USA/Europe retail text `/a/0/0/2` and personal data `/a/0/1/6` to generate `data/rental-pokemon-builds.csv`, including 908 selectable and 80 explicitly labelled excluded builds.
 - Built-in battle-AI audit: all 128 rows generated from `wbt_trainer_list.txt` store `ai_type = 0`, but `WBTTRAINER_SetRomTrainer` in `wbt_system_lobby.c` ignores that stored byte and supplies `WBT_AI_BIT_ALL`. `setBSPTrainerData` in `wbt_battle.c` transfers its Basic, Strong, Expert, and Double flags into the battle setup. Thus Red, Champions, Leaders, and generic built-in opponents share the same complete AI mask. Pure downloaded characters instead supply their downloaded `ai_bit`.
