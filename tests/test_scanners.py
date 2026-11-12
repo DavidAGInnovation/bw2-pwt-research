@@ -18,6 +18,7 @@ import inspect_wbt_table as wbt_table  # noqa: E402
 import parse_pwt_bracket as pwt_bracket  # noqa: E402
 import audit_wbt_party as wbt_party  # noqa: E402
 import decode_rental_pokemon as rental_pokemon  # noqa: E402
+import decode_wbt_parties as wbt_parties  # noqa: E402
 
 
 def make_narc(members: list[bytes]) -> bytes:
@@ -84,6 +85,35 @@ class ScannerTests(unittest.TestCase):
             rental_pokemon.player_ivs("Excluded from PWT"),
             "Not applicable (excluded from PWT)",
         )
+
+    def test_wbt_party_table_decoder(self) -> None:
+        # Member 0 is the dummy row. Trainer 0 is a six-record party whose ace
+        # is its second record (Clair's wbt2 layout); trainer 1 is the shared
+        # placeholder list; trainer 2 repeats trainer 0's records.
+        headers = [
+            struct.pack("<HHH", 0, 1, 0),
+            struct.pack("<HHH", 2, 1, 164),
+            struct.pack("<HHH", 2, 1, 73),
+            struct.pack("<HHH", 2, 1, 164),
+        ]
+        party = (163, 164, 165, 166, 167, 168)
+        lists = [
+            struct.pack("<HHH", 0, 1, 0),
+            struct.pack("<HH6H", 2, 6, *party),
+            struct.pack("<HH4H", 2, 4, *wbt_parties.PLACEHOLDER_LIST),
+            struct.pack("<HH6H", 2, 6, *party),
+        ]
+        self.assertEqual(wbt_parties.decode_header(headers[1]), (2, 1, 164))
+        self.assertEqual(wbt_parties.decode_index_list(lists[1]), party)
+        self.assertEqual(wbt_parties.decode_index_list(lists[2]), wbt_parties.PLACEHOLDER_LIST)
+        with self.assertRaises(ValueError):
+            wbt_parties.decode_index_list(struct.pack("<HH", 2, 3))
+        decoded = list(wbt_parties.parties("wbt2", headers, lists))
+        self.assertEqual([p.trainer_id for p in decoded], [0, 1, 2])
+        self.assertEqual(decoded[0].ace_record, 164)
+        self.assertEqual(decoded[0].records, party)
+        self.assertEqual(decoded[1].records, wbt_parties.PLACEHOLDER_LIST)
+        self.assertEqual(wbt_parties.RETAIL_PATHS["wbt2"], ("/a/2/5/1", "/a/2/5/2", "/a/2/5/3"))
 
     def test_wbt_party_audit_signatures(self) -> None:
         # Keep this unit test independent of the large ROM/disassembly

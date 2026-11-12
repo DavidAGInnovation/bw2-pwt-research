@@ -185,7 +185,14 @@ are not the runtime archive mapping. Trainer NARCs include a dummy member 0;
 `FBI_TOOL_GetTrainerRomData` reads member `trainer_id + 1`. The
 first u16 in the selected PDM record is the species ID. For all 74 ace rows in
 `wbt1`/`wbt2` and the 64 rows represented in `wbt3`, that species record is
-nonzero. Therefore the fixed-first algorithm is verified across every
+nonzero. In the USA/Europe retail ROM the ace trainer tables are `/a/2/4/8`,
+`/a/2/5/1` and `/a/2/5/4`: each member is three `u16` values `2, 1,
+ace_record`, and the third value is the normal-archive record index that the
+fixed-first path writes to position `0`. It is not always the lowest record
+of the party: Clair's header names record 164 (Kingdra), the second of her six
+records, in both `wbt2` and `wbt3`. The member layout, the companion
+party-index tables and the complete decode are in
+[`wbt-normal-parties.md`](wbt-normal-parties.md). Therefore the fixed-first algorithm is verified across every
 ace-marked trainer that has a party-table record in the examined build when
 the normal ROM-party path is used. Rental modes use the separate random path,
 and Mix modes can subsequently exchange the ace out of the constructed party.
@@ -325,7 +332,9 @@ candidate list by the no-replacement chooser. The
 four unmarked records represented in WBT3 are Blue (ID 14), Red (ID 53), Hilda
 (ID 54), and the Rival (ID 55). Only Blue and Red are eligible for the built-in
 Champions roster; Hilda is unused data and the Rival belongs to the Driftveil
-event. Blue and Red use the normal no-ace selection path. Hilda is not a
+event. Blue and Red use the normal no-ace selection path. Their retail `wbt3`
+headers nevertheless store record indices (346, Blue's Alakazam; 382, Red's
+Pikachu), which the cleared flag leaves unused. Hilda is not a
 built-in battle opponent, and the Rival bypasses this builder entirely.
 
 ### Rival party override

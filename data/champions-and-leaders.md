@@ -33,7 +33,12 @@ The IV values are fixed rather than rolled per Pokémon. In source-record byte
 `30`. The normal WBT party builder reads that Trainer value and passes it to
 `FBI_TOOL_MakePokemonParam` for both the ace and every normally selected party
 member, applying the value to all six IVs. EVs remain properties of the
-selected Pokémon records and are independent of this Trainer-level IV input.
+selected Pokémon records and are independent of this Trainer-level IV input;
+those records are decoded in
+[`wbt-normal-parties.md`](wbt-normal-parties.md). Every Champion party stores
+two-stat EV masks, and so does every Kanto, Johto, Hoenn and Sinnoh Leader
+party, while the 14 Unova rows' regional-cup (`wbt2`) parties store EV mask
+`0`.
 
 ### Battle AI is shared by every built-in opponent
 
